@@ -1,9 +1,13 @@
-package cn.edu.shu.android.drawingboard.core;
+package cn.edu.shu.android.drawingboard.core.tool;
 
-import org.dom4j.Document;
-
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+
+import cn.edu.shu.android.drawingboard.MyApplication;
+import cn.edu.shu.android.drawingboard.core.exception.ParserXMLException;
+import cn.edu.shu.android.drawingboard.xml.Block;
+import cn.edu.shu.android.drawingboard.xml.XMLParser;
 
 /**
  * Created by yy on 1/22/14.
@@ -23,8 +27,9 @@ public class ToolManager {
 
     }
 
-    public Tool buildToolByXML(Document doc) throws PhraseXMLException {
-        org.dom4j.Element root = doc.getRootElement();
+    public Tool buildToolByXML(String XMLFilePath) throws ParserXMLException, FileNotFoundException {
+        MyApplication app = MyApplication.getInstance();
+        Block root = XMLParser.getRootBlock(app.openFileInput(XMLFilePath));
         Tool t = new Tool();
         t.loadXML(root);
         tools.add(t);

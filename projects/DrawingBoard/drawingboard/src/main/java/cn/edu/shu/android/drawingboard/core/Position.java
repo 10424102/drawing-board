@@ -4,6 +4,8 @@ import org.dom4j.Attribute;
 
 import java.util.Iterator;
 
+import cn.edu.shu.android.drawingboard.core.exception.ParserXMLException;
+
 /**
  * Created by yy on 1/22/14.
  */
@@ -15,9 +17,9 @@ public class Position {
         this.x = x;
     }
 
-    public void loadXML(org.dom4j.Element root) throws PhraseXMLException {
+    public void loadXML(org.dom4j.Element root) throws ParserXMLException {
         if(!root.getName().toLowerCase().equals("center")) {
-            throw new PhraseXMLException("Try to use a non-center xml to initialize the Position object.");
+            throw new ParserXMLException("Try to use a non-center xml to initialize the Position object.");
         }
         for(Iterator i = root.attributeIterator();i.hasNext();){
             Attribute a = (Attribute)i.next();
@@ -26,7 +28,7 @@ public class Position {
                     x = Integer.parseInt(a.getValue());
                 }
                 catch (NumberFormatException e){
-                    throw new PhraseXMLException("Value syntax error: center -> x.");
+                    throw new ParserXMLException("Value syntax error: center -> x.");
                 }
             }
             else if(a.getName().toLowerCase().equals("y")){
@@ -34,12 +36,12 @@ public class Position {
                     x = Integer.parseInt(a.getValue());
                 }
                 catch (NumberFormatException e){
-                    throw new PhraseXMLException("Value syntax error: center -> y.");
+                    throw new ParserXMLException("Value syntax error: center -> y.");
                 }
             }
             else
             {
-                throw new PhraseXMLException("center only support attributes: x and y.");
+                throw new ParserXMLException("center only support attributes: x and y.");
             }
         }
     }

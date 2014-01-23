@@ -19,9 +19,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 import cn.edu.shu.android.drawingboard.core.PaintCanvas;
-import cn.edu.shu.android.drawingboard.core.PhraseXMLException;
-import cn.edu.shu.android.drawingboard.core.Tool;
-import cn.edu.shu.android.drawingboard.core.ToolManager;
+import cn.edu.shu.android.drawingboard.core.exception.ParserXMLException;
+import cn.edu.shu.android.drawingboard.core.tool.Tool;
+import cn.edu.shu.android.drawingboard.core.tool.ToolManager;
 import cn.shu.edu.android.drawingboard.R;
 
 public class MainActivity extends Activity {
@@ -56,7 +56,7 @@ public class MainActivity extends Activity {
         }
         try {
             t = mToolManager.buildToolByXML(document);
-        } catch (PhraseXMLException e) {
+        } catch (ParserXMLException e) {
             Log.i("yy", e.toString());
             Log.i("yy", "初始化工具失败");
         }
