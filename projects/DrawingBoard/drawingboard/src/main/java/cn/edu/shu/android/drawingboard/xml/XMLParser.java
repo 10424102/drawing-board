@@ -20,27 +20,40 @@ public class XMLParser {
      *
      * @param inputStream 输入流
      * @return Block 返回位于XML文件根部的一个Block
-     * @author otakuplus
      */
     public static Block getRootBlock(InputStream inputStream) {
         XmlPullParserFactory factory = null;
         XmlPullParser parser = null;
+        Block block = null;
         Block rootBlock = new Block();
+        Attr attr = null;
+        int attrcount = 0;
+        int index = 0;
         try {
             factory = XmlPullParserFactory.newInstance();
             factory.setValidating(false);
-            factory.setNamespaceAware(true);
+            factory.setNamespaceAware(false);
             parser = factory.newPullParser();
             // xmlPullParser的encoding参数为null则试图自动检测符合XML1.0标准的编码
             parser.setInput(inputStream, null);
             int eventType = parser.getEventType();
-            Block block = rootBlock;
+            block = new Block();
             while (eventType != XmlPullParser.END_DOCUMENT) {
                 if (eventType == XmlPullParser.START_TAG) {
                     block.setName(parser.getName());
-                } else if (eventType == XmlPullParser.TEXT) {
+                    attrcount = parser.getAttributeCount();
+                    if (attrcount != -1) {
+                        for (index = 0; index < attrcount; index++) {
+                            attr = new Attr();
+                            attr.setName(parser.getAttributeName(index));
+                            attr.setValue(parser.getAttributeValue(index));
+                            block.addAttr(attr);
+                        }
+                    }
                 } else if (eventType == XmlPullParser.END_TAG) {
+                    rootBlock.addSubBlock(block);
                     block = new Block();
+                    attrcount = 0;
                 }
                 eventType = parser.next();
             }

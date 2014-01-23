@@ -10,14 +10,12 @@ import java.util.List;
  */
 public class Block {
     private String name = null;
-    private int count = 0;
     private ArrayList<Block> blockArrayList = null;
     private ArrayList<Attr> attrArrayList = null;
 
     public Block() {
         blockArrayList = new ArrayList<Block>();
         attrArrayList = new ArrayList<Attr>();
-        count = 0;
     }
 
 
@@ -29,10 +27,6 @@ public class Block {
         return null;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     /**
      * 返回该Block的名称
      *
@@ -40,6 +34,15 @@ public class Block {
      */
     public String getName() {
         return this.name;
+    }
+
+    /**
+     * 设置该Block的名称
+     *
+     * @param name Block的新名称
+     */
+    public void setName(String name) {
+        this.name = name;
     }
 
     /**
@@ -59,7 +62,6 @@ public class Block {
      * 返回子Block列表中的第一个Block
      *
      * @return 子Block列表中的第一个Block
-     * @author otakuplus
      */
     public Block getFirstSubBlock() {
         Block firstSubBlock = null;
@@ -73,7 +75,6 @@ public class Block {
      * 返回该Block的子Block List
      *
      * @return 该Block的子Block List
-     * @author otakuplus
      */
     public List<Block> getSubBlocks() {
         return blockArrayList;
@@ -87,7 +88,6 @@ public class Block {
      * 检测该Block是否含有子Block
      *
      * @return 返回true表示含有非空子Block，返回false表示不含子Block
-     * @author otakuplus
      */
     public boolean hasSubBlock() {
         if (blockArrayList != null) {
@@ -100,7 +100,6 @@ public class Block {
     /**
      * @param subBlockName 指定的Block名称
      * @return List<Block> 名称为subBlockName的Block构成的List
-     * @author otakuplus
      * 返回名为subBlockName的Block List
      */
     public List<Block> getSubBlocksByName(String subBlockName) {
@@ -116,5 +115,28 @@ public class Block {
             }
         }
         return resultBlockList;
+    }
+
+
+    /**
+     * 添加该Block的子block
+     *
+     * @param block 要添加的子Block
+     */
+    public void addSubBlock(Block block) {
+        if (blockArrayList != null) {
+            blockArrayList.add(block);
+        }
+    }
+
+    /**
+     * 添加该Block的属性
+     *
+     * @param attr 要添加的属性
+     */
+    public void addAttr(Attr attr) {
+        if (attrArrayList != null) {
+            attrArrayList.add(attr);
+        }
     }
 }
