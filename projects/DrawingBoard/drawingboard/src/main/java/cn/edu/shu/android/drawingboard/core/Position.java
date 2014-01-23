@@ -1,10 +1,10 @@
 package cn.edu.shu.android.drawingboard.core;
 
-import org.dom4j.Attribute;
-
 import java.util.Iterator;
 
 import cn.edu.shu.android.drawingboard.core.exception.ParserXMLException;
+import cn.edu.shu.android.drawingboard.xml.Attr;
+import cn.edu.shu.android.drawingboard.xml.Block;
 
 /**
  * Created by yy on 1/22/14.
@@ -17,12 +17,12 @@ public class Position {
         this.x = x;
     }
 
-    public void loadXML(org.dom4j.Element root) throws ParserXMLException {
+    public void loadXML(Block root) throws ParserXMLException {
         if(!root.getName().toLowerCase().equals("center")) {
             throw new ParserXMLException("Try to use a non-center xml to initialize the Position object.");
         }
-        for(Iterator i = root.attributeIterator();i.hasNext();){
-            Attribute a = (Attribute)i.next();
+        for(Iterator<Attr> i = root.attrIterator();i.hasNext();){
+            Attr a = i.next();
             if(a.getName().toLowerCase().equals("x")){
                 try{
                     x = Integer.parseInt(a.getValue());

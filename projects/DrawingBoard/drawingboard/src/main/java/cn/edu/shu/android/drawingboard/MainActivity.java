@@ -3,30 +3,15 @@ package cn.edu.shu.android.drawingboard;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.io.SAXReader;
-
-import java.io.FileInputStream;
-import java.io.IOException;
-
-import cn.edu.shu.android.drawingboard.core.PaintCanvas;
-import cn.edu.shu.android.drawingboard.core.exception.ParserXMLException;
-import cn.edu.shu.android.drawingboard.core.tool.Tool;
-import cn.edu.shu.android.drawingboard.core.tool.ToolManager;
-import cn.shu.edu.android.drawingboard.R;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
-
-    private ToolManager mToolManager = ToolManager.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,46 +19,32 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         if (savedInstanceState == null) {
-//            getFragmentManager().beginTransaction()
-//                    .add(R.id.container, new PlaceholderFragment())
-//                    .commit();
+            getFragmentManager().beginTransaction()
+                    .add(R.id.container, new PlaceholderFragment())
+                    .commit();
         }
-        SAXReader reader = new SAXReader();
-        Document document;
-        Tool t = null;
-        FileInputStream inputStream;
-        try {
-            inputStream = this.openFileInput("a.xml");
-        } catch (IOException e) {
-            Log.i("yy", "Cannot open a.xml");
-            return;
-        }
-        try {
-            document = reader.read(inputStream);
-        } catch (DocumentException e) {
-            Log.i("yy", e.toString());
-            return;
-        }
-        try {
-            t = mToolManager.buildToolByXML(document);
-        } catch (ParserXMLException e) {
-            Log.i("yy", e.toString());
-            Log.i("yy", "初始化工具失败");
-        }
-        Button btn = (Button)t.getView(this);
-        this.addContentView(btn, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT));
-        PaintCanvas pc = new PaintCanvas(this);
-        this.addContentView(pc, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT));
-        MyApplication app = MyApplication.getInstance();
-        app.pc = pc;
+
+        Button btn = new Button(this);
+        btn.setText("Click Me");
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String s = "apple";
+                switch(s){
+                    case "apple":
+                        Toast.makeText(v.getContext(),s,Toast.LENGTH_LONG).show();
+                        break;
+                }
+            }
+        });
+        addContentView(btn,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
+        
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
@@ -97,12 +68,11 @@ public class MainActivity extends Activity {
     public static class PlaceholderFragment extends Fragment {
 
         public PlaceholderFragment() {
-
         }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
+                Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
             return rootView;
         }

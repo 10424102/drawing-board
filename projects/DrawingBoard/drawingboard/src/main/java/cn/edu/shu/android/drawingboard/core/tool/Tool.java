@@ -17,7 +17,9 @@ import cn.edu.shu.android.drawingboard.core.exception.ParserXMLException;
 import cn.edu.shu.android.drawingboard.xml.Block;
 
 /**
- * Created by yy on 1/22/14.
+ * 画点，画直线，画圆，画矩形，背景填充，橡皮擦
+ * @version 1.0
+ * @author Yang Yang
  */
 public class Tool {
     private Element structure;
@@ -31,48 +33,51 @@ public class Tool {
         if (root.getName().equalsIgnoreCase("drawingboard-tool")) {
             for (Iterator<Block> i = root.blockIterator(); i.hasNext(); ) {
                 Block e = i.next();
-                String e_name = e.getName().toLowerCase();
-                if (e_name.equals("ui")) {
+                switch (e.getName().toLowerCase()) {
 
-                    //TODO support different resolution, gif
-                    List<Block> icon = e.getSubBlocksByName("icon");
-                    int icon_num = icon.size();
-                    if (icon_num == 0) {
-                        //TODO use default icon
-                    } else if (icon_num == 1) {
-                        iconPath = icon.get(0).getAttrValue("url");
-                    } else {
-                        throw new ParserXMLException("More than one icon.");
-                    }
+                    case "ui":
 
-                } else if (e_name.equals("structure")) {
-
-                    if (e.hasSubBlock()) {
-                        if (e.subBlockCount() == 1) {
-                            Block x = e.getFirstSubBlock();
-                            if (x.getName().equalsIgnoreCase("point")) {
-                                structure = new Point();
-                            } else if (x.getName().equalsIgnoreCase("line")) {
-                                //TODO single element line
-                            }
-                            structure.loadXML(x);
+                        //TODO support different resolution, gif
+                        List<Block> icon = e.getSubBlocksByName("icon");
+                        int icon_num = icon.size();
+                        if (icon_num == 0) {
+                            //TODO use default icon
+                        } else if (icon_num == 1) {
+                            iconPath = icon.get(0).getAttrValue("url");
                         } else {
-                            structure = new ElementGroup();
-                            structure.loadXML(e);
+                            throw new ParserXMLException("More than one icon.");
                         }
-                    } else {
-                        new ParserXMLException("Structure must contain one element.");
-                    }
+                        break;
 
-                } else if (e_name.equals("animation")) {
+                    case "structure":
 
-                } else {
-                    throw new ParserXMLException("Drawingboard-tool only support element: ui, structure and animation.");
+                        if (e.hasSubBlock()) {
+                            if (e.subBlockCount() == 1) {
+                                Block x = e.getFirstSubBlock();
+                                if (x.getName().equalsIgnoreCase("point")) {
+                                    structure = new Point();
+                                } else if (x.getName().equalsIgnoreCase("line")) {
+                                    //TODO single element line
+                                }
+                                structure.loadXML(x);
+                            } else {
+                                structure = new ElementGroup();
+                                structure.loadXML(e);
+                            }
+                        } else {
+                            new ParserXMLException("Structure must contain one element.");
+                        }
+
+                    case "animation":
+                        break;
+
+                    default:
+                        throw new ParserXMLException("Drawingboard-tool only support elements: ui, structure and animation.");
 
                 }
             }
         }
-        throw new ParserXMLException("The root name is not drawingboard-tool");
+        throw new ParserXMLException("Try to use a non-drawingboard-tool xml to initialize the Tool object.");
     }
 
     public View getView(Context c) {
