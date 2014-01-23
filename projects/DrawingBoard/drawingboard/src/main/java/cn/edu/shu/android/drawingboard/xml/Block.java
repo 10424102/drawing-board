@@ -13,19 +13,38 @@ public class Block {
     private ArrayList<Block> blockArrayList = null;
     private ArrayList<Attr> attrArrayList = null;
     private Block parentBlock = null;
+    private int counter = 0;
+    private Iterator<Block> blockIterator = null;
 
     public Block() {
         blockArrayList = new ArrayList<Block>();
         attrArrayList = new ArrayList<Attr>();
     }
 
-
+    /**
+     * 返回该Block的子Block的迭代器
+     *
+     * @return Iterator<Block>的迭代器
+     */
     public Iterator<Block> blockIterator() {
-        return null;
+        Iterator<Block> blockIterator = null;
+        if (blockArrayList != null) {
+            blockIterator = blockArrayList.iterator();
+        }
+        return blockIterator;
     }
 
+    /**
+     * 返回该Block的Attr的迭代器
+     *
+     * @return Iterator<Attr>的迭代器
+     */
     public Iterator<Attr> attrIterator() {
-        return null;
+        Iterator<Attr> attrIterator = null;
+        if (attrArrayList != null) {
+            attrIterator = attrArrayList.iterator();
+        }
+        return attrIterator;
     }
 
     /**
@@ -92,12 +111,13 @@ public class Block {
 
     /**
      * 返回该Block的最后一个子Block
+     *
      * @return 该Block的最后一个子Block
      */
     public Block getLastSubBlock() {
         Block lastSubBlock = null;
         int size = -1;
-        if(blockArrayList != null && blockArrayList.isEmpty() == false){
+        if (blockArrayList != null && blockArrayList.isEmpty() == false) {
             size = blockArrayList.size();
             lastSubBlock = blockArrayList.get(size - 1);
         }
