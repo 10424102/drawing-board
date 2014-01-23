@@ -12,6 +12,7 @@ public class Block {
     private String name = null;
     private ArrayList<Block> blockArrayList = null;
     private ArrayList<Attr> attrArrayList = null;
+    private Block parentBlock = null;
 
     public Block() {
         blockArrayList = new ArrayList<Block>();
@@ -59,6 +60,24 @@ public class Block {
     }
 
     /**
+     * 获得该Block的父Block
+     *
+     * @return 该Block的父Block
+     */
+    public Block getParentBlock() {
+        return parentBlock;
+    }
+
+    /**
+     * 设置该Block的父Block
+     *
+     * @param parentBlock 父Block的引用
+     */
+    public void setParentBlock(Block parentBlock) {
+        this.parentBlock = parentBlock;
+    }
+
+    /**
      * 返回子Block列表中的第一个Block
      *
      * @return 子Block列表中的第一个Block
@@ -69,6 +88,20 @@ public class Block {
             firstSubBlock = blockArrayList.get(0);
         }
         return firstSubBlock;
+    }
+
+    /**
+     * 返回该Block的最后一个子Block
+     * @return 该Block的最后一个子Block
+     */
+    public Block getLastSubBlock() {
+        Block lastSubBlock = null;
+        int size = -1;
+        if(blockArrayList != null && blockArrayList.isEmpty() == false){
+            size = blockArrayList.size();
+            lastSubBlock = blockArrayList.get(size - 1);
+        }
+        return lastSubBlock;
     }
 
     /**

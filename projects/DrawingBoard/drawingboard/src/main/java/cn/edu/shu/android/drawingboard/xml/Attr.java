@@ -7,7 +7,7 @@ public class Attr {
     private String name;
     private String value;
 
-    public String setName(String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -15,7 +15,7 @@ public class Attr {
         return name;
     }
 
-    public String setValue(String value) {
+    public void setValue(String value) {
         this.value = value;
     }
 

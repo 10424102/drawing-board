@@ -25,21 +25,29 @@ public class XMLParser {
         XmlPullParserFactory factory = null;
         XmlPullParser parser = null;
         Block block = null;
+        Block parent = null;
         Block rootBlock = new Block();
+        rootBlock.setName("Root0");
         Attr attr = null;
         int attrcount = 0;
         int index = 0;
+        int depth = 0;
         try {
             factory = XmlPullParserFactory.newInstance();
             factory.setValidating(false);
             factory.setNamespaceAware(false);
             parser = factory.newPullParser();
-            // xmlPullParser的encoding参数为null则试图自动检测符合XML1.0标准的编码
+            //xmlPullParser的encoding参数为null则试图自动检测符合XML1.0标准的编码
             parser.setInput(inputStream, null);
             int eventType = parser.getEventType();
-            block = new Block();
+            parent = rootBlock;
             while (eventType != XmlPullParser.END_DOCUMENT) {
                 if (eventType == XmlPullParser.START_TAG) {
+                    // getDepth方法返回的层数以最外层为0层，第一个根节点为1层计算
+                    if(depth != 0 && depth != parser.getDepth()){
+                        parent = parent.getLastSubBlock();
+                    }
+                    block = new Block();
                     block.setName(parser.getName());
                     attrcount = parser.getAttributeCount();
                     if (attrcount != -1) {
@@ -50,15 +58,19 @@ public class XMLParser {
                             block.addAttr(attr);
                         }
                     }
+                    // 第2层结构开始，添加父子关系
+                    block.setParentBlock(parent);
+                    parent.addSubBlock(block);
+                    depth = parser.getDepth();
                 } else if (eventType == XmlPullParser.END_TAG) {
-                    rootBlock.addSubBlock(block);
-                    block = new Block();
-                    attrcount = 0;
+                    //每遇到一个闭标签，说明这一层一个标签结束，应该更新parent
+                    if (block.getParentBlock() != null) {
+                        parent = block.getParentBlock();
+                    }
+                    depth--;
                 }
                 eventType = parser.next();
             }
-            // 释放最后生成的Block
-            block = null;
         } catch (XmlPullParserException e) {
             Log.e(XMLParser.class.getName(), "XMlParserError", e);
         } catch (IOException e) {
@@ -66,5 +78,4 @@ public class XMLParser {
         }
         return rootBlock;
     }
-
 }
