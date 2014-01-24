@@ -133,8 +133,26 @@ public class Block {
         return blockArrayList;
     }
 
+    /**
+     * 查找该区块内名称为attrName的属性的值
+     *
+     * @param attrName 属性的名称
+     * @return 该属性的值
+     */
     public String getAttrValue(String attrName) {
-        return null;
+        String result = null;
+        if (attrArrayList != null && attrArrayList.isEmpty() == false) {
+            Iterator<Attr> iterator = attrArrayList.iterator();
+            Attr attr = null;
+            while (iterator.hasNext()) {
+                attr = iterator.next();
+                if (attr != null && attr.getName().equals(attrName)) {
+                    result = attr.getValue();
+                    break;
+                }
+            }
+        }
+        return result;
     }
 
     /**

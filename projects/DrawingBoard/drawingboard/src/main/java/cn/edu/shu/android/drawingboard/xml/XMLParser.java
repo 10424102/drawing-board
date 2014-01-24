@@ -21,14 +21,14 @@ public class XMLParser {
      * @param inputStream 输入流
      * @return Block 返回位于XML文件根部的一个Block
      */
-    public static Block getRootBlock(InputStream inputStream) {
+    public static Block getRootBlock(InputStream inputStream) throws XMLParserBaseException {
         XmlPullParserFactory factory = null;
         XmlPullParser parser = null;
         Block block = null;
         Block parent = null;
-        Block rootBlock = new Block();
-        rootBlock.setName("Root0");
+        Block rootBlock = null;
         Attr attr = null;
+        boolean firstTag = false;
         int attrcount = 0;
         int index = 0;
         int depth = 0;
@@ -40,14 +40,17 @@ public class XMLParser {
             //xmlPullParser的encoding参数为null则试图自动检测符合XML1.0标准的编码
             parser.setInput(inputStream, null);
             int eventType = parser.getEventType();
-            parent = rootBlock;
             while (eventType != XmlPullParser.END_DOCUMENT) {
                 if (eventType == XmlPullParser.START_TAG) {
                     // getDepth方法返回的层数以最外层为0层，第一个根节点为1层计算
-                    if(depth != 0 && depth != parser.getDepth()){
+                    if (depth != 0 && depth != parser.getDepth()) {
                         parent = parent.getLastSubBlock();
                     }
                     block = new Block();
+                    if (firstTag == false) {
+                        parent = block;
+                        firstTag = true;
+                    }
                     block.setName(parser.getName());
                     attrcount = parser.getAttributeCount();
                     if (attrcount != -1) {
@@ -73,8 +76,10 @@ public class XMLParser {
             }
         } catch (XmlPullParserException e) {
             Log.e(XMLParser.class.getName(), "XMlParserError", e);
+            throw new XMLParserBaseException("Error caused by XMLPullParser while parsing xml!");
         } catch (IOException e) {
             Log.e(XMLParser.class.getName(), "XMlParserError", e);
+            throw new XMLParserBaseException("Error caused by io reading while parsing xml!");
         }
         return rootBlock;
     }
