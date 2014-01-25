@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<test>
+    <structure>
+        <point color="red" style="fill" size="5">
+            <center x="1" y="2"/>
+        </point>
+        <point color="red" style="fill" size="5">
+            <center x="1" y="2"/>
+        </point>
+        <point color="red" style="fill" size="5">
+            <center x="1" y="2"/>
+        </point>
+    </structure>
+</test>
