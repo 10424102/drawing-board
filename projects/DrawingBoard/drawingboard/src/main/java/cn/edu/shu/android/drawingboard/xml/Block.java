@@ -10,15 +10,18 @@ import java.util.List;
  */
 public class Block {
     private String name = null;
-    private ArrayList<Block> blockArrayList = null;
-    private ArrayList<Attr> attrArrayList = null;
+    private ArrayList<Block> blockArrayList = new ArrayList<>();
+    private ArrayList<Attr> attrArrayList = new ArrayList<>();
     private Block parentBlock = null;
     private int counter = 0;
     private Iterator<Block> blockIterator = null;
 
-    public Block() {
-        blockArrayList = new ArrayList<Block>();
-        attrArrayList = new ArrayList<Attr>();
+    public Block(String name,Block parent){
+        setName(name);
+        setParentBlock(parent);
+    }
+    public Block(){
+        
     }
 
     /**
@@ -162,7 +165,7 @@ public class Block {
      */
     public boolean hasSubBlock() {
         if (blockArrayList != null) {
-            return blockArrayList.isEmpty();
+            return !blockArrayList.isEmpty();
         } else {
             return false;
         }

@@ -11,7 +11,6 @@ import java.lang.System;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import cn.edu.shu.android.drawingboard.xml.Block;
 import cn.edu.shu.android.drawingboard.xml.XMLParser;
 import cn.edu.shu.android.drawingboard.xml.XMLParserBaseException;
 

@@ -8,6 +8,11 @@ public class Attr {
     private String name;
     private String value;
 
+    public Attr(String name,String value){
+        setName(name);
+        setValue(value);
+    }
+
     public void setName(String name) {
         this.name = name;
     }

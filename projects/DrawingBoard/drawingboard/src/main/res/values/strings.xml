@@ -5,4 +5,14 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 
+    <!-- MENU -->
+    <string name="menu_toolbox">Tool box</string>
+    <string name="menu_add_tool">Add tool</string>
+    <string name="menu_remove_tool">Remove tool</string>
+    <string name="menu_save_canvas">Save canvas</string>
+    <string name="menu_save_template">Save template</string>
+
+    <!-- Toolbox -->
+    <string name="toolbox_title">Pick a tool</string>
+
 </resources>

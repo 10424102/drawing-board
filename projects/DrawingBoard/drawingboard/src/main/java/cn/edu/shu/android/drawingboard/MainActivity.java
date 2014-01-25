@@ -1,15 +1,15 @@
 package cn.edu.shu.android.drawingboard;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.Toast;
+
+import cn.edu.shu.android.drawingboard.core.PaintCanvas;
+import cn.edu.shu.android.drawingboard.core.tool.Tool;
+import cn.edu.shu.android.drawingboard.core.tool.ToolManager;
 
 public class MainActivity extends Activity {
 
@@ -17,34 +17,33 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //setContentView(new PaintCanvas(this));
 
-        if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment())
-                    .commit();
-        }
+        PaintCanvas pc = (PaintCanvas)findViewById(R.id.my_canvas);
+        MyApplication app = MyApplication.getInstance();
+        app.setPc(pc);
 
-        Button btn = new Button(this);
-        btn.setText("Click Me");
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String s = "apple";
-                switch(s){
-                    case "apple":
-                        Toast.makeText(v.getContext(),s,Toast.LENGTH_LONG).show();
-                        break;
-                }
-            }
-        });
-        addContentView(btn,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        ToolManager toolManager = ToolManager.getInstance();
+        Tool t = toolManager.getToolById(1);
+        View v = t.getView(this);
+
+        addContentView(v, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+//        try {
+//            InputStream is = openFileInput(Environment.getExternalStorageDirectory().toString());
+//        } catch (Exception e) {
+//
+//            e.printStackTrace();
+//        }
+
+        //app.getCanvas().drawColor(Color.BLACK);
 
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        
+
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
@@ -56,26 +55,23 @@ public class MainActivity extends Activity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id) {
+            case R.id.menu_toolbox:
+                ToolboxFragment f = new ToolboxFragment();
+                f.show(getFragmentManager(), "toolbox");
+                break;
+            case R.id.menu_add_tool:
+                break;
+            case R.id.menu_remove_tool:
+                break;
+            case R.id.menu_save_canvas:
+                break;
+            case R.id.menu_save_template:
+                break;
+            case R.id.action_settings:
+                return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            return rootView;
-        }
     }
 
 }

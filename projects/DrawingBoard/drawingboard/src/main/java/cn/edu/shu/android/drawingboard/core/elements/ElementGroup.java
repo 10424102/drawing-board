@@ -6,13 +6,10 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.PriorityQueue;
 
-import cn.edu.shu.android.drawingboard.core.exception.ParserXMLException;
+import cn.edu.shu.android.drawingboard.core.exception.BuildElementException;
 import cn.edu.shu.android.drawingboard.core.transform.Transform;
 import cn.edu.shu.android.drawingboard.xml.Block;
 
-/**
- * Created by yy on 1/22/14.
- */
 public class ElementGroup extends Element {
 
     /**
@@ -25,9 +22,12 @@ public class ElementGroup extends Element {
         }
     });
 
-    public ElementGroup()
-    {
-        setXMLBlockName("element-group");
+    public ElementGroup() {
+
+    }
+
+    public ElementGroup(Block b) throws BuildElementException {
+        loadXML(b);
     }
 
     public void addElement(Element e) {
@@ -42,30 +42,30 @@ public class ElementGroup extends Element {
 
     /**
      * 组生成策略，也许不是，每个元素分别生成
+     *
      * @param v
      */
     @Override
     public void generate(View v) {
-        for(Iterator<Element> i = group.iterator();i.hasNext();){
+        for (Iterator<Element> i = group.iterator(); i.hasNext(); ) {
             Element e = i.next();
             e.generate(v);
         }
     }
 
     @Override
-    public void loadXML(Block root) throws ParserXMLException {
+    public void loadXML(Block root) throws BuildElementException {
         int zindex = 0;
-        for(Iterator i = root.blockIterator();i.hasNext();zindex++){
-            Block e = (Block)i.next();
+        for (Iterator i = root.blockIterator(); i.hasNext(); zindex++) {
+            Block b = (Block) i.next();
 
-            //TODO 这里一样的操作仅仅是因为工具名称不同
-            if(e.getName().equalsIgnoreCase("point")){
-                Element x = new Point();
-                x.loadXML(e);
-                x.setZindex(zindex);
-                group.add(x);
-            }else if(e.getName().equalsIgnoreCase("line")){
-                //TODO generate different kind of element
+            switch (b.getName().toLowerCase()) {
+                case "point":
+                    Element e = new Point(b, zindex);
+                    addElement(e);
+                    break;
+                case "line":
+                    break;
             }
         }
     }
