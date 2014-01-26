@@ -15,4 +15,9 @@
     <!-- Toolbox -->
     <string name="toolbox_title">Pick a tool</string>
 
+    <!-- Remove tool -->
+    <string name="remove_tool_title">Remove tools</string>
+    <string name="remove_tool_cancel">Cancel</string>
+    <string name="remove_tool_remove">Remove</string>
+
 </resources>

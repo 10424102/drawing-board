@@ -25,6 +25,11 @@ import cn.edu.shu.android.drawingboard.xml.Block;
 public class Tool {
     private static int tool_count = 0;
     private Element structure;
+
+    public String getIconPath() {
+        return iconPath;
+    }
+
     private String iconPath;
     private String name;
     private int id;
@@ -136,5 +141,9 @@ public class Tool {
             }
         });
         return btn;
+    }
+    public void startUsing()
+    {
+        structure.generate(MyApplication.getInstance().pc);
     }
 }

@@ -4,8 +4,10 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,50 +21,69 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import cn.edu.shu.android.drawingboard.core.tool.Tool;
 import cn.edu.shu.android.drawingboard.core.tool.ToolDisplayModel;
 import cn.edu.shu.android.drawingboard.core.tool.ToolManager;
 
 /**
  * Created by yy on 1/25/14.
  */
-public class ToolboxFragment extends DialogFragment {
+public class RemoveToolFragment extends DialogFragment {
 
     private List<ToolDisplayModel> list;
+    private boolean[] selected;
 
     private MyAdapter adapter;
 
     private MyApplication app = MyApplication.getInstance();
 
-    public ToolboxFragment(){
+    public RemoveToolFragment(){
 
     }
-
 
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         list = ToolManager.getInstance().getToolList();
+        selected = new boolean[list.size()];
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        //LayoutInflater inflater = getActivity().getLayoutInflater();
-        //View view = inflater.inflate(R.layout.toolbox,null);
-        //view.setMinimumHeight((int)(app.getScreenHeight()*0.7));
-        //GridView grid = (GridView)view.findViewById(R.id.toolbox_grid);
-
         GridView grid = new GridView(getActivity());
         grid.setNumColumns(4);
+        grid.setHorizontalSpacing(2);
         adapter = new MyAdapter(getActivity());
         grid.setAdapter(adapter);
         grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Tool t = ToolManager.getInstance().getTool(list.get(position).getId());
-                t.setCanvas(MyApplication.getInstance().getCanvas());
-                t.startUsing();
-                dismiss();
+                if(selected[position] == true){
+                    selected[position] = false;
+                    view.setBackgroundColor(Color.TRANSPARENT);
+                }else{
+                    selected[position] = true;
+                    view.setBackgroundColor(Color.LTGRAY);
+//                    TextView tv = (TextView)view.findViewById(R.id.toolbox_item_text);
+//                    tv.setBackgroundColor(Color.BLACK);
+//                    tv.setTextColor(Color.WHITE);
+                }
             }
         });
-        builder.setView(grid).setTitle(getResources().getString(R.string.toolbox_title));
+        builder.setView(grid)
+                .setTitle(getResources().getString(R.string.remove_tool_title))
+                .setPositiveButton(R.string.remove_tool_remove, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        for (int i = 0; i < selected.length; i++) {
+                            if (selected[i] == true) {
+                                ToolManager.getInstance().removeTool(list.get(i).getId());
+                            }
+                        }
+                    }
+                })
+                .setNeutralButton(R.string.remove_tool_cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
         return builder.create();
     }
 

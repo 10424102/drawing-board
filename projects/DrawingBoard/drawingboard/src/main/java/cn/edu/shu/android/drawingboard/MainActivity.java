@@ -6,9 +6,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import cn.edu.shu.android.drawingboard.core.PaintCanvas;
-import cn.edu.shu.android.drawingboard.core.tool.Tool;
 import cn.edu.shu.android.drawingboard.core.tool.ToolManager;
 
 public class MainActivity extends Activity {
@@ -23,20 +23,16 @@ public class MainActivity extends Activity {
         MyApplication app = MyApplication.getInstance();
         app.setPc(pc);
 
-        ToolManager toolManager = ToolManager.getInstance();
-        Tool t = toolManager.getToolById(1);
-        View v = t.getView(this);
+        Button btn = new Button(this);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ToolManager.getInstance().getToolList().clear();
+            }
+        });
+        btn.setText("Clear");
 
-        addContentView(v, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
-//        try {
-//            InputStream is = openFileInput(Environment.getExternalStorageDirectory().toString());
-//        } catch (Exception e) {
-//
-//            e.printStackTrace();
-//        }
-
-        //app.getCanvas().drawColor(Color.BLACK);
+        addContentView(btn, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
     }
 
@@ -57,12 +53,12 @@ public class MainActivity extends Activity {
         int id = item.getItemId();
         switch (id) {
             case R.id.menu_toolbox:
-                ToolboxFragment f = new ToolboxFragment();
-                f.show(getFragmentManager(), "toolbox");
+                new ToolboxFragment().show(getFragmentManager(), "toolbox");
                 break;
             case R.id.menu_add_tool:
                 break;
             case R.id.menu_remove_tool:
+                new RemoveToolFragment().show(getFragmentManager(),"remove_tool");
                 break;
             case R.id.menu_save_canvas:
                 break;

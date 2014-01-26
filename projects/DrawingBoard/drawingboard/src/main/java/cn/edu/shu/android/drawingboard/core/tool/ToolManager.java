@@ -27,6 +27,15 @@ public class ToolManager {
         return instance;
     }
 
+    public void removeTool(int toolId){
+        for(Tool t : tools){
+            if(t.getId() == toolId){
+                tools.remove(t);
+                break;
+            }
+        }
+    }
+
     private ToolManager() {
 
     }
@@ -77,14 +86,18 @@ public class ToolManager {
         //TODO load all
     }
 
-    public List<Tool> getToolList()
+    public List<ToolDisplayModel> getToolList()
     {
-        return tools;
+        List<ToolDisplayModel> ret = new ArrayList<>();
+        for(Tool t : tools){
+            ret.add(new ToolDisplayModel(t));
+        }
+        return ret;
     }
 
-    public Tool getToolById(int id) {
+    public Tool getTool(int toolId) {
         for(Tool t : tools){
-            if(t.getId() == id)return t;
+            if(t.getId() == toolId)return t;
         }
         return null;
     }
