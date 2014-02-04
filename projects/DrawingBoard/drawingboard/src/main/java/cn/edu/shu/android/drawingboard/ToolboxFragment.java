@@ -22,6 +22,7 @@ import java.util.List;
 import cn.edu.shu.android.drawingboard.core.tool.Tool;
 import cn.edu.shu.android.drawingboard.core.tool.ToolDisplayModel;
 import cn.edu.shu.android.drawingboard.core.tool.ToolManager;
+import cn.edu.shu.android.drawingboard.util.BitmapUtil;
 
 /**
  * Created by yy on 1/25/14.
@@ -34,10 +35,9 @@ public class ToolboxFragment extends DialogFragment {
 
     private MyApplication app = MyApplication.getInstance();
 
-    public ToolboxFragment(){
+    public ToolboxFragment() {
 
     }
-
 
 
     @Override
@@ -57,7 +57,7 @@ public class ToolboxFragment extends DialogFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Tool t = ToolManager.getInstance().getTool(list.get(position).getId());
-                t.setCanvas(MyApplication.getInstance().getCanvas());
+                t.setCanvas(app.getPaintCanvas().getCanvas());
                 t.startUsing();
                 dismiss();
             }
@@ -66,11 +66,11 @@ public class ToolboxFragment extends DialogFragment {
         return builder.create();
     }
 
-    private class MyAdapter extends BaseAdapter{
+    private class MyAdapter extends BaseAdapter {
 
         private LayoutInflater inflater;
 
-        public MyAdapter(Context context){
+        public MyAdapter(Context context) {
             inflater = LayoutInflater.from(context);
         }
 
@@ -89,7 +89,7 @@ public class ToolboxFragment extends DialogFragment {
             return list.get(position).getId();
         }
 
-        private class Holder{
+        private class Holder {
             RelativeLayout wrapper;
             ImageView icon;
             TextView text;
@@ -99,28 +99,27 @@ public class ToolboxFragment extends DialogFragment {
         public View getView(int position, View convertView, ViewGroup parent) {
 
             Holder holder;
-            if(convertView == null){
-                convertView = inflater.inflate(R.layout.toolbox_item,parent,false);
+            if (convertView == null) {
+                convertView = inflater.inflate(R.layout.toolbox_item, parent, false);
                 holder = new Holder();
                 holder.wrapper = (RelativeLayout) convertView.findViewById(R.id.toolbox_item_wrapper);
                 holder.text = (TextView) convertView.findViewById(R.id.toolbox_item_text);
                 holder.icon = (ImageView) convertView.findViewById(R.id.toolbox_item_icon);
                 convertView.setTag(holder);
-            }else{
-                holder = (Holder)convertView.getTag();
+            } else {
+                holder = (Holder) convertView.getTag();
             }
 
-            ToolDisplayModel t = (ToolDisplayModel)getItem(position);
+            ToolDisplayModel t = (ToolDisplayModel) getItem(position);
             holder.text.setText(t.getName());
 
             //handle icon
             BitmapFactory.Options decodeOption = new BitmapFactory.Options();
-            decodeOption.outWidth = (int)(parent.getWidth() * 0.6);
+            decodeOption.outWidth = (int) (parent.getWidth() * 0.6);
             decodeOption.outHeight = decodeOption.outWidth;
-            Bitmap bmp = BitmapFactory.decodeFile(t.getIconPath(),decodeOption);
-            if(bmp == null)
-            {
-                bmp = BitmapUtil.getBitmap(R.drawable.default_tool_icon,parent.getWidth() * 0.6);
+            Bitmap bmp = BitmapFactory.decodeFile(t.getIconPath(), decodeOption);
+            if (bmp == null) {
+                bmp = BitmapUtil.getBitmap(R.drawable.default_tool_icon, parent.getWidth() * 0.6);
             }
 
             holder.icon.setImageBitmap(bmp);

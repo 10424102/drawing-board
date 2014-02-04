@@ -1,6 +1,7 @@
 package cn.edu.shu.android.drawingboard;
 
 import android.app.Activity;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,7 +12,12 @@ import android.widget.Button;
 import cn.edu.shu.android.drawingboard.core.PaintCanvas;
 import cn.edu.shu.android.drawingboard.core.tool.ToolManager;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements PaintColorPickerDialog.OnColorChangedListener,
+        PaintSizePickerDialog.OnSizeChangedListener,
+        PaintStylePickerDialog.OnStyleChangedListener {
+
+    public static final MyApplication app = MyApplication.getInstance();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,9 +25,9 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         //setContentView(new PaintCanvas(this));
 
-        PaintCanvas pc = (PaintCanvas)findViewById(R.id.my_canvas);
+        PaintCanvas pc = (PaintCanvas) findViewById(R.id.my_canvas);
         MyApplication app = MyApplication.getInstance();
-        app.setPc(pc);
+        app.setPaintCanvas(pc);
 
         Button btn = new Button(this);
         btn.setOnClickListener(new View.OnClickListener() {
@@ -33,6 +39,9 @@ public class MainActivity extends Activity {
         btn.setText("Clear");
 
         addContentView(btn, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        FloatToolboxFragment ff = new FloatToolboxFragment();
+        getFragmentManager().beginTransaction().add(R.id.main_container, ff).commit();
 
     }
 
@@ -58,16 +67,42 @@ public class MainActivity extends Activity {
             case R.id.menu_add_tool:
                 break;
             case R.id.menu_remove_tool:
-                new RemoveToolFragment().show(getFragmentManager(),"remove_tool");
+                new RemoveToolFragment().show(getFragmentManager(), "remove_tool");
                 break;
             case R.id.menu_save_canvas:
                 break;
             case R.id.menu_save_template:
                 break;
+            case R.id.menu_paint_color:
+                new PaintColorPickerDialog(this, this, app.getPaint().getColor())
+                        .show();
+                return true;
+            case R.id.menu_paint_size:
+                new PaintSizePickerDialog(this, (int) app.getPaint().getStrokeWidth())
+                        .show(getFragmentManager(), "paint_size");
+                return true;
+            case R.id.menu_paint_style:
+                new PaintStylePickerDialog(this, app.getPaint().getStyle())
+                        .show(getFragmentManager(), "paint_style");
+                return true;
             case R.id.action_settings:
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void colorChanged(int color) {
+        app.getPaint().setColor(color);
+    }
+
+    @Override
+    public void sizeChanged(int size) {
+        app.getPaint().setStrokeWidth(size);
+    }
+
+    @Override
+    public void styleChanged(Paint.Style style) {
+        app.getPaint().setStyle(style);
+    }
 }

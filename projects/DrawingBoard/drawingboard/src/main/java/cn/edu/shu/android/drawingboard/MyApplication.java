@@ -2,13 +2,15 @@ package cn.edu.shu.android.drawingboard;
 
 import android.app.Application;
 import android.content.Context;
-import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
+
+import java.io.File;
 
 import cn.edu.shu.android.drawingboard.core.PaintCanvas;
 import cn.edu.shu.android.drawingboard.core.tool.ToolManager;
@@ -18,19 +20,66 @@ import cn.edu.shu.android.drawingboard.core.tool.ToolManager;
  */
 public class MyApplication extends Application {
     private static MyApplication instance;
+    private PaintCanvas mPaintCanvas = null;
+    private Paint mPaint = null;
 
-    public void setPc(PaintCanvas pc) {
-        this.pc = pc;
+    public void setPaintCanvas(PaintCanvas pc) {
+        mPaintCanvas = pc;
     }
 
-    public PaintCanvas pc = null;
+    public PaintCanvas getPaintCanvas() {
+        return mPaintCanvas;
+    }
+
+    public Paint getPaint() {
+        return mPaint;
+    }
+
     public Bundle transfer;
-    public static final String APP_HOME = Environment.getDataDirectory().getParent() + "/";
-    public static final String PLUGIN_HOME = Environment.getDataDirectory().getParent() + "/plugins/";
-    public static final String TEMPLATE_HOME = Environment.getDataDirectory().getParent() + "/templates/";
-    public static final String GALLERY_HOME = Environment.getDataDirectory().getParent() + "/gallery/";
+    public static final String APP_HOME = Environment.getExternalStorageDirectory().getPath() + "/drawingboard/";
+    public static final String PLUGIN_DIR = "plugins/";
+    public static final String TEMPLATE_DIR = "templates/";
+    public static final String GALLERY_DIR = "gallery/";
     private static int screenWidth;
     private static int screenHeight;
+
+    static {
+        File home = new File(APP_HOME);
+        if (!home.exists()) {
+            if (home.mkdir()) {
+                Log.i("yy", "Created home directory.");
+            }
+        } else {
+            Log.i("yy", "Home directory exists.");
+        }
+
+        File plugins = new File(APP_HOME + PLUGIN_DIR);
+        if (!plugins.exists()) {
+            if (plugins.mkdir()) {
+                Log.i("yy", "Created plugin directory.");
+            }
+        } else {
+            Log.i("yy", "Plugin directory exists.");
+        }
+
+        File templates = new File(APP_HOME + TEMPLATE_DIR);
+        if (!templates.exists()) {
+            if (templates.mkdir()) {
+                Log.i("yy", "Created template directory.");
+            }
+        } else {
+            Log.i("yy", "Template directory exists.");
+        }
+
+        File gallery = new File(APP_HOME + GALLERY_DIR);
+        if (!gallery.exists()) {
+            if (gallery.mkdir()) {
+                Log.i("yy", "Created gallery directory.");
+            }
+        } else {
+            Log.i("yy", "Gallery directory exists.");
+        }
+    }
 
     public int getScreenWidth() {
         return screenWidth;
@@ -41,70 +90,47 @@ public class MyApplication extends Application {
     }
 
     private void setScreenSize() {
-        WindowManager wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
-        Display display = wm.getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        screenWidth = size.x;
-        screenHeight = size.y;
-        Log.i("yy", "Screen Size: " + screenWidth + "," + screenHeight);
+
     }
-
-//    public MyApplication() {
-//    }
-
 
     @Override
     public void onCreate() {
         super.onCreate();
         instance = this;
         transfer = new Bundle();
-        setScreenSize();
+
+        //get screen size
+        WindowManager wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        screenWidth = size.x;
+        screenHeight = size.y;
+
+        //initialize paint
+        mPaint = new Paint();
+
+        //load 'plugins/'
         ToolManager mToolManager = ToolManager.getInstance();
         try {
-            mToolManager.buildToolByXML("/DrawPointTool.xml");
-            mToolManager.buildToolByXML("/DrawPointTool.xml");
-            mToolManager.buildToolByXML("/DrawPointTool.xml");
-
-            mToolManager.buildToolByXML("/DrawPointTool.xml");
-            mToolManager.buildToolByXML("/DrawPointTool.xml");
-            mToolManager.buildToolByXML("/DrawPointTool.xml");
-
-            mToolManager.buildToolByXML("/DrawPointTool.xml");
-            mToolManager.buildToolByXML("/DrawPointTool.xml");
-            mToolManager.buildToolByXML("/DrawPointTool.xml");
-
-            mToolManager.buildToolByXML("/DrawPointTool.xml");
-            mToolManager.buildToolByXML("/DrawPointTool.xml");
-            mToolManager.buildToolByXML("/DrawPointTool.xml");
-
-            mToolManager.buildToolByXML("/DrawPointTool.xml");
-            mToolManager.buildToolByXML("/DrawPointTool.xml");
-            mToolManager.buildToolByXML("/DrawPointTool.xml");
-
-            mToolManager.buildToolByXML("/DrawPointTool.xml");
-            mToolManager.buildToolByXML("/DrawPointTool.xml");
-            mToolManager.buildToolByXML("/DrawPointTool.xml");
+            mToolManager.buildTool("DrawPointTool");
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
 
-    @Override
-    public void registerActivityLifecycleCallbacks(ActivityLifecycleCallbacks callback) {
-        super.registerActivityLifecycleCallbacks(callback);
+
     }
 
     public static MyApplication getInstance() {
         return instance;
     }
 
-    public Canvas getCanvas() {
-        return pc.getCanvas();
-    }
-
-    public void update() {
-        pc.update();
-    }
+//    public Canvas getCanvas() {
+//        return pc.getCanvas();
+//    }
+//
+//    public void update() {
+//        pc.update();
+//    }
 
 }

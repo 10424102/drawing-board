@@ -16,32 +16,31 @@ import cn.edu.shu.android.drawingboard.xml.Block;
 public class Point extends Element {
     private Paint pen;
 
-    public Point(Block b,int zindex)throws BuildElementException{
+    public Point(Block b, int zindex) throws BuildElementException {
         super(b);
         this.setZindex(zindex);
         pen = new Paint();
         loadXML(b);
     }
 
-    private void setPenSize(String s) throws BuildElementException{
-        try{
+    private void setPenSize(String s) throws BuildElementException {
+        try {
             pen.setStrokeWidth(Float.parseFloat(s));
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new BuildElementException(e);
         }
     }
 
-    private void setPenColor(String s) throws BuildElementException{
-        try{
+    private void setPenColor(String s) throws BuildElementException {
+        try {
             pen.setColor(Color.parseColor(s));
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new BuildElementException(e);
         }
     }
 
-    private void setPenStyle(String s) throws BuildElementException{
-        switch(s.toUpperCase())
-        {
+    private void setPenStyle(String s) throws BuildElementException {
+        switch (s.toUpperCase()) {
             case "FILL":
                 pen.setStyle(Paint.Style.FILL);
                 break;
@@ -104,7 +103,7 @@ public class Point extends Element {
                         center.setY(event.getY());
                         draw();
                         MyApplication app = MyApplication.getInstance();
-                        app.pc.invalidate();
+                        app.getPaintCanvas().invalidate();
                         break;
                 }
 

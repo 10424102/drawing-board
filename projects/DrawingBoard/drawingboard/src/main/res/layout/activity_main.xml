@@ -1,15 +1,19 @@
-<LinearLayout
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_container"
     android:background="#43219014">
-
 
     <cn.edu.shu.android.drawingboard.core.PaintCanvas
         android:id="@+id/my_canvas"
         android:layout_height="200dp"
-        android:layout_width="200dp"
-         />
+        android:layout_width="200dp" />
 
-</LinearLayout>
+    <cn.edu.shu.android.drawingboard.core.CanvasElement
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="200dp"
+        android:layout_marginLeft="200dp" />
+
+</FrameLayout>

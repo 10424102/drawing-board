@@ -1,7 +1,5 @@
 package cn.edu.shu.android.drawingboard.core.tool;
 
-import android.os.Environment;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
@@ -44,32 +42,18 @@ public class ToolManager {
 
     }
 
-    public void loadTool(String name) throws BuildToolException{
-
-    }
-
-    public void loadToolFromDir(String path) throws BuildToolException{
-
-    }
-
-    public void loadToolFromFile(String path) throws BuildToolException{
-        try{
-            File src = new File(path);
-            //TODO copy to /tmp
-            //TODO decompress it
-            //TODO load
-            //TODO clean
-        }
-        catch (Exception e)
-        {
-            throw new BuildToolException(e);
-        }
+    public void buildTool(String name) throws BuildToolException {
+        String toolDir = app.APP_HOME + app.PLUGIN_DIR + name + "/";
+        File toolXml = new File(toolDir + name + ".xml");
+        if (toolXml.exists()) {
+            buildToolByXML(toolDir + name + ".xml");
+        } else throw new BuildToolException("Tool built file doesn't exists: " + toolXml.getPath());
     }
 
     public Tool buildToolByXML(String XMLFilePath) throws BuildToolException {
         Tool t = null;
         try{
-            File xml = new File(Environment.getExternalStorageDirectory().getPath() + XMLFilePath);
+            File xml = new File(XMLFilePath);
             FileInputStream fis = new FileInputStream(xml);
             Block root = new XMLParser().getRootBlock(fis);
             t = new Tool();

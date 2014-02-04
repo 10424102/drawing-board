@@ -25,6 +25,7 @@ import cn.edu.shu.android.drawingboard.xml.Block;
 public class Tool {
     private static int tool_count = 0;
     private Element structure;
+    private MyApplication app = MyApplication.getInstance();
 
     public String getIconPath() {
         return iconPath;
@@ -135,15 +136,15 @@ public class Tool {
             public void onClick(View v) {
                 //Toast.makeText(v.getContext(), "Start drawing point, please touch.", Toast.LENGTH_LONG).show();
 
-                structure.setCanvas(MyApplication.getInstance().getCanvas());
-                structure.generate(MyApplication.getInstance().pc);
+                structure.setCanvas(app.getPaintCanvas().getCanvas());
+                structure.generate(app.getPaintCanvas());
                 //MyApplication.getInstance().update();
             }
         });
         return btn;
     }
-    public void startUsing()
-    {
-        structure.generate(MyApplication.getInstance().pc);
+
+    public void startUsing() {
+        structure.generate(app.getPaintCanvas());
     }
 }
