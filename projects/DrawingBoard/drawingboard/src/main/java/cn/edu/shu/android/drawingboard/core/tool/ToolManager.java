@@ -8,6 +8,7 @@ import java.util.List;
 import cn.edu.shu.android.drawingboard.MyApplication;
 import cn.edu.shu.android.drawingboard.core.exception.BuildToolException;
 import cn.edu.shu.android.drawingboard.xml.Block;
+import cn.edu.shu.android.drawingboard.xml.XMLInitializer;
 import cn.edu.shu.android.drawingboard.xml.XMLParser;
 
 /**
@@ -16,7 +17,7 @@ import cn.edu.shu.android.drawingboard.xml.XMLParser;
 public class ToolManager {
     private List<Tool> tools = new ArrayList<Tool>();
     private static ToolManager instance;
-    private static MyApplication app = MyApplication.getInstance();
+    private final static MyApplication app = MyApplication.getInstance();
 
     public static ToolManager getInstance() {
         if (instance == null) {
@@ -25,63 +26,76 @@ public class ToolManager {
         return instance;
     }
 
-    public void removeTool(int toolId){
-        for(Tool t : tools){
-            if(t.getId() == toolId){
+    public void removeTool(int toolId) {
+        for (Tool t : tools) {
+            if (t.getId() == toolId) {
                 tools.remove(t);
                 break;
             }
         }
     }
 
-    private ToolManager() {
+    public class ToolDisplayModel {
+        private int id;
+        private String name;
+        private String iconPath;
 
+        public ToolDisplayModel(Tool t) {
+            id = t.getId();
+            name = t.getName();
+            iconPath = t.getIconPath();
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getIconPath() {
+            return iconPath;
+        }
     }
 
-    private void decompress(File f){
-
+    private ToolManager() {
     }
 
     public void buildTool(String name) throws BuildToolException {
         String toolDir = app.APP_HOME + app.PLUGIN_DIR + name + "/";
         File toolXml = new File(toolDir + name + ".xml");
         if (toolXml.exists()) {
-            buildToolByXML(toolDir + name + ".xml");
+            buildToolByXML(toolXml.getPath());
         } else throw new BuildToolException("Tool built file doesn't exists: " + toolXml.getPath());
     }
 
     public Tool buildToolByXML(String XMLFilePath) throws BuildToolException {
-        Tool t = null;
-        try{
+        Tool t;
+        try {
             File xml = new File(XMLFilePath);
             FileInputStream fis = new FileInputStream(xml);
             Block root = new XMLParser().getRootBlock(fis);
             t = new Tool();
-            t.loadXML(root);
+            XMLInitializer.init(t, root);
             tools.add(t);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             throw new BuildToolException(e);
         }
         return t;
     }
 
-    public void loadAll() {
-        //TODO load all
-    }
-
-    public List<ToolDisplayModel> getToolList()
-    {
+    public List<ToolDisplayModel> getToolDisplayModelList() {
         List<ToolDisplayModel> ret = new ArrayList<>();
-        for(Tool t : tools){
+        for (Tool t : tools) {
             ret.add(new ToolDisplayModel(t));
         }
         return ret;
     }
 
     public Tool getTool(int toolId) {
-        for(Tool t : tools){
-            if(t.getId() == toolId)return t;
+        for (Tool t : tools) {
+            if (t.getId() == toolId) return t;
         }
         return null;
     }

@@ -63,35 +63,6 @@ public class XMLParser {
                         }
                         break;
                 }
-//                if (eventType == XmlPullParser.START_TAG) {
-//                    // getDepth方法返回的层数以最外层为0层，第一个根节点为1层计算
-//                    if (depth != 0 && depth != parser.getDepth()) {
-//                        parent = parent.getLastSubBlock();
-//                    }
-//                    block = new Block();
-//                    if (firstTag == false) {
-//                        parent = block;
-//                        firstTag = true;
-//                    }
-//                    block.setName(parser.getName());
-//                    attrcount = parser.getAttributeCount();
-//                    for (int i = 0; i < attrcount; i++) {
-//                        attr = new Attr();
-//                        attr.setName(parser.getAttributeName(i));
-//                        attr.setValue(parser.getAttributeValue(i));
-//                        block.addAttr(attr);
-//                    }
-//                    // 第2层结构开始，添加父子关系
-//                    block.setParentBlock(parent);
-//                    parent.addSubBlock(block);
-//                    depth = parser.getDepth();
-//                } else if (eventType == XmlPullParser.END_TAG) {
-//                    //每遇到一个闭标签，说明这一层一个标签结束，应该更新parent
-//                    if (block.getParentBlock() != null) {
-//                        parent = block.getParentBlock();
-//                    }
-//                    depth--;
-//                }
                 eventType = parser.next();
             }
         } catch (XmlPullParserException e) {

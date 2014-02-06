@@ -1,5 +1,6 @@
 package cn.edu.shu.android.drawingboard;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.graphics.Paint;
@@ -13,6 +14,7 @@ import android.view.WindowManager;
 import java.io.File;
 
 import cn.edu.shu.android.drawingboard.core.PaintCanvas;
+import cn.edu.shu.android.drawingboard.core.tool.Tool;
 import cn.edu.shu.android.drawingboard.core.tool.ToolManager;
 
 /**
@@ -22,6 +24,15 @@ public class MyApplication extends Application {
     private static MyApplication instance;
     private PaintCanvas mPaintCanvas = null;
     private Paint mPaint = null;
+    private Activity mMainActivity;
+
+    public void setMainActivity(Activity a) {
+        mMainActivity = a;
+    }
+
+    public Activity getMainActivity() {
+        return mMainActivity;
+    }
 
     public void setPaintCanvas(PaintCanvas pc) {
         mPaintCanvas = pc;
@@ -114,23 +125,29 @@ public class MyApplication extends Application {
         ToolManager mToolManager = ToolManager.getInstance();
         try {
             mToolManager.buildTool("DrawPointTool");
+            mToolManager.buildTool("DrawStraightSegmentTool");
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
     }
 
     public static MyApplication getInstance() {
         return instance;
     }
 
-//    public Canvas getCanvas() {
-//        return pc.getCanvas();
-//    }
-//
-//    public void update() {
-//        pc.update();
-//    }
+
+    private Tool mCurrentTool;
+
+    public void setCurrentTool(Tool tool) {
+        mCurrentTool = tool;
+    }
+
+    public Tool getCurrentTool() {
+        return mCurrentTool;
+    }
+
+    public Context getContext() {
+        return mPaintCanvas.getContext();
+    }
 
 }

@@ -21,7 +21,6 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import cn.edu.shu.android.drawingboard.core.tool.ToolDisplayModel;
 import cn.edu.shu.android.drawingboard.core.tool.ToolManager;
 import cn.edu.shu.android.drawingboard.util.BitmapUtil;
 
@@ -30,7 +29,7 @@ import cn.edu.shu.android.drawingboard.util.BitmapUtil;
  */
 public class RemoveToolFragment extends DialogFragment {
 
-    private List<ToolDisplayModel> list;
+    private List<ToolManager.ToolDisplayModel> list;
     private boolean[] selected;
 
     private MyAdapter adapter;
@@ -44,7 +43,7 @@ public class RemoveToolFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        list = ToolManager.getInstance().getToolList();
+        list = ToolManager.getInstance().getToolDisplayModelList();
         selected = new boolean[list.size()];
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         GridView grid = new GridView(getActivity());
@@ -132,7 +131,7 @@ public class RemoveToolFragment extends DialogFragment {
                 holder = (Holder) convertView.getTag();
             }
 
-            ToolDisplayModel t = (ToolDisplayModel) getItem(position);
+            ToolManager.ToolDisplayModel t = (ToolManager.ToolDisplayModel) getItem(position);
             holder.text.setText(t.getName());
 
             //handle icon

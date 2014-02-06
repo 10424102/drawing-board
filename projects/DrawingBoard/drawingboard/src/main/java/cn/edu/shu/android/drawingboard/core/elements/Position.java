@@ -15,8 +15,18 @@ public class Position {
     private float x;
     private float y;
 
+    public Position(Position p) {
+        x = p.getX();
+        y = p.getY();
+    }
+
     public Position(Block b) throws BuildElementException{
         loadXML(b);
+    }
+
+    public Position(float x, float y) {
+        this.x = x;
+        this.y = y;
     }
 
 

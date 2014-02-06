@@ -5,17 +5,12 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 
 import cn.edu.shu.android.drawingboard.core.PaintCanvas;
-import cn.edu.shu.android.drawingboard.core.tool.ToolManager;
 
 public class MainActivity extends Activity implements PaintColorPickerDialog.OnColorChangedListener,
         PaintSizePickerDialog.OnSizeChangedListener,
         PaintStylePickerDialog.OnStyleChangedListener {
-
     public static final MyApplication app = MyApplication.getInstance();
 
 
@@ -26,22 +21,11 @@ public class MainActivity extends Activity implements PaintColorPickerDialog.OnC
         //setContentView(new PaintCanvas(this));
 
         PaintCanvas pc = (PaintCanvas) findViewById(R.id.my_canvas);
-        MyApplication app = MyApplication.getInstance();
         app.setPaintCanvas(pc);
 
-        Button btn = new Button(this);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ToolManager.getInstance().getToolList().clear();
-            }
-        });
-        btn.setText("Clear");
 
-        addContentView(btn, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        app.setMainActivity(this);
 
-        FloatToolboxFragment ff = new FloatToolboxFragment();
-        getFragmentManager().beginTransaction().add(R.id.main_container, ff).commit();
 
     }
 

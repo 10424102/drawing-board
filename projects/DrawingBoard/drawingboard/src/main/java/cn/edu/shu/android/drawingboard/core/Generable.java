@@ -6,5 +6,5 @@ import android.view.View;
  * Created by yy on 1/22/14.
  */
 public interface Generable {
-    public void generate(View v);
+    public View generate(View v);
 }

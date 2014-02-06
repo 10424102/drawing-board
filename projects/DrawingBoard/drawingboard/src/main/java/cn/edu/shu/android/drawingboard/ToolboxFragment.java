@@ -20,7 +20,6 @@ import android.widget.TextView;
 import java.util.List;
 
 import cn.edu.shu.android.drawingboard.core.tool.Tool;
-import cn.edu.shu.android.drawingboard.core.tool.ToolDisplayModel;
 import cn.edu.shu.android.drawingboard.core.tool.ToolManager;
 import cn.edu.shu.android.drawingboard.util.BitmapUtil;
 
@@ -29,7 +28,7 @@ import cn.edu.shu.android.drawingboard.util.BitmapUtil;
  */
 public class ToolboxFragment extends DialogFragment {
 
-    private List<ToolDisplayModel> list;
+    private List<ToolManager.ToolDisplayModel> list;
 
     private MyAdapter adapter;
 
@@ -42,12 +41,8 @@ public class ToolboxFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        list = ToolManager.getInstance().getToolList();
+        list = ToolManager.getInstance().getToolDisplayModelList();
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        //LayoutInflater inflater = getActivity().getLayoutInflater();
-        //View view = inflater.inflate(R.layout.toolbox,null);
-        //view.setMinimumHeight((int)(app.getScreenHeight()*0.7));
-        //GridView grid = (GridView)view.findViewById(R.id.toolbox_grid);
 
         GridView grid = new GridView(getActivity());
         grid.setNumColumns(4);
@@ -57,7 +52,6 @@ public class ToolboxFragment extends DialogFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Tool t = ToolManager.getInstance().getTool(list.get(position).getId());
-                t.setCanvas(app.getPaintCanvas().getCanvas());
                 t.startUsing();
                 dismiss();
             }
@@ -110,7 +104,7 @@ public class ToolboxFragment extends DialogFragment {
                 holder = (Holder) convertView.getTag();
             }
 
-            ToolDisplayModel t = (ToolDisplayModel) getItem(position);
+            ToolManager.ToolDisplayModel t = (ToolManager.ToolDisplayModel) getItem(position);
             holder.text.setText(t.getName());
 
             //handle icon
