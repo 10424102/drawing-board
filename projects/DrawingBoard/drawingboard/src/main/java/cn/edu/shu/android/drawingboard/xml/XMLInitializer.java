@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import cn.edu.shu.android.drawingboard.core.elements.Dot;
+import cn.edu.shu.android.drawingboard.core.elements.FreeSegment;
 import cn.edu.shu.android.drawingboard.core.elements.Position;
 import cn.edu.shu.android.drawingboard.core.elements.StraightSegment;
 import cn.edu.shu.android.drawingboard.core.tool.Tool;
@@ -101,6 +102,23 @@ public class XMLInitializer {
                         break;
                 }
             }
+        } else if (x instanceof FreeSegment) {
+            FreeSegment y = (FreeSegment) x;
+//            for (Iterator i = block.attrIterator(); i.hasNext(); ) {
+//                Attr a = (Attr) i.next();
+//                switch (a.getName().toLowerCase()) {
+//                }
+//            }
+            for (Iterator i = block.blockIterator(); i.hasNext(); ) {
+                Block b = (Block) i.next();
+                switch (b.getName().toLowerCase()) {
+                    case "paint":
+                        y.setDefaultPaint(getPaint(b));
+                        break;
+                    case "center":
+                        break;
+                }
+            }
 
         } else if (x instanceof Tool) {
             Tool y = (Tool) x;
@@ -131,6 +149,11 @@ public class XMLInitializer {
                                     StraightSegment straightSegment = new StraightSegment();
                                     init(straightSegment, bb);
                                     y.setContent(straightSegment);
+                                    break;
+                                case "free-segment":
+                                    FreeSegment freeSegment = new FreeSegment();
+                                    init(freeSegment, bb);
+                                    y.setContent(freeSegment);
                                     break;
                             }
                             break;
