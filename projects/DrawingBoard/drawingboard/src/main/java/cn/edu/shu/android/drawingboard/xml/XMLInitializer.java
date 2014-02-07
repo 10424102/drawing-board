@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import cn.edu.shu.android.drawingboard.core.elements.Circle;
 import cn.edu.shu.android.drawingboard.core.elements.Dot;
 import cn.edu.shu.android.drawingboard.core.elements.FreeSegment;
 import cn.edu.shu.android.drawingboard.core.elements.Position;
@@ -92,6 +93,7 @@ public class XMLInitializer {
             float cos = (float) (length * Math.cos((double) angle));
             y.setStartPosition(new Position(-sin, -cos));
             y.setStartPosition(new Position(sin, cos));
+            //y.measureBoundary();
             for (Iterator i = block.blockIterator(); i.hasNext(); ) {
                 Block b = (Block) i.next();
                 switch (b.getName().toLowerCase()) {
@@ -104,6 +106,23 @@ public class XMLInitializer {
             }
         } else if (x instanceof FreeSegment) {
             FreeSegment y = (FreeSegment) x;
+//            for (Iterator i = block.attrIterator(); i.hasNext(); ) {
+//                Attr a = (Attr) i.next();
+//                switch (a.getName().toLowerCase()) {
+//                }
+//            }
+            for (Iterator i = block.blockIterator(); i.hasNext(); ) {
+                Block b = (Block) i.next();
+                switch (b.getName().toLowerCase()) {
+                    case "paint":
+                        y.setDefaultPaint(getPaint(b));
+                        break;
+                    case "center":
+                        break;
+                }
+            }
+        } else if (x instanceof Circle) {
+            Circle y = (Circle) x;
 //            for (Iterator i = block.attrIterator(); i.hasNext(); ) {
 //                Attr a = (Attr) i.next();
 //                switch (a.getName().toLowerCase()) {
@@ -155,6 +174,10 @@ public class XMLInitializer {
                                     init(freeSegment, bb);
                                     y.setContent(freeSegment);
                                     break;
+                                case "circle":
+                                    Circle circle = new Circle();
+                                    init(circle, bb);
+                                    y.setContent(circle);
                             }
                             break;
                         case "element-group":

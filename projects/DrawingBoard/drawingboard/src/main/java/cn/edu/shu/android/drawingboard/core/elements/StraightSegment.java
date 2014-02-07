@@ -72,28 +72,28 @@ public class StraightSegment extends Element {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 PaintCanvas pc = app.getPaintCanvas();
+                float x = event.getX();
+                float y = event.getY();
 
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         Log.i("yy", "DOWN");
-                        startX = event.getX();
-                        startY = event.getY();
+                        startX = x;
+                        startY = y;
                         endX = startX;
                         endY = startY;
                         break;
                     case MotionEvent.ACTION_MOVE:
                         Log.i("yy", "MOVE");
                         pc.getCanvas().drawLine(startX, startY, endX, endY, erasePaint);
-                        endX = event.getX();
-                        endY = event.getY();
+                        endX = x;
+                        endY = y;
                         pc.getCanvas().drawLine(startX, startY, endX, endY, drawPaint);
                         pc.invalidate();
                         break;
                     case MotionEvent.ACTION_UP:
                         Log.i("yy", "UP");
                         pc.getCanvas().drawLine(startX, startY, endX, endY, erasePaint);
-                        endX = event.getX();
-                        endY = event.getY();
 
                         StraightSegment element = new StraightSegment((StraightSegment) app.getCurrentTool().getContent());
                         element.setGenTool(app.getCurrentTool());

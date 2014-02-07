@@ -127,6 +127,7 @@ public class MyApplication extends Application {
             mToolManager.buildTool("DrawPointTool");
             mToolManager.buildTool("DrawStraightSegmentTool");
             mToolManager.buildTool("DrawFreeSegmentTool");
+            mToolManager.buildTool("DrawCircleTool");
         } catch (Exception e) {
             e.printStackTrace();
         }
