@@ -14,7 +14,6 @@ public class Dot extends Element {
 
     //Constructor
     public Dot() {
-        mDefaultPaint = new Paint();
     }
 
     public Dot(Dot x) {
@@ -22,8 +21,10 @@ public class Dot extends Element {
     }
 
     public void measureBoundary() {
-        mPureWidth = 2 * PADDING;
-        mPureHeight = 2 * PADDING;
+        mPureWidth = 0;
+        mPureHeight = 0;
+        setWidth(2 * PADDING);
+        setHeight(2 * PADDING);
     }
 
 
@@ -63,7 +64,7 @@ public class Dot extends Element {
 
                         pc.addCanvasElement(canvasElement, new Position(centerX, centerY));
 
-                        return true;
+                        break;
                 }
                 return true;
             }

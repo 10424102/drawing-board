@@ -36,7 +36,7 @@ public class PaintCanvas extends View {
         pen.setColor(Color.GRAY);
         pen.setStyle(Paint.Style.STROKE);
         pen.setStrokeWidth(3);
-        bmp = Bitmap.createBitmap(320, 480, Bitmap.Config.ARGB_8888);
+        bmp = Bitmap.createBitmap(app.getScreenWidth(), app.getScreenHeight(), Bitmap.Config.ARGB_8888);
         mCanvas = new Canvas(bmp);
     }
 

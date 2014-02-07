@@ -37,8 +37,10 @@ public class StraightSegment extends Element {
     }
 
     public void measureBoundary() {
-        mPureWidth = Math.abs(mStart.getX() - mEnd.getX()) + 2 * PADDING;
-        mPureHeight = Math.abs(mStart.getY() - mEnd.getY()) + 2 * PADDING;
+        mPureWidth = Math.abs(mStart.getX() - mEnd.getX());
+        mPureHeight = Math.abs(mStart.getY() - mEnd.getY());
+        setWidth(mPureWidth + 2 * PADDING);
+        setHeight(mPureHeight + 2 * PADDING);
     }
 
 
@@ -78,7 +80,7 @@ public class StraightSegment extends Element {
                         startY = event.getY();
                         endX = startX;
                         endY = startY;
-                        return true;
+                        break;
                     case MotionEvent.ACTION_MOVE:
                         Log.i("yy", "MOVE");
                         pc.getCanvas().drawLine(startX, startY, endX, endY, erasePaint);
@@ -86,7 +88,7 @@ public class StraightSegment extends Element {
                         endY = event.getY();
                         pc.getCanvas().drawLine(startX, startY, endX, endY, drawPaint);
                         pc.invalidate();
-                        return true;
+                        break;
                     case MotionEvent.ACTION_UP:
                         Log.i("yy", "UP");
                         pc.getCanvas().drawLine(startX, startY, endX, endY, erasePaint);
@@ -110,9 +112,9 @@ public class StraightSegment extends Element {
 
                         pc.addCanvasElement(canvasElement, new Position(centerX, centerY));
 
-                        return true;
+                        break;
                 }
-                return false;
+                return true;
             }
         });
         return null;

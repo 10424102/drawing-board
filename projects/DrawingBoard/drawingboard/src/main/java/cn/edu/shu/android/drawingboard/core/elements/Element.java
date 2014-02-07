@@ -37,6 +37,10 @@ public abstract class Element implements Generable, Paintable {
         return mWidth;
     }
 
+    public int getWidthInt() {
+        return (int) mWidth;
+    }
+
     protected void setWidth(float width) {
         if (width > 0) mWidth = width;
     }
@@ -47,6 +51,10 @@ public abstract class Element implements Generable, Paintable {
         return mHeight;
     }
 
+    public int getHeightInt() {
+        return (int) mHeight;
+    }
+
     protected void setHeight(float height) {
         if (height > 0) mHeight = height;
     }
@@ -55,6 +63,8 @@ public abstract class Element implements Generable, Paintable {
 
     public Element() {
         mId = ++mIdCount;
+        mDefaultPaint = new Paint();
+        setPaint(mDefaultPaint);
     }
 
     public Element(Element e) {
@@ -122,8 +132,10 @@ public abstract class Element implements Generable, Paintable {
         mDrawPaint = new Paint(p);
         mErasePaint = new Paint(p);
         mErasePaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
-        setWidth(mPureWidth + mDrawPaint.getStrokeWidth());
-        setHeight(mPureHeight + mDrawPaint.getStrokeWidth());
+        if (mDefaultPaint.getStrokeWidth() > 2 * PADDING) {
+            setWidth(mPureWidth + mDrawPaint.getStrokeWidth() + 2);
+            setHeight(mPureHeight + mDrawPaint.getStrokeWidth() + 2);
+        }
     }
 
 }

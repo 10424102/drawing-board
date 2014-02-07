@@ -22,7 +22,7 @@ public class CanvasElement extends View implements View.OnTouchListener {
 
     public void setContent(Element p) {
         mContent = p;
-        mBitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
+        mBitmap = Bitmap.createBitmap(mContent.getWidthInt(), mContent.getHeightInt(), Bitmap.Config.ARGB_8888);
         mCanvas = new Canvas(mBitmap);
     }
 
@@ -55,11 +55,15 @@ public class CanvasElement extends View implements View.OnTouchListener {
 
     @Override
     protected void onDraw(Canvas canvas) {
+        if (mContent.getWidthInt() != mBitmap.getWidth() || mContent.getHeightInt() != mBitmap.getHeight()) {
+            mBitmap = Bitmap.createBitmap(mContent.getWidthInt(), mContent.getHeightInt(), Bitmap.Config.ARGB_8888);
+            requestLayout();
+        }
         mContent.paint(mCanvas, null);
         canvas.drawBitmap(mBitmap, 0, 0, mPaint);
         Position center = app.getPaintCanvas().getCenter(this);
-        setLeft((int) (center.getX() - mContent.getWidth() / 2));
-        setTop((int) (center.getY() - mContent.getHeight() / 2));
+        setX(center.getX() - mContent.getWidth() / 2);
+        setY(center.getY() - mContent.getHeight() / 2);
     }
 
     public CanvasElement(Context context) {
@@ -81,8 +85,10 @@ public class CanvasElement extends View implements View.OnTouchListener {
     public boolean onTouch(View v, MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                mCanvas.drawColor(Color.GREEN);
-                invalidate();
+                if (event.getX() <= mContent.getWidth() && event.getY() <= mContent.getHeight()) {
+                    mCanvas.drawColor(Color.argb(0x11, 0x11, 0x22, 0x33));
+                    invalidate();
+                }
                 break;
             case MotionEvent.ACTION_UP:
                 break;
