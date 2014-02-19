@@ -1,8 +1,10 @@
 package cn.edu.shu.android.drawingboard.core.elements;
 
+import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
+import android.view.View;
 
 import cn.edu.shu.android.drawingboard.MyApplication;
 import cn.edu.shu.android.drawingboard.core.Generable;
@@ -86,6 +88,20 @@ public abstract class Element implements Generable, Paintable {
     }
 
     protected Paint mDefaultPaint;
+
+    @Override
+    public void paint(Canvas canvas, Paint paint) {
+        if (paint == null) {
+            setPaint(mDefaultPaint);
+        } else {
+            setPaint(paint);
+        }
+    }
+
+    @Override
+    public View generate(View v) {
+        return null;
+    }
 
     public void setDefaultPaint(Paint p) {
         mDefaultPaint = p;

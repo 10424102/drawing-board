@@ -46,11 +46,7 @@ public class StraightSegment extends Element {
 
     @Override
     public void paint(Canvas canvas, Paint paint) {
-        if (paint == null) {
-            setPaint(mDefaultPaint);
-        } else {
-            setPaint(paint);
-        }
+        super.paint(canvas, paint);
         float startX = mStart.getX() + getWidth() / 2;
         float startY = -mStart.getY() + getHeight() / 2;
         float endX = mEnd.getX() + getWidth() / 2;

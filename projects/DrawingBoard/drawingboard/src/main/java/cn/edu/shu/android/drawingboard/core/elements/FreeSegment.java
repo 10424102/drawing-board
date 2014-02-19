@@ -45,12 +45,7 @@ public class FreeSegment extends Element {
 
     @Override
     public void paint(Canvas canvas, Paint paint) {
-        if (paint == null) {
-            setPaint(mDefaultPaint);
-        } else {
-            setPaint(paint);
-        }
-
+        super.paint(canvas, paint);
         canvas.drawPath(mPath, mDrawPaint);
     }
 

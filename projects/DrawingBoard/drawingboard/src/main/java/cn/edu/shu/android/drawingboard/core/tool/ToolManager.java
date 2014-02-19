@@ -63,7 +63,8 @@ public class ToolManager {
     }
 
     public void buildTool(String name) throws BuildToolException {
-        String toolDir = app.APP_HOME + app.PLUGIN_DIR + name + "/";
+        //String toolDir = app.APP_HOME + app.PLUGIN_DIR + name + "/";
+        String toolDir = "/sdcard/drawingboard/" + app.PLUGIN_DIR + name + "/";
         File toolXml = new File(toolDir + name + ".xml");
         if (toolXml.exists()) {
             buildToolByXML(toolXml.getPath());
