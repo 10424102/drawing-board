@@ -4,94 +4,105 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 
-import cn.edu.shu.android.drawingboard.MyApplication;
-import cn.edu.shu.android.drawingboard.core.CanvasElement;
+import java.util.Iterator;
+
 import cn.edu.shu.android.drawingboard.core.PaintCanvas;
+import cn.edu.shu.android.drawingboard.core.XmlInitializable;
+import cn.edu.shu.android.drawingboard.xml.Block;
+import cn.edu.shu.android.drawingboard.xml.XmlInitializer;
+import cn.edu.shu.android.drawingboard.xml.XmlParserException;
 
 /**
  * Created by yy on 2/6/14.
  */
-public class FreeSegment extends Element {
+public class FreeSegment extends Element implements XmlInitializable {
 
-    private Path mPath = new Path();
-    RectF boundary = new RectF();
+    private Path path = new Path();
 
-    public void setPath(Path path) {
-        mPath = path;
+    public Path getPath() {
+        return path;
     }
 
-    //Constructor
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //                                    Constructor
+    ////////////////////////////////////////////////////////////////////////////////////////////////
     public FreeSegment() {
+        super();
     }
 
     public FreeSegment(FreeSegment x) {
         super(x);
+        path = new Path(x.getPath());
     }
 
-    public Position measureBoundary() {
-        mPath.computeBounds(boundary, true);
-        mPureWidth = Math.abs(boundary.width());
-        mPureHeight = Math.abs(boundary.height());
-        mPath.offset(-boundary.left + PADDING, -boundary.top + PADDING);
-        setWidth(mPureWidth + 2 * PADDING);
-        setHeight(mPureHeight + 2 * PADDING);
-        return new Position(boundary.centerX(), boundary.centerY());
-    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //                                    Other
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+    @Override
+    public void measure(float startX, float startY, float endX, float endY) {
+        //In this method mDrawPaint has been setted
+        RectF boundary = new RectF();
+        path.computeBounds(boundary, true);
+        float bw = boundary.width();
+        float bh = boundary.height();
+        pureWidth = bw;
+        pureHeight = bh;
+        calculateRealSize();
+        //adjust coordinate system
+        float paddingLeft = (width - bw) / 2;
+        float paddingTop = (height - bh) / 2;
+        path.offset(-boundary.left + paddingLeft, -boundary.top + paddingTop);
+        center.set(boundary.centerX(), boundary.centerY());
+    }
 
     @Override
     public void paint(Canvas canvas, Paint paint) {
         super.paint(canvas, paint);
-        canvas.drawPath(mPath, mDrawPaint);
+        canvas.drawPath(path, drawPaint);
     }
 
     @Override
-    public View generate(View v) {
-        v.setOnTouchListener(new View.OnTouchListener() {
-            private Path path;
-            private MyApplication app = MyApplication.getInstance();
-            private Paint drawPaint = app.getCurrentTool().getDrawPaint();
-            private Paint erasePaint = app.getCurrentTool().getErasePaint();
+    public void generate(View v) {
+        GenerationSlide<FreeSegment> gen = new GenerationSlide<>(FreeSegment.class);
+        gen.setGenerationSlideListener(new GenerationSlide.GenerationSlideListener<FreeSegment>() {
+            @Override
+            public void onActionDown(FreeSegment e, float x, float y, PaintCanvas pc, Paint drawPaint, Paint erasePaint) {
+                e.getPath().moveTo(x, y);
+            }
 
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                PaintCanvas pc = app.getPaintCanvas();
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        Log.i("yy", "DOWN");
-                        path = new Path();
-                        path.moveTo(event.getX(), event.getY());
-                        pc.getCanvas().drawPath(path, drawPaint);
-                        pc.invalidate();
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        Log.i("yy", "MOVE");
-                        path.lineTo(event.getX(), event.getY());
-                        pc.getCanvas().drawPath(path, drawPaint);
-                        pc.invalidate();
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        pc.getCanvas().drawPath(path, erasePaint);
-                        Log.i("yy", "UP");
-                        FreeSegment element = new FreeSegment((FreeSegment) app.getCurrentTool().getContent());
-                        element.setGenTool(app.getCurrentTool());
-                        element.setPath(path);
-                        Position center = element.measureBoundary();
+            public void onActionMove(FreeSegment e, float x, float y, PaintCanvas pc, Paint drawPaint, Paint erasePaint, float startX, float startY, float endX, float endY) {
+                Path path = e.getPath();
+                path.lineTo(x, y);
+                pc.getCanvas().drawPath(path, drawPaint);
+                pc.invalidate();
+            }
 
-                        CanvasElement canvasElement = new CanvasElement(app.getContext());
-                        canvasElement.setContent(element);
-
-                        pc.addCanvasElement(canvasElement, center);
-
-                        break;
-                }
-                return true;
+            @Override
+            public void onActionUp(FreeSegment e, float x, float y, PaintCanvas pc, Paint drawPaint, Paint erasePaint, float startX, float startY, float endX, float endY) {
+                pc.getCanvas().drawPath(e.getPath(), erasePaint);
+                pc.invalidate();
             }
         });
-        return null;
+        v.setOnTouchListener(gen);
+    }
+
+    @Override
+    public boolean xmlParse(Block block) throws XmlParserException {
+        for (Iterator i = block.blockIterator(); i.hasNext(); ) {
+            Block b = (Block) i.next();
+            switch (b.getName().toLowerCase()) {
+                case "paint":
+                    setPaint(XmlInitializer.getPaint(b));
+                    break;
+                case "center":
+                    break;
+            }
+        }
+        return true;
     }
 }

@@ -2,117 +2,106 @@ package cn.edu.shu.android.drawingboard.core.elements;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 
-import cn.edu.shu.android.drawingboard.MyApplication;
-import cn.edu.shu.android.drawingboard.core.CanvasElement;
+import java.util.Iterator;
+
 import cn.edu.shu.android.drawingboard.core.PaintCanvas;
+import cn.edu.shu.android.drawingboard.core.XmlInitializable;
+import cn.edu.shu.android.drawingboard.xml.Block;
+import cn.edu.shu.android.drawingboard.xml.XmlInitializer;
+import cn.edu.shu.android.drawingboard.xml.XmlParserException;
 
 /**
  * Created by yy on 2/5/14.
  */
-public class StraightSegment extends Element {
+public class StraightSegment extends Element implements XmlInitializable {
 
-    private Position mStart;
+    private Position start;
+    private Position end;
 
-    public void setStartPosition(Position p) {
-        mStart = new Position(p);
+    public void setStart(float x, float y) {
+        start = new Position(x, y);
     }
 
-    private Position mEnd;
+    public Position getStart() {
+        return start;
+    }
 
-    public void setEndPosition(Position p) {
-        mEnd = new Position(p);
+    public void setEnd(float x, float y) {
+        end = new Position(x, y);
+    }
+
+    public Position getEnd() {
+        return end;
     }
 
     //Constructor
     public StraightSegment() {
-
+        super();
     }
 
     public StraightSegment(StraightSegment x) {
         super(x);
+        start = new Position(x.getStart());
+        end = new Position(x.getEnd());
     }
 
-    public void measureBoundary() {
-        mPureWidth = Math.abs(mStart.getX() - mEnd.getX());
-        mPureHeight = Math.abs(mStart.getY() - mEnd.getY());
-        setWidth(mPureWidth + 2 * PADDING);
-        setHeight(mPureHeight + 2 * PADDING);
+    public void measure(float startX, float startY, float endX, float endY) {
+        pureWidth = Math.abs(start.x - end.x);
+        pureHeight = Math.abs(start.y - end.y);
+        calculateRealSize();
+        float dx = (start.x + end.x - width) / 2;
+        float dy = (start.y + end.y - height) / 2;
+        start.offset(-dx, -dy);
+        end.offset(-dx, -dy);
+        center.set((startX + endX) / 2, (startY + endY) / 2);
     }
 
 
     @Override
     public void paint(Canvas canvas, Paint paint) {
         super.paint(canvas, paint);
-        float startX = mStart.getX() + getWidth() / 2;
-        float startY = -mStart.getY() + getHeight() / 2;
-        float endX = mEnd.getX() + getWidth() / 2;
-        float endY = -mEnd.getY() + getHeight() / 2;
-        canvas.drawLine(startX, startY, endX, endY, mDrawPaint);
+        canvas.drawLine(start.x, start.y, end.x, end.y, drawPaint);
     }
 
     @Override
-    public View generate(View v) {
-        v.setOnTouchListener(new View.OnTouchListener() {
-            private float startX;
-            private float startY;
-            private float endX;
-            private float endY;
-            private MyApplication app = MyApplication.getInstance();
-            private Paint drawPaint = app.getCurrentTool().getDrawPaint();
-            private Paint erasePaint = app.getCurrentTool().getErasePaint();
+    public void generate(View v) {
+        GenerationSlide<StraightSegment> gen = new GenerationSlide<>(StraightSegment.class);
+        gen.setGenerationSlideListener(new GenerationSlide.GenerationSlideListener<StraightSegment>() {
+            @Override
+            public void onActionDown(StraightSegment e, float x, float y, PaintCanvas pc, Paint drawPaint, Paint erasePaint) {
+            }
 
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                PaintCanvas pc = app.getPaintCanvas();
-                float x = event.getX();
-                float y = event.getY();
+            public void onActionMove(StraightSegment e, float x, float y, PaintCanvas pc, Paint drawPaint, Paint erasePaint, float startX, float startY, float endX, float endY) {
+                pc.getCanvas().drawLine(startX, startY, endX, endY, erasePaint);
+                pc.getCanvas().drawLine(startX, startY, x, y, drawPaint);
+                pc.invalidate();
+            }
 
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        Log.i("yy", "DOWN");
-                        startX = x;
-                        startY = y;
-                        endX = startX;
-                        endY = startY;
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        Log.i("yy", "MOVE");
-                        pc.getCanvas().drawLine(startX, startY, endX, endY, erasePaint);
-                        endX = x;
-                        endY = y;
-                        pc.getCanvas().drawLine(startX, startY, endX, endY, drawPaint);
-                        pc.invalidate();
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        Log.i("yy", "UP");
-                        pc.getCanvas().drawLine(startX, startY, endX, endY, erasePaint);
-
-                        StraightSegment element = new StraightSegment((StraightSegment) app.getCurrentTool().getContent());
-                        element.setGenTool(app.getCurrentTool());
-                        float centerX = (startX + endX) / 2;
-                        float centerY = (startY + endY) / 2;
-                        startX = startX - centerX;
-                        startY = -(startY - centerY);
-                        endX = endX - centerX;
-                        endY = -(endY - centerY);
-                        element.setStartPosition(new Position(startX, startY));
-                        element.setEndPosition(new Position(endX, endY));
-                        element.measureBoundary();
-
-                        CanvasElement canvasElement = new CanvasElement(app.getContext());
-                        canvasElement.setContent(element);
-
-                        pc.addCanvasElement(canvasElement, new Position(centerX, centerY));
-
-                        break;
-                }
-                return true;
+            @Override
+            public void onActionUp(StraightSegment e, float x, float y, PaintCanvas pc, Paint drawPaint, Paint erasePaint, float startX, float startY, float endX, float endY) {
+                pc.getCanvas().drawLine(startX, startY, endX, endY, erasePaint);
+                e.setStart(startX, startY);
+                e.setEnd(x, y);
             }
         });
-        return null;
+        v.setOnTouchListener(gen);
+    }
+
+    @Override
+    public boolean xmlParse(Block block) throws XmlParserException {
+        for (Iterator i = block.blockIterator(); i.hasNext(); ) {
+            Block b = (Block) i.next();
+            switch (b.getName().toLowerCase()) {
+                case "paint":
+                    setPaint(XmlInitializer.getPaint(b));
+                    break;
+                case "center":
+                    break;
+            }
+        }
+        return true;
     }
 }

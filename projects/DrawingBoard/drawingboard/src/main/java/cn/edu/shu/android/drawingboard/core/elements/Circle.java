@@ -2,113 +2,104 @@ package cn.edu.shu.android.drawingboard.core.elements;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 
-import cn.edu.shu.android.drawingboard.MyApplication;
-import cn.edu.shu.android.drawingboard.core.CanvasElement;
+import java.util.Iterator;
+
 import cn.edu.shu.android.drawingboard.core.PaintCanvas;
+import cn.edu.shu.android.drawingboard.core.XmlInitializable;
+import cn.edu.shu.android.drawingboard.xml.Block;
+import cn.edu.shu.android.drawingboard.xml.XmlInitializer;
+import cn.edu.shu.android.drawingboard.xml.XmlParserException;
 
 /**
  * Created by yy on 2/6/14.
  */
-public class Circle extends Element {
-    private float mRadius;
+public class Circle extends Element implements XmlInitializable {
+    private float radius;
 
     public void setRadius(float radius) {
-        mRadius = radius;
+        this.radius = radius;
     }
 
-    //Constructor
-    public Circle() {
+    public float getRadius() {
+        return radius;
+    }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //                                    Constructor
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    public Circle() {
+        super();
     }
 
     public Circle(Circle x) {
         super(x);
+        radius = x.getRadius();
     }
 
-    public void measureBoundary() {
-        mPureWidth = mRadius * 2;
-        mPureHeight = mRadius * 2;
-        setWidth(mPureWidth + 2 * PADDING);
-        setHeight(mPureHeight + 2 * PADDING);
-    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //                                    Other
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+    @Override
+    public void measure(float startX, float startY, float endX, float endY) {
+        pureWidth = radius * 2;
+        pureHeight = radius * 2;
+        calculateRealSize();
+        center.set(startX, startY);
+    }
 
     @Override
     public void paint(Canvas canvas, Paint paint) {
         super.paint(canvas, paint);
-        canvas.drawCircle(getWidth() / 2, getHeight() / 2, mRadius, mDrawPaint);
+        canvas.drawCircle(width / 2, height / 2, radius, drawPaint);
+    }
+
+    private float distance(float x1, float y1, float x2, float y2) {
+        float dx = x1 - x2;
+        float dy = y1 - y2;
+        return (float) Math.sqrt(dx * dx + dy * dy);
     }
 
     @Override
-    public View generate(View v) {
-        v.setOnTouchListener(new View.OnTouchListener() {
-            private float startX;
-            private float startY;
-            private float endX;
-            private float endY;
-            private MyApplication app = MyApplication.getInstance();
-            private Paint drawPaint = app.getCurrentTool().getDrawPaint();
-            private Paint erasePaint = app.getCurrentTool().getErasePaint();
+    public void generate(View v) {
+        GenerationSlide<Circle> gen = new GenerationSlide<>(Circle.class);
+        gen.setGenerationSlideListener(new GenerationSlide.GenerationSlideListener<Circle>() {
+            @Override
+            public void onActionDown(Circle e, float x, float y, PaintCanvas pc, Paint drawPaint, Paint erasePaint) {
+            }
 
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                PaintCanvas pc = app.getPaintCanvas();
-                float x = event.getX();
-                float y = event.getY();
-                float dx, dy, r;
+            public void onActionMove(Circle e, float x, float y, PaintCanvas pc, Paint drawPaint, Paint erasePaint, float startX, float startY, float endX, float endY) {
+                pc.getCanvas().drawCircle(startX, startY, distance(startX, startY, endX, endY), erasePaint);
+                pc.getCanvas().drawCircle(startX, startY, distance(startX, startY, x, y), drawPaint);
+                pc.invalidate();
+            }
 
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        Log.i("yy", "DOWN");
-                        startX = x;
-                        startY = y;
-                        endX = startX;
-                        endY = startY;
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        Log.i("yy", "MOVE");
-                        dx = endX - startX;
-                        dy = endY - startY;
-                        r = (float) Math.sqrt(dx * dx + dy * dy);
-                        pc.getCanvas().drawCircle(startX, startY, r, erasePaint);
-                        endX = x;
-                        endY = y;
-                        dx = endX - startX;
-                        dy = endY - startY;
-                        r = (float) Math.sqrt(dx * dx + dy * dy);
-                        pc.getCanvas().drawCircle(startX, startY, r, drawPaint);
-                        pc.invalidate();
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        Log.i("yy", "UP");
-                        dx = endX - startX;
-                        dy = endY - startY;
-                        r = (float) Math.sqrt(dx * dx + dy * dy);
-                        pc.getCanvas().drawCircle(startX, startY, r, erasePaint);
-                        pc.invalidate();
-
-                        Circle element = new Circle((Circle) app.getCurrentTool().getContent());
-                        element.setGenTool(app.getCurrentTool());
-                        float centerX = startX;
-                        float centerY = startY;
-                        element.setRadius(r);
-                        element.measureBoundary();
-
-                        CanvasElement canvasElement = new CanvasElement(app.getContext());
-                        canvasElement.setContent(element);
-
-                        pc.addCanvasElement(canvasElement, new Position(centerX, centerY));
-
-                        break;
-                }
-                return true;
+            @Override
+            public void onActionUp(Circle e, float x, float y, PaintCanvas pc, Paint drawPaint, Paint erasePaint, float startX, float startY, float endX, float endY) {
+                pc.getCanvas().drawCircle(startX, startY, distance(startX, startY, endX, endY), erasePaint);
+                pc.invalidate();
+                e.setRadius(distance(startX, startY, x, y));
             }
         });
-        return null;
+        v.setOnTouchListener(gen);
     }
 
+    @Override
+    public boolean xmlParse(Block block) throws XmlParserException {
+        for (Iterator i = block.blockIterator(); i.hasNext(); ) {
+            Block b = (Block) i.next();
+            switch (b.getName().toLowerCase()) {
+                case "paint":
+                    setPaint(XmlInitializer.getPaint(b));
+                    break;
+                case "center":
+                    break;
+            }
+        }
+        return true;
+    }
 }
