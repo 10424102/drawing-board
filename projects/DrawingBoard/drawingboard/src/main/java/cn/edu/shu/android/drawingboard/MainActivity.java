@@ -50,6 +50,9 @@ public class MainActivity extends Activity implements PaintColorPickerDialog.OnC
             case R.id.menu_toolbox:
                 new ToolboxFragment().show(getFragmentManager(), "toolbox");
                 break;
+            case R.id.menu_clean_caves:
+                app.getPaintCanvas().clear();
+                break;
             case R.id.menu_add_tool:
                 break;
             case R.id.menu_remove_tool:
