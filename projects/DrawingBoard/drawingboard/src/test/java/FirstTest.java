@@ -11,8 +11,8 @@ import java.lang.System;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import cn.edu.shu.android.drawingboard.xml.XMLParser;
-import cn.edu.shu.android.drawingboard.xml.XMLParserBaseException;
+import cn.edu.shu.android.drawingboard.xml.XmlParser;
+import cn.edu.shu.android.drawingboard.xml.XmlParserException;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
@@ -26,7 +26,7 @@ public class FirstTest {
         String value = null;
         InputStream is = new ByteArrayInputStream(test.getBytes());
         try {
-            Block root = XMLParser.getRootBlock(is);
+            Block root = XmlParser.getRootBlock(is);
             ArrayList<Block> list = (ArrayList<Block>) root.getSubBlocks();
             Block block = null;
             String result = root.getName();
@@ -40,7 +40,7 @@ public class FirstTest {
             }
             assertThat(block.getName(), equalTo("c"));
             assertThat(value, equalTo("exit"));
-        } catch (XMLParserBaseException e) {
+        } catch (XmlParserException e) {
             Log.e("getRootBlocks error");
             System.out.println(e.printStackTrace());
         }

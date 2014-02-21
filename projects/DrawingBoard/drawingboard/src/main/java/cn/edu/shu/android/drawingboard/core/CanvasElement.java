@@ -11,7 +11,6 @@ import android.view.View;
 
 import cn.edu.shu.android.drawingboard.MyApplication;
 import cn.edu.shu.android.drawingboard.core.elements.Element;
-import cn.edu.shu.android.drawingboard.core.elements.Position;
 
 /**
  * Created by yy on 2/4/14.
@@ -61,9 +60,8 @@ public class CanvasElement extends View implements View.OnTouchListener {
         }
         mContent.paint(mCanvas, null);
         canvas.drawBitmap(mBitmap, 0, 0, mPaint);
-        Position center = app.getPaintCanvas().getCenter(this);
-        setX(center.getX() - mContent.getWidth() / 2);
-        setY(center.getY() - mContent.getHeight() / 2);
+        setX(mContent.getCenter().x - mContent.getWidth() / 2);
+        setY(mContent.getCenter().y - mContent.getHeight() / 2);
     }
 
     public CanvasElement(Context context) {

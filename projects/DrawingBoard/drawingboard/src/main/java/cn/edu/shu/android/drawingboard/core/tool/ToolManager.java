@@ -8,8 +8,7 @@ import java.util.List;
 import cn.edu.shu.android.drawingboard.MyApplication;
 import cn.edu.shu.android.drawingboard.core.exception.BuildToolException;
 import cn.edu.shu.android.drawingboard.xml.Block;
-import cn.edu.shu.android.drawingboard.xml.XMLInitializer;
-import cn.edu.shu.android.drawingboard.xml.XMLParser;
+import cn.edu.shu.android.drawingboard.xml.XmlParser;
 
 /**
  * Created by yy on 1/22/14.
@@ -63,26 +62,27 @@ public class ToolManager {
     }
 
     public void buildTool(String name) throws BuildToolException {
-        String toolDir = app.APP_HOME + app.PLUGIN_DIR + name + "/";
+        //String toolDir = app.APP_HOME + app.PLUGIN_DIR + name + "/";
+        String toolDir = "/sdcard/drawingboard/" + app.PLUGIN_DIR + name + "/";
         File toolXml = new File(toolDir + name + ".xml");
         if (toolXml.exists()) {
-            buildToolByXML(toolXml.getPath());
+            Tool t = new Tool();
+            t.setDirPath(toolDir);
+            buildToolByXML(t, toolXml.getPath());
+            tools.add(t);
         } else throw new BuildToolException("Tool built file doesn't exists: " + toolXml.getPath());
     }
 
-    public Tool buildToolByXML(String XMLFilePath) throws BuildToolException {
-        Tool t;
+    public void buildToolByXML(Tool t, String XMLFilePath) throws BuildToolException {
         try {
             File xml = new File(XMLFilePath);
+            if (!xml.exists()) throw new BuildToolException("Xml file not found.");
             FileInputStream fis = new FileInputStream(xml);
-            Block root = new XMLParser().getRootBlock(fis);
-            t = new Tool();
-            XMLInitializer.init(t, root);
-            tools.add(t);
+            Block root = new XmlParser().getRootBlock(fis);
+            t.xmlParse(root);
         } catch (Exception e) {
             throw new BuildToolException(e);
         }
-        return t;
     }
 
     public List<ToolDisplayModel> getToolDisplayModelList() {

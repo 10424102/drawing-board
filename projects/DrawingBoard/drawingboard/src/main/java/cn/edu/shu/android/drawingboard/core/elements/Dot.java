@@ -2,73 +2,70 @@ package cn.edu.shu.android.drawingboard.core.elements;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 
-import cn.edu.shu.android.drawingboard.MyApplication;
-import cn.edu.shu.android.drawingboard.core.CanvasElement;
-import cn.edu.shu.android.drawingboard.core.PaintCanvas;
+import java.util.Iterator;
 
-public class Dot extends Element {
+import cn.edu.shu.android.drawingboard.core.XmlInitializable;
+import cn.edu.shu.android.drawingboard.xml.Block;
+import cn.edu.shu.android.drawingboard.xml.XmlInitializer;
+import cn.edu.shu.android.drawingboard.xml.XmlParserException;
 
-    //Constructor
+public class Dot extends Element implements XmlInitializable {
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //                                    Constructor
+    ////////////////////////////////////////////////////////////////////////////////////////////////
     public Dot() {
+        super();
     }
 
     public Dot(Dot x) {
         super(x);
     }
 
-    public void measureBoundary() {
-        mPureWidth = 0;
-        mPureHeight = 0;
-        setWidth(2 * PADDING);
-        setHeight(2 * PADDING);
-    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //                                    Other
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+    @Override
+    public void measure(float startX, float startY, float endX, float endY) {
+        pureWidth = 0;
+        pureHeight = 0;
+        calculateRealSize();
+        center.set(startX, startY);
+    }
 
     @Override
     public void paint(Canvas canvas, Paint paint) {
-        if (paint == null) {
-            setPaint(mDefaultPaint);
-        } else {
-            setPaint(paint);
-        }
-        canvas.drawPoint(getWidth() / 2, getHeight() / 2, mDrawPaint);
+        super.paint(canvas, paint);
+        canvas.drawPoint(width / 2, height / 2, drawPaint);
     }
 
     @Override
-    public View generate(View v) {
-        v.setOnTouchListener(new View.OnTouchListener() {
-            private MyApplication app = MyApplication.getInstance();
-
+    public void generate(View v) {
+        GenerationClick<Dot> gen = new GenerationClick<>(Dot.class);
+        gen.setGenerationClickListener(new GenerationClick.GenerationClickListener<Dot>() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                PaintCanvas pc = app.getPaintCanvas();
-
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-
-                        Log.i("yy", "ACTION_DOWN");
-
-                        Dot element = new Dot((Dot) app.getCurrentTool().getContent());
-                        element.setGenTool(app.getCurrentTool());
-                        element.measureBoundary();
-
-                        CanvasElement canvasElement = new CanvasElement(app.getContext());
-                        canvasElement.setContent(element);
-
-                        float centerX = event.getX();
-                        float centerY = event.getY();
-
-                        pc.addCanvasElement(canvasElement, new Position(centerX, centerY));
-
-                        break;
-                }
-                return true;
+            public void onSetElement(Dot e, float clickX, float clickY) {
             }
         });
-        return null;
+        v.setOnTouchListener(gen);
+    }
+
+    @Override
+    public boolean xmlParse(Block block) throws XmlParserException {
+        for (Iterator i = block.blockIterator(); i.hasNext(); ) {
+            Block b = (Block) i.next();
+            switch (b.getName().toLowerCase()) {
+                case "paint":
+                    setPaint(XmlInitializer.getPaint(b));
+                    break;
+                case "center":
+                    break;
+            }
+        }
+        return true;
     }
 }

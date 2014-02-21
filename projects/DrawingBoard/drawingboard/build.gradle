@@ -22,13 +22,13 @@ android {
         }
     }
 }
-sourceSets{
-    unitTest{
+sourceSets {
+    unitTest {
         java.srcDir file('src/test/java')
         resources.srcDir file('src/test/res')
     }
 }
-configurations{
+configurations {
     unitTestCompile.extendsFrom runtime
     unitTestRuntime.extendsFrom unitTestCompile
 }
@@ -41,7 +41,7 @@ dependencies {
     unitTestCompile 'org.robolectric:robolectric:2.1.+'
     unitTestCompile 'com.google.android:android:4.0.1.2'
 }
-task unitTest(type:Test, dependsOn: assemble) {
+task unitTest(type: Test, dependsOn: assemble) {
     testClassesDir = project.sourceSets.unitTest.output.classesDir
     classpath = project.sourceSets.unitTest.runtimeClasspath
 }

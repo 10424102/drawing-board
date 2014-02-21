@@ -13,7 +13,7 @@ import java.io.InputStream;
  * Created by yy on 1/23/14.
  * XMLParser用于提供XML文件的解析
  */
-public class XMLParser {
+public class XmlParser {
 
     private Block root;
     private Block parent;
@@ -26,7 +26,7 @@ public class XMLParser {
      * @param inputStream 输入流
      * @return Block 返回位于XML文件根部的一个Block
      */
-    public Block getRootBlock(InputStream inputStream) throws XMLParserBaseException {
+    public Block getRootBlock(InputStream inputStream) throws XmlParserException {
         try {
             XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
             XmlPullParser parser = factory.newPullParser();
@@ -66,11 +66,11 @@ public class XMLParser {
                 eventType = parser.next();
             }
         } catch (XmlPullParserException e) {
-            Log.e(XMLParser.class.getName(), "XMlParserError", e);
-            throw new XMLParserBaseException("Error caused by XMLPullParser while parsing xml!");
+            Log.e(XmlParser.class.getName(), "XMlParserError", e);
+            throw new XmlParserException("Error caused by XMLPullParser while parsing xml!");
         } catch (IOException e) {
-            Log.e(XMLParser.class.getName(), "XMlParserError", e);
-            throw new XMLParserBaseException("Error caused by io reading while parsing xml!");
+            Log.e(XmlParser.class.getName(), "XMlParserError", e);
+            throw new XmlParserException("Error caused by io reading while parsing xml!");
         }
         return null;
     }

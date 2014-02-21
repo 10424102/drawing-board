@@ -2,26 +2,30 @@ package cn.edu.shu.android.drawingboard.core.elements;
 
 import java.util.Iterator;
 
-import cn.edu.shu.android.drawingboard.core.exception.BuildElementException;
+import cn.edu.shu.android.drawingboard.core.XmlInitializable;
 import cn.edu.shu.android.drawingboard.xml.Attr;
 import cn.edu.shu.android.drawingboard.xml.Block;
+import cn.edu.shu.android.drawingboard.xml.XmlParserException;
 
 /**
  * Created by yy on 1/22/14.
  */
 
 
-public class Position {
-    private float x;
-    private float y;
+public class Position implements XmlInitializable {
+    public float x;
+    public float y;
 
-    public Position(Position p) {
-        x = p.getX();
-        y = p.getY();
+    public Position() {
+        x = 0;
+        y = 0;
     }
 
-    public Position(Block b) throws BuildElementException{
-        loadXML(b);
+    public Position(Position p) {
+        if (p != null) {
+            x = p.x;
+            y = p.y;
+        }
     }
 
     public Position(float x, float y) {
@@ -29,53 +33,29 @@ public class Position {
         this.y = y;
     }
 
+    public void offset(float dx, float dy) {
+        x += dx;
+        y += dy;
+    }
 
-    public void setX(float x) {
+    public void set(float x, float y) {
         this.x = x;
-    }
-
-    public void setX(String s) throws BuildElementException {
-        try {
-            x = Float.parseFloat(s);
-        } catch (Exception e) {
-            throw new BuildElementException(e);
-        }
-    }
-
-    public void setY(float y) {
         this.y = y;
     }
 
-    public void setY(String s) throws BuildElementException {
-        try {
-            y = Float.parseFloat(s);
-        } catch (Exception e) {
-            throw new BuildElementException(e);
-        }
-    }
-
-    public void loadXML(Block root) throws BuildElementException {
-        if (root.getName().equalsIgnoreCase("center")) {
-            for (Iterator<Attr> i = root.attrIterator(); i.hasNext(); ) {
-                Attr a = i.next();
-                switch (a.getName().toLowerCase()) {
-                    case "x":
-                        setX(a.getValue());
-                        break;
-                    case "y":
-                        setY(a.getValue());
-                        break;
-                }
+    @Override
+    public boolean xmlParse(Block block) throws XmlParserException {
+        for (Iterator i = block.attrIterator(); i.hasNext(); ) {
+            Attr a = (Attr) i.next();
+            switch (a.getName().toLowerCase()) {
+                case "x":
+                    x = Float.parseFloat(a.getValue());
+                    break;
+                case "y":
+                    y = Float.parseFloat(a.getValue());
+                    break;
             }
         }
-    }
-
-
-    public float getX() {
-        return x;
-    }
-
-    public float getY() {
-        return y;
+        return true;
     }
 }

@@ -1,5 +1,6 @@
 package cn.edu.shu.android.drawingboard.core.elements;
 
+import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
@@ -11,131 +12,156 @@ import cn.edu.shu.android.drawingboard.core.tool.Tool;
 
 public abstract class Element implements Generable, Paintable {
     public static final float PADDING = 10;
-
-    private static int mIdCount = 0;
+    private static int idCount = 0;
     protected static MyApplication app = MyApplication.getInstance();
 
-    private int mId;
+    protected int id;
+    protected Tool genTool;
+    protected float width;
+    protected float height;
+    protected float pureWidth;
+    protected float pureHeight;
+    protected Paint drawPaint;
+    protected Paint erasePaint;
+    protected Position center = new Position();
 
-    public int getId() {
-        return mId;
-    }
-
-    private Tool mGenTool;
-
-    public Tool getGenTool() {
-        return mGenTool;
-    }
-
-    public void setGenTool(Tool tool) {
-        mGenTool = tool;
-    }
-
-    private float mWidth = 0;
-
-    public float getWidth() {
-        return mWidth;
-    }
-
-    public int getWidthInt() {
-        return (int) mWidth;
-    }
-
-    protected void setWidth(float width) {
-        if (width > 0) mWidth = width;
-    }
-
-    private float mHeight = 0;
-
-    public float getHeight() {
-        return mHeight;
-    }
-
-    public int getHeightInt() {
-        return (int) mHeight;
-    }
-
-    protected void setHeight(float height) {
-        if (height > 0) mHeight = height;
-    }
-
-    //TODO Animation
-
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //
+    //                                       Constructor
+    //
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////
     public Element() {
-        mId = ++mIdCount;
-        mDefaultPaint = new Paint();
-        setPaint(mDefaultPaint);
+        id = ++idCount;
+        genTool = null;
+        pureWidth = 0;
+        pureHeight = 0;
+        setPaint(null);
+        calculateRealSize();
     }
 
     public Element(Element e) {
-        mId = ++mIdCount;
-        mWidth = e.getWidth();
-        mHeight = e.getHeight();
-        mGenTool = e.getGenTool();
-        mDefaultPaint = e.getDefaultPaint();
-        mPureWidth = e.getPureWidth();
-        mPureHeight = e.getPureHeight();
+        id = ++idCount;
+        genTool = e.getGenTool();
+        pureWidth = e.getPureWidth();
+        pureHeight = e.getPureHeight();
+        setPaint(e.getDrawPaint());
+        calculateRealSize();
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //                                    Getter & Setter
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    public int getId() {
+        return id;
+    }
+
+    public Tool getGenTool() {
+        return genTool;
+    }
+
+    public void setGenTool(Tool genTool) {
+        this.genTool = genTool;
+    }
+
+    public float getWidth() {
+        return width;
+    }
+
+    public void setWidth(float width) {
+        this.width = width;
+    }
+
+    public float getHeight() {
+        return height;
+    }
+
+    public void setHeight(float height) {
+        this.height = height;
+    }
+
+    public float getPureWidth() {
+        return pureWidth;
+    }
+
+    public void setPureWidth(float pureWidth) {
+        this.pureWidth = pureWidth;
+    }
+
+    public float getPureHeight() {
+        return pureHeight;
+    }
+
+    public void setPureHeight(float pureHeight) {
+        this.pureHeight = pureHeight;
+    }
+
+    public Paint getDrawPaint() {
+        return drawPaint;
+    }
+
+    public void setDrawPaint(Paint drawPaint) {
+        this.drawPaint = drawPaint;
+    }
+
+    public Paint getErasePaint() {
+        return erasePaint;
+    }
+
+    public void setErasePaint(Paint erasePaint) {
+        this.erasePaint = erasePaint;
+    }
+
+    public Position getCenter() {
+        return center;
+    }
+
+    public void setCenter(Position center) {
+        this.center = center;
+    }
+
+    public int getWidthInt() {
+        return (int) width;
+    }
+
+    public int getHeightInt() {
+        return (int) height;
+    }
+
+    public void setPaint(Paint p) {
+        if (p == null) {
+            drawPaint = new Paint();
+            erasePaint = new Paint();
+        } else {
+            drawPaint = new Paint(p);
+            erasePaint = new Paint(p);
+        }
+        erasePaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //                                    Other
+    ////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     public boolean equals(Object o) {
         if (o instanceof Element) {
-            if (mId == ((Element) o).getId()) return true;
+            if (id == ((Element) o).getId()) return true;
         }
         return false;
     }
 
-    protected Paint mDefaultPaint;
-
-    public void setDefaultPaint(Paint p) {
-        mDefaultPaint = p;
-        setPaint(p);
+    @Override
+    public void paint(Canvas canvas, Paint paint) {
+        if (paint != null) setPaint(paint);
     }
 
-    public Paint getDefaultPaint() {
-        return mDefaultPaint;
+    protected void calculateRealSize() {
+        float strokeWidth = drawPaint.getStrokeWidth();
+        width = pureWidth + strokeWidth + 2 * PADDING;
+        height = pureHeight + strokeWidth + 2 * PADDING;
     }
 
-    protected Paint mDrawPaint;
-
-    public Paint getDrawPaint() {
-        return mDrawPaint;
-    }
-
-    protected Paint mErasePaint;
-
-    public Paint getErasePaint() {
-        return mErasePaint;
-    }
-
-    protected float mPureWidth;
-
-    public void setPureWidth(float pureWidth) {
-        mPureWidth = pureWidth;
-    }
-
-    public float getPureWidth() {
-        return mPureWidth;
-    }
-
-    protected float mPureHeight;
-
-    public void setPureHeight(float pureHeight) {
-        mPureWidth = pureHeight;
-    }
-
-    public float getPureHeight() {
-        return mPureHeight;
-    }
-
-    public void setPaint(Paint p) {
-        mDrawPaint = new Paint(p);
-        mErasePaint = new Paint(p);
-        mErasePaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
-        if (mDefaultPaint.getStrokeWidth() > 2 * PADDING) {
-            setWidth(mPureWidth + mDrawPaint.getStrokeWidth() + 2);
-            setHeight(mPureHeight + mDrawPaint.getStrokeWidth() + 2);
-        }
-    }
-
+    public abstract void measure(float startX, float startY, float endX, float endY);
 }
