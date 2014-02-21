@@ -26,6 +26,7 @@ public class Tool implements XmlInitializable {
     private String name;
     private int id;
     private String dirPath;
+    private boolean useGlobalPaint;
 
     public String getDirPath() {
         return dirPath;
@@ -90,6 +91,9 @@ public class Tool implements XmlInitializable {
                     break;
                 case "icon-path":
                     iconPath = a.getValue();
+                    break;
+                case "use-global-paint":
+                    useGlobalPaint = Boolean.parseBoolean(a.getValue());
                     break;
             }
         }

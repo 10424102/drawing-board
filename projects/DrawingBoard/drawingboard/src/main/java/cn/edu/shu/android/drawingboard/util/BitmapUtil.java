@@ -5,7 +5,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Point;
 
 import cn.edu.shu.android.drawingboard.MyApplication;
-import cn.edu.shu.android.drawingboard.R;
 
 /**
  * Created by yy on 1/26/14.
@@ -13,27 +12,33 @@ import cn.edu.shu.android.drawingboard.R;
 public class BitmapUtil {
     private static MyApplication app = MyApplication.getInstance();
 
-    public static Bitmap getBitmap(String path, double size) {
-        BitmapFactory.Options opts = new BitmapFactory.Options();
-        opts.inJustDecodeBounds = true;
-        Bitmap bmp = BitmapFactory.decodeFile(path, opts);
-        opts.inSampleSize = (int) (Math.max(opts.outHeight, opts.outWidth) / size + 0.5);
-        opts.inJustDecodeBounds = false;
-        bmp = BitmapFactory.decodeFile(path, opts);
-        return bmp;
+    public static Bitmap getBitmapFile(String path, double width, double height) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(path, options);
+        options.inSampleSize = Math.max((int) Math.round(options.outHeight / height), (int) Math.round(options.outWidth / width));
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeFile(path);
     }
 
-    public static Bitmap getBitmap(int resourceId, double size) {
-        BitmapFactory.Options opts = new BitmapFactory.Options();
-        opts.inJustDecodeBounds = true;
-        Bitmap bmp = BitmapFactory.decodeResource(app.getResources(), R.drawable.default_tool_icon, opts);
-        opts.inSampleSize = (int) (Math.max(opts.outHeight, opts.outWidth) / size + 0.5);
-        opts.inJustDecodeBounds = false;
-        bmp = BitmapFactory.decodeResource(app.getResources(), R.drawable.default_tool_icon, opts);
-        return bmp;
+    public static Bitmap getBitmapFile(String path) {
+        return BitmapFactory.decodeFile(path);
     }
 
-    public static Point getPictureSize(String path) {
+    public static Bitmap getBitmapResource(int resourceId) {
+        return BitmapFactory.decodeResource(app.getResources(), resourceId);
+    }
+
+    public static Bitmap getBitmapResource(int resourceId, double width, double height) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeResource(app.getResources(), resourceId, options);
+        options.inSampleSize = Math.max((int) Math.round(options.outHeight / height), (int) Math.round(options.outWidth / width));
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeResource(app.getResources(), resourceId, options);
+    }
+
+    public static Point getBitmapSize(String path) {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(path, options);

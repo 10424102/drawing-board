@@ -63,15 +63,15 @@ public class MainActivity extends Activity implements PaintColorPickerDialog.OnC
             case R.id.menu_save_template:
                 break;
             case R.id.menu_paint_color:
-                new PaintColorPickerDialog(this, this, app.getPaint().getColor())
+                new PaintColorPickerDialog(this, this, app.paint.getColor())
                         .show();
                 return true;
             case R.id.menu_paint_size:
-                new PaintSizePickerDialog(this, (int) app.getPaint().getStrokeWidth())
+                new PaintSizePickerDialog(this, (int) app.paint.getStrokeWidth())
                         .show(getFragmentManager(), "paint_size");
                 return true;
             case R.id.menu_paint_style:
-                new PaintStylePickerDialog(this, app.getPaint().getStyle())
+                new PaintStylePickerDialog(this, app.paint.getStyle())
                         .show(getFragmentManager(), "paint_style");
                 return true;
             case R.id.action_settings:
@@ -82,16 +82,16 @@ public class MainActivity extends Activity implements PaintColorPickerDialog.OnC
 
     @Override
     public void colorChanged(int color) {
-        app.getPaint().setColor(color);
+        app.paint.setColor(color);
     }
 
     @Override
     public void sizeChanged(int size) {
-        app.getPaint().setStrokeWidth(size);
+        app.paint.setStrokeWidth(size);
     }
 
     @Override
     public void styleChanged(Paint.Style style) {
-        app.getPaint().setStyle(style);
+        app.paint.setStyle(style);
     }
 }

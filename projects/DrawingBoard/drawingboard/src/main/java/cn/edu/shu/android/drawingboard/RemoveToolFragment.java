@@ -140,7 +140,7 @@ public class RemoveToolFragment extends DialogFragment {
             decodeOption.outHeight = decodeOption.outWidth;
             Bitmap bmp = BitmapFactory.decodeFile(t.getIconPath(), decodeOption);
             if (bmp == null) {
-                bmp = BitmapUtil.getBitmap(R.drawable.default_tool_icon, parent.getWidth() * 0.6);
+                bmp = BitmapUtil.getBitmapResource(R.drawable.default_tool_icon, parent.getWidth() * 0.6, parent.getWidth() * 0.6);
             }
 
             holder.icon.setImageBitmap(bmp);

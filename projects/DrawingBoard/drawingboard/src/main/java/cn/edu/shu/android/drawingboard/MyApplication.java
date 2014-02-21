@@ -7,7 +7,6 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 
@@ -22,73 +21,63 @@ import cn.edu.shu.android.drawingboard.core.tool.ToolManager;
  */
 public class MyApplication extends Application {
     private static MyApplication instance;
-    private PaintCanvas mPaintCanvas = null;
-    private Paint mPaint = null;
-    private Activity mMainActivity;
-
-    public void setMainActivity(Activity a) {
-        mMainActivity = a;
-    }
-
-    public Activity getMainActivity() {
-        return mMainActivity;
-    }
-
-    public void setPaintCanvas(PaintCanvas pc) {
-        mPaintCanvas = pc;
-    }
-
-    public PaintCanvas getPaintCanvas() {
-        return mPaintCanvas;
-    }
-
-    public Paint getPaint() {
-        return mPaint;
-    }
-
-    public Bundle transfer;
     public static final String APP_HOME = Environment.getExternalStorageDirectory().getPath() + "/drawingboard/";
     public static final String PLUGIN_DIR = "plugins/";
     public static final String TEMPLATE_DIR = "templates/";
     public static final String GALLERY_DIR = "gallery/";
-    private static int screenWidth;
-    private static int screenHeight;
+    public static int screenWidth;
+    public static int screenHeight;
+    private PaintCanvas pc;
+    public Activity mainActivity;
+    public Bundle data;
+    public int canvasWidth;
+    public int canvasHeight;
+    public Paint paint;
+    private Tool currentTool;
+
+    public void setMainActivity(Activity a) {
+        mainActivity = a;
+    }
+
+    public Activity getMainActivity() {
+        return mainActivity;
+    }
+
+    public void setPaintCanvas(PaintCanvas pc) {
+        this.pc = pc;
+    }
+
+    public PaintCanvas getPaintCanvas() {
+        return pc;
+    }
 
     static {
         File home = new File(APP_HOME);
         if (!home.exists()) {
             if (home.mkdir()) {
-                Log.i("yy", "Created home directory.");
             }
         } else {
-            Log.i("yy", "Home directory exists.");
         }
 
         File plugins = new File(APP_HOME + PLUGIN_DIR);
         if (!plugins.exists()) {
             if (plugins.mkdir()) {
-                Log.i("yy", "Created plugin directory.");
             }
         } else {
-            Log.i("yy", "Plugin directory exists.");
         }
 
         File templates = new File(APP_HOME + TEMPLATE_DIR);
         if (!templates.exists()) {
             if (templates.mkdir()) {
-                Log.i("yy", "Created template directory.");
             }
         } else {
-            Log.i("yy", "Template directory exists.");
         }
 
         File gallery = new File(APP_HOME + GALLERY_DIR);
         if (!gallery.exists()) {
             if (gallery.mkdir()) {
-                Log.i("yy", "Created gallery directory.");
             }
         } else {
-            Log.i("yy", "Gallery directory exists.");
         }
     }
 
@@ -100,15 +89,11 @@ public class MyApplication extends Application {
         return screenHeight;
     }
 
-    private void setScreenSize() {
-
-    }
-
     @Override
     public void onCreate() {
         super.onCreate();
         instance = this;
-        transfer = new Bundle();
+        data = new Bundle();
 
         //get screen size
         WindowManager wm = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
@@ -119,7 +104,7 @@ public class MyApplication extends Application {
         screenHeight = size.y;
 
         //initialize paint
-        mPaint = new Paint();
+        paint = new Paint();
 
         //load 'plugins/'
         ToolManager mToolManager = ToolManager.getInstance();
@@ -140,18 +125,16 @@ public class MyApplication extends Application {
     }
 
 
-    private Tool mCurrentTool;
-
     public void setCurrentTool(Tool tool) {
-        mCurrentTool = tool;
+        currentTool = tool;
     }
 
     public Tool getCurrentTool() {
-        return mCurrentTool;
+        return currentTool;
     }
 
     public Context getContext() {
-        return mPaintCanvas.getContext();
+        return pc.getContext();
     }
 
 }

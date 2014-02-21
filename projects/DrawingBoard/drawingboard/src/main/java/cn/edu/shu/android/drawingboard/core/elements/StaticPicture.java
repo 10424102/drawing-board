@@ -1,7 +1,6 @@
 package cn.edu.shu.android.drawingboard.core.elements;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
@@ -26,7 +25,7 @@ public class StaticPicture extends Element implements XmlInitializable {
 
     public Bitmap getBmp() {
         if (bmp == null || bmp.isRecycled()) {
-            bmp = BitmapFactory.decodeFile(picturePath);
+            bmp = BitmapUtil.getBitmapFile(picturePath);
         }
         return bmp;
     }
@@ -97,7 +96,7 @@ public class StaticPicture extends Element implements XmlInitializable {
             switch (a.getName().toLowerCase()) {
                 case "path":
                     picturePath = genTool.getDirPath() + a.getValue();
-                    Point size = BitmapUtil.getPictureSize(picturePath);
+                    Point size = BitmapUtil.getBitmapSize(picturePath);
                     pureWidth = size.x;
                     pureHeight = size.y;
                     calculateRealSize();
@@ -111,6 +110,7 @@ public class StaticPicture extends Element implements XmlInitializable {
                     setPaint(XmlInitializer.getPaint(b));
                     break;
                 case "center":
+                    center.xmlParse(b);
                     break;
             }
         }
