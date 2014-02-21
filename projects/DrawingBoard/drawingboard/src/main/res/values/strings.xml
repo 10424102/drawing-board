@@ -7,6 +7,8 @@
 
     <!-- MENU -->
     <string name="menu_toolbox">Tool box</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_clean_canvas">Clean canvas</string>
     <string name="menu_add_tool">Add tool</string>
     <string name="menu_remove_tool">Remove tool</string>
     <string name="menu_save_canvas">Save canvas</string>

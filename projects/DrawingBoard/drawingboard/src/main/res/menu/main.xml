@@ -9,7 +9,19 @@
         android:showAsAction="never" />
     <item
         android:id="@+id/menu_toolbox"
-        android:title="@string/menu_toolbox" />
+        android:icon="@drawable/actionbar_pickaxe_icon"
+        android:title="@string/menu_toolbox"
+        android:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/menu_gallery"
+        android:icon="@drawable/actionbar_gallery_icon"
+        android:title="@string/menu_gallery"
+        android:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/menu_clean_caves"
+        android:title="@string/menu_clean_canvas"
+        android:icon="@drawable/actionbar_tnt_icon"
+        android:showAsAction="ifRoom" />
     <item
         android:id="@+id/menu_add_tool"
         android:title="@string/menu_add_tool" />
