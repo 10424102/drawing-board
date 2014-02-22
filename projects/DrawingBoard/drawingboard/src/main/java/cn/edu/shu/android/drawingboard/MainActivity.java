@@ -20,6 +20,7 @@ public class MainActivity extends Activity implements PaintColorPickerDialog.OnC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         PaintCanvas pc = (PaintCanvas) findViewById(R.id.my_canvas);
+        app.setCurrentPaintCanvas(pc);
 //        Errorbox errorbox = new Errorbox();
 //        errorbox.setContent("Fuck You!");
 //        getFragmentManager().beginTransaction().add(R.id.main_container, errorbox).commit();
