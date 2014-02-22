@@ -8,14 +8,17 @@ import cn.edu.shu.android.drawingboard.core.Paintable;
 import cn.edu.shu.android.drawingboard.core.tool.Tool;
 
 public abstract class Element implements Generable, Paintable {
-    public static final float PADDING = 10;
+    public static final float PADDING = 20;
     private static int idCount = 0;
     protected static MyApplication app = MyApplication.getInstance();
 
     protected int id;
     protected Tool genTool;
-    private Paint paint;
-    protected Position center = new Position();
+    protected Paint paint;
+    protected float width;
+    protected float height;
+    protected float centerX;
+    protected float centerY;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //                                       Constructor
@@ -23,13 +26,13 @@ public abstract class Element implements Generable, Paintable {
     public Element() {
         id = ++idCount;
         genTool = null;
-        setPaint(null);
+        setPaint(null);//create a new paint
     }
 
     public Element(Element e) {
         id = ++idCount;
         genTool = e.getGenTool();
-        setPaint(e.getPaint());
+        setPaint(e.getPaint());//copy e's paint
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -51,25 +54,30 @@ public abstract class Element implements Generable, Paintable {
         return paint;
     }
 
-    public Position getCenter() {
-        return new Position(center);
-    }
-
-    public void setCenter(Position center) {
-        this.center = new Position(center);
-    }
-
-    public void setCenter(float x, float y) {
-        center = new Position(x, y);
-    }
-
     public void setPaint(Paint p) {
         if (p == null) {
             paint = new Paint();
         } else {
             paint = new Paint(p);
         }
+        paint.setAntiAlias(true);
 //        erasePaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+    }
+
+    public float getWidth() {
+        return width;
+    }
+
+    public void setWidth(float width) {
+        this.width = width;
+    }
+
+    public float getHeight() {
+        return height;
+    }
+
+    public void setHeight(float height) {
+        this.height = height;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -84,5 +92,7 @@ public abstract class Element implements Generable, Paintable {
         return false;
     }
 
-    public abstract void measure(float startX, float startY, float endX, float endY);
+    public abstract Position measure(float startX, float startY, float endX, float endY);
+
+    public abstract boolean inside(float x, float y);
 }

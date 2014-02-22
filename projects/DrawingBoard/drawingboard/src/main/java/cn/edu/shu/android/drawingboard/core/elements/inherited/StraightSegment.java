@@ -36,7 +36,9 @@ public class StraightSegment extends Element implements XmlInitializable {
         return end;
     }
 
-    //Constructor
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    //                                    Constructor
+    ////////////////////////////////////////////////////////////////////////////////////////////////
     public StraightSegment() {
         super();
     }
@@ -47,14 +49,23 @@ public class StraightSegment extends Element implements XmlInitializable {
         end = new Position(x.getEnd());
     }
 
-    public void measure(float startX, float startY, float endX, float endY) {
-        center.set((startX + endX) / 2, (startY + endY) / 2);
+    @Override
+    public Position measure(float startX, float startY, float endX, float endY) {
+        float paintStrokeWidth = paint.getStrokeWidth();
+        width = Math.abs(startX - endX) + paintStrokeWidth + PADDING;
+        height = Math.abs(startY - endY) + paintStrokeWidth + PADDING;
+        centerX = width / 2;
+        centerY = height / 2;
+        Position leftTop = new Position((startX + endX) / 2 - centerX, (startY + endY) / 2 - centerY);
+        start.offset(-leftTop.x, -leftTop.y);
+        end.offset(-leftTop.x, -leftTop.y);
+        return leftTop;
     }
 
 
     @Override
     public void paint(Canvas canvas) {
-        canvas.drawLine(start.x, start.y, end.x, end.y, getPaint());
+        canvas.drawLine(start.x, start.y, end.x, end.y, paint);
     }
 
     @Override
@@ -67,7 +78,7 @@ public class StraightSegment extends Element implements XmlInitializable {
             }
 
             @Override
-            public void onActionMove(StraightSegment e, float x, float y, Canvas canvas, float startX, float startY) {
+            public void onActionMove(StraightSegment e, float x, float y, Canvas canvas, float startX, float startY, float prevX, float prevY) {
                 canvas.drawLine(startX, startY, x, y, e.getPaint());
             }
 
@@ -92,6 +103,11 @@ public class StraightSegment extends Element implements XmlInitializable {
                     break;
             }
         }
+        return true;
+    }
+
+    @Override
+    public boolean inside(float x, float y) {
         return true;
     }
 }

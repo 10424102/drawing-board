@@ -55,15 +55,16 @@ public class MyApplication extends Application {
     public static int screenWidth;
     public static int screenHeight;
     private List<PaintCanvas> pclist = new ArrayList<>();
-    private PaintCanvas currentpc;
+    private PaintCanvas currentPaintCanvas;
+    private Tool currentTool;
+    private Paint currentPaint;
     private Activity mainActivity;
     private Errorbox errorBox;
     private List<ErrorMessage> errorMessageList = new LinkedList<>();
     public Bundle data;
     private int canvasWidth;
     private int canvasHeight;
-    private Paint paint;
-    private Tool currentTool;
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //                                    Constructor
@@ -100,10 +101,6 @@ public class MyApplication extends Application {
         return mainActivity;
     }
 
-    public PaintCanvas getPaintCanvas() {
-        return currentpc;
-    }
-
     public AppStatus getStatus() {
         return status;
     }
@@ -132,8 +129,12 @@ public class MyApplication extends Application {
         return mainActivity;
     }
 
-    public Paint getPaint() {
-        return paint;
+    public PaintCanvas getCurrentPaintCanvas() {
+        return currentPaintCanvas;
+    }
+
+    public Paint getCurrentPaint() {
+        return currentPaint;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -155,7 +156,7 @@ public class MyApplication extends Application {
         screenHeight = size.y;
 
         //initialize paint
-        paint = new Paint();
+        currentPaint = new Paint();
 
         //load 'plugins/'
         ToolManager mToolManager = ToolManager.getInstance();
@@ -199,7 +200,7 @@ public class MyApplication extends Application {
     }
 
     public void setCurrentPaintCanvas(PaintCanvas pc) {
-        currentpc = pc;
+        currentPaintCanvas = pc;
     }
 
     public void setPaintCanvasOnTouchListener(View.OnTouchListener l) {

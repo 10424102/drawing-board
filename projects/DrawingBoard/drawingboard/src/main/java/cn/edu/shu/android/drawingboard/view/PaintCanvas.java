@@ -121,4 +121,8 @@ public class PaintCanvas extends ViewGroup {
     public void invalidate() {
         draft.invalidate();
     }
+
+    public void endGeneration() {
+        draft.setOnTouchListener(defaultOnTouchListener);
+    }
 }

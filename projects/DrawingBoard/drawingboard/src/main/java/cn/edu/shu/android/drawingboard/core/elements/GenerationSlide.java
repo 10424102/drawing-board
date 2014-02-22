@@ -15,12 +15,27 @@ import cn.edu.shu.android.drawingboard.view.PaintCanvas;
 public class GenerationSlide<T extends Element> implements View.OnTouchListener {
     private MyApplication app = MyApplication.getInstance();
     private Class<T> ElementClass;
-    private GenerationSlideListener listener;
+    private GenerationSlideListener listener = new GenerationSlideListener() {
+        @Override
+        public void onActionDown(Element e, float x, float y, Canvas canvas) {
+
+        }
+
+        @Override
+        public void onActionMove(Element e, float x, float y, Canvas canvas, float startX, float startY, float prevX, float prevY) {
+
+        }
+
+        @Override
+        public void onActionUp(Element e, float x, float y, float startX, float startY) {
+
+        }
+    };
     private T element;
     private float startX;
     private float startY;
-    private float endX;
-    private float endY;
+    private float prevX;
+    private float prevY;
 
     public void setGenerationSlideListener(GenerationSlideListener l) {
         listener = l;
@@ -35,7 +50,8 @@ public class GenerationSlide<T extends Element> implements View.OnTouchListener 
         public void onActionMove(T e,
                                  float x, float y,
                                  Canvas canvas,
-                                 float startX, float startY
+                                 float startX, float startY,
+                                 float prevX, float prevY
         );
 
         public void onActionUp(T e,
@@ -59,11 +75,12 @@ public class GenerationSlide<T extends Element> implements View.OnTouchListener 
             case MotionEvent.ACTION_DOWN:
                 startX = eventX;
                 startY = eventY;
-                endX = startX;
-                endY = startY;
+                prevX = startX;
+                prevY = startY;
                 try {
                     element = ElementClass.getDeclaredConstructor(ElementClass).newInstance(app.getCurrentTool().getContent());
                     element.setGenTool(app.getCurrentTool());
+                    //element.setPaint(app.getCurrentPaint());
                     listener.onActionDown(element, eventX, eventY, canvas);
                     draft.invalidate();
                 } catch (Exception e) {
@@ -72,17 +89,19 @@ public class GenerationSlide<T extends Element> implements View.OnTouchListener 
                 break;
             case MotionEvent.ACTION_MOVE:
                 draft.clear();
-                listener.onActionMove(element, eventX, eventY, canvas, startX, startY);
+                listener.onActionMove(element, eventX, eventY, canvas, startX, startY, prevX, prevY);
                 draft.invalidate();
-                endX = eventX;
-                endY = eventY;
+                prevX = eventX;
+                prevY = eventY;
                 break;
             case MotionEvent.ACTION_UP:
                 draft.clear();
                 draft.invalidate();
                 listener.onActionUp(element, eventX, eventY, startX, startY);
-                element.measure(startX, startY, eventX, eventY);
+                Position leftTop = element.measure(startX, startY, eventX, eventY);
                 CanvasElement canvasElement = new CanvasElement(app.getContext());
+                canvasElement.setX(leftTop.x);
+                canvasElement.setY(leftTop.y);
                 canvasElement.setContent(element);
                 pc.add(canvasElement);
                 break;

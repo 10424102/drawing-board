@@ -42,18 +42,19 @@
         android:src="@drawable/colorbutton"
         android:layout_width="64dp"
         android:layout_height="64dp" />
-    <!--<Button-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_marginLeft="300dp"-->
-    <!--android:layout_marginTop="300dp"-->
-    <!--android:text="Test Button 1"-->
-    <!--android:id="@+id/btn_test_1" />-->
-    <!--<Button-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_marginLeft="300dp"-->
-    <!--android:layout_marginTop="400dp"-->
-    <!--android:text="Test Button 2"-->
-    <!--android:id="@+id/btn_test_2" />-->
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="Test Button 1"
+        android:id="@+id/btn_test_1" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/btn_test_1"
+        android:text="Test Button 2"
+        android:id="@+id/btn_test_2" />
 </RelativeLayout>
