@@ -7,27 +7,12 @@ import java.util.Iterator;
 import cn.edu.shu.android.drawingboard.core.XmlInitializable;
 import cn.edu.shu.android.drawingboard.core.elements.Element;
 import cn.edu.shu.android.drawingboard.core.elements.GenerationClick;
+import cn.edu.shu.android.drawingboard.core.elements.Position;
 import cn.edu.shu.android.drawingboard.xml.Block;
 import cn.edu.shu.android.drawingboard.xml.XmlInitializer;
 import cn.edu.shu.android.drawingboard.xml.XmlParserException;
 
 public class Dot extends Element implements XmlInitializable {
-
-    private float dotX;
-    private float dotY;
-
-    public float getDotX() {
-        return dotX;
-    }
-
-    public float getDotY() {
-        return dotY;
-    }
-
-    public void setDotXY(float x, float y) {
-        dotX = x;
-        dotY = y;
-    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     //                                    Constructor
@@ -38,8 +23,6 @@ public class Dot extends Element implements XmlInitializable {
 
     public Dot(Dot x) {
         super(x);
-        dotX = x.getDotX();
-        dotY = x.getDotY();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -48,13 +31,18 @@ public class Dot extends Element implements XmlInitializable {
 
 
     @Override
-    public void measure(float startX, float startY, float endX, float endY) {
-        center.set(startX, startY);
+    public Position measure(float startX, float startY, float endX, float endY) {
+        float paintStrokeWidth = paint.getStrokeWidth();
+        width = paintStrokeWidth + PADDING;
+        height = paintStrokeWidth + PADDING;
+        centerX = width / 2;
+        centerY = height / 2;
+        return new Position(startX - centerX, startY - centerY);
     }
 
     @Override
     public void paint(Canvas canvas) {
-        canvas.drawPoint(dotX, dotY, getPaint());
+        canvas.drawPoint(width / 2, height / 2, paint);
     }
 
     @Override
@@ -63,7 +51,6 @@ public class Dot extends Element implements XmlInitializable {
         gen.setGenerationClickListener(new GenerationClick.GenerationClickListener<Dot>() {
             @Override
             public void onSetElement(Dot e, float clickX, float clickY) {
-                e.setDotXY(clickX, clickY);
             }
         });
         app.setPaintCanvasOnTouchListener(gen);
@@ -82,5 +69,13 @@ public class Dot extends Element implements XmlInitializable {
             }
         }
         return true;
+    }
+
+    @Override
+    public boolean inside(float x, float y) {
+        double dx = x - centerX;
+        double dy = y - centerY;
+        if (Math.sqrt(dx * dx + dy * dy) <= 24) return true;
+        return false;
     }
 }

@@ -9,6 +9,7 @@ import java.util.Iterator;
 import cn.edu.shu.android.drawingboard.core.XmlInitializable;
 import cn.edu.shu.android.drawingboard.core.elements.Element;
 import cn.edu.shu.android.drawingboard.core.elements.GenerationSlide;
+import cn.edu.shu.android.drawingboard.core.elements.Position;
 import cn.edu.shu.android.drawingboard.util.BitmapUtil;
 import cn.edu.shu.android.drawingboard.xml.Attr;
 import cn.edu.shu.android.drawingboard.xml.Block;
@@ -23,16 +24,6 @@ public class StaticPicture extends Element implements XmlInitializable {
     private Bitmap bmp;
     private int pictureWidth;
     private int pictureHeight;
-    private float left;
-    private float top;
-
-    public float getLeft() {
-        return left;
-    }
-
-    public float getTop() {
-        return top;
-    }
 
     public int getPictureWidth() {
         return pictureWidth;
@@ -40,11 +31,6 @@ public class StaticPicture extends Element implements XmlInitializable {
 
     public int getPictureHeight() {
         return pictureHeight;
-    }
-
-    public void setLeftTop(float l, float t) {
-        left = l;
-        top = t;
     }
 
     public Bitmap getPicture() {
@@ -76,14 +62,18 @@ public class StaticPicture extends Element implements XmlInitializable {
     }
 
     @Override
-    public void measure(float startX, float startY, float endX, float endY) {
-        center.set(endX, endY);
+    public Position measure(float startX, float startY, float endX, float endY) {
+        width = pictureWidth + PADDING;
+        height = pictureHeight + PADDING;
+        centerX = width / 2;
+        centerY = height / 2;
+        return new Position(endX - centerX, endY - centerY);
     }
 
     @Override
     public void paint(Canvas canvas) {
         getPicture();
-        canvas.drawBitmap(bmp, left, top, getPaint());
+        canvas.drawBitmap(bmp, (width - pictureWidth) / 2, (height - pictureHeight) / 2, paint);
         bmp.recycle();
     }
 
@@ -97,14 +87,13 @@ public class StaticPicture extends Element implements XmlInitializable {
             }
 
             @Override
-            public void onActionMove(StaticPicture e, float x, float y, Canvas canvas, float startX, float startY) {
+            public void onActionMove(StaticPicture e, float x, float y, Canvas canvas, float startX, float startY, float prevX, float prevY) {
                 canvas.drawBitmap(e.getPicture(), x - e.getPictureWidth() / 2, y - e.getPictureHeight() / 2, e.getPaint());
             }
 
             @Override
             public void onActionUp(StaticPicture e, float x, float y, float startX, float startY) {
-                e.getPicture().recycle();
-                e.setLeftTop(x - e.getPictureWidth() / 2, y - e.getPictureHeight() / 2);
+                //e.getPicture().recycle();
             }
         });
         app.setPaintCanvasOnTouchListener(gen);
@@ -130,10 +119,14 @@ public class StaticPicture extends Element implements XmlInitializable {
                     setPaint(XmlInitializer.getPaint(b));
                     break;
                 case "center":
-                    center.xmlParse(b);
                     break;
             }
         }
+        return true;
+    }
+
+    @Override
+    public boolean inside(float x, float y) {
         return true;
     }
 }

@@ -7,6 +7,7 @@ import java.util.Iterator;
 import cn.edu.shu.android.drawingboard.core.XmlInitializable;
 import cn.edu.shu.android.drawingboard.core.elements.Element;
 import cn.edu.shu.android.drawingboard.core.elements.GenerationSlide;
+import cn.edu.shu.android.drawingboard.core.elements.Position;
 import cn.edu.shu.android.drawingboard.xml.Block;
 import cn.edu.shu.android.drawingboard.xml.XmlInitializer;
 import cn.edu.shu.android.drawingboard.xml.XmlParserException;
@@ -41,14 +42,19 @@ public class Circle extends Element implements XmlInitializable {
     //                                    Other
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-
     @Override
-    public void measure(float startX, float startY, float endX, float endY) {
+    public Position measure(float startX, float startY, float endX, float endY) {
+        float paintStrokeWidth = paint.getStrokeWidth();
+        width = radius * 2 + paintStrokeWidth + PADDING;
+        height = radius * 2 + paintStrokeWidth + PADDING;
+        centerX = width / 2;
+        centerY = height / 2;
+        return new Position(startX - centerX, startY - centerY);
     }
 
     @Override
     public void paint(Canvas canvas) {
-        canvas.drawCircle(center.x, center.y, radius, getPaint());
+        canvas.drawCircle(centerX, centerY, radius, paint);
     }
 
     private float distance(float x1, float y1, float x2, float y2) {
@@ -63,12 +69,11 @@ public class Circle extends Element implements XmlInitializable {
         gen.setGenerationSlideListener(new GenerationSlide.GenerationSlideListener<Circle>() {
             @Override
             public void onActionDown(Circle e, float x, float y, Canvas canvas) {
-                e.setCenter(x, y);
                 canvas.drawPoint(x, y, e.getPaint());
             }
 
             @Override
-            public void onActionMove(Circle e, float x, float y, Canvas canvas, float startX, float startY) {
+            public void onActionMove(Circle e, float x, float y, Canvas canvas, float startX, float startY, float prevX, float prevY) {
                 canvas.drawCircle(startX, startY, distance(startX, startY, x, y), e.getPaint());
             }
 
@@ -93,5 +98,13 @@ public class Circle extends Element implements XmlInitializable {
             }
         }
         return true;
+    }
+
+    @Override
+    public boolean inside(float x, float y) {
+        double dx = x - centerX;
+        double dy = y - centerY;
+        if (Math.sqrt(dx * dx + dy * dy) <= width / 2) return true;
+        return false;
     }
 }

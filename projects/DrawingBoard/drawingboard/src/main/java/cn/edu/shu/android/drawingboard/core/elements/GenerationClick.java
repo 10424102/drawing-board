@@ -44,8 +44,10 @@ public class GenerationClick<T extends Element> implements View.OnTouchListener 
                     element = ElementClass.getDeclaredConstructor(ElementClass).newInstance((T) (app.getCurrentTool().getContent()));
                     element.setGenTool(app.getCurrentTool());
                     listener.onSetElement(element, eventX, eventY);
-                    element.measure(eventX, eventY, eventX, eventY);
+                    Position leftTop = element.measure(eventX, eventY, eventX, eventY);
                     CanvasElement canvasElement = new CanvasElement(app.getContext());
+                    canvasElement.setX(leftTop.x);
+                    canvasElement.setY(leftTop.y);
                     canvasElement.setContent(element);
                     pc.add(canvasElement);
                     app.getMainActivity().addContentView(canvasElement, new ViewGroup.LayoutParams(100, 100));

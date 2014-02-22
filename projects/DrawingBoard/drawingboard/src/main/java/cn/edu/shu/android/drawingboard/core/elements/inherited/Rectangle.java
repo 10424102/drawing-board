@@ -8,6 +8,7 @@ import java.util.Iterator;
 import cn.edu.shu.android.drawingboard.core.XmlInitializable;
 import cn.edu.shu.android.drawingboard.core.elements.Element;
 import cn.edu.shu.android.drawingboard.core.elements.GenerationSlide;
+import cn.edu.shu.android.drawingboard.core.elements.Position;
 import cn.edu.shu.android.drawingboard.xml.Block;
 import cn.edu.shu.android.drawingboard.xml.XmlInitializer;
 import cn.edu.shu.android.drawingboard.xml.XmlParserException;
@@ -17,39 +18,23 @@ import cn.edu.shu.android.drawingboard.xml.XmlParserException;
  */
 public class Rectangle extends Element implements XmlInitializable {
 
-    private float left;
-    private float top;
-    private float right;
-    private float bottom;
+    private float rectWidth;
+    private float rectHeight;
 
-    public float getLeft() {
-        return left;
+    public float getRectWidth() {
+        return rectWidth;
     }
 
-    public float getTop() {
-        return top;
+    public void setRectWidth(float rectWidth) {
+        this.rectWidth = rectWidth;
     }
 
-    public float getRight() {
-        return right;
+    public float getRectHeight() {
+        return rectHeight;
     }
 
-    public float getBottom() {
-        return bottom;
-    }
-
-    public void setSize(float l, float t, float r, float b) {
-        left = l;
-        top = t;
-        right = r;
-        bottom = b;
-    }
-
-    public void setSize(RectF rect) {
-        left = rect.left;
-        top = rect.top;
-        right = rect.right;
-        bottom = rect.bottom;
+    public void setRectHeight(float rectHeight) {
+        this.rectHeight = rectHeight;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -61,10 +46,8 @@ public class Rectangle extends Element implements XmlInitializable {
 
     public Rectangle(Rectangle x) {
         super(x);
-        left = x.getLeft();
-        top = x.getTop();
-        right = x.getRight();
-        bottom = x.getBottom();
+        rectWidth = x.getRectWidth();
+        rectHeight = x.getRectHeight();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -73,13 +56,22 @@ public class Rectangle extends Element implements XmlInitializable {
 
 
     @Override
-    public void measure(float startX, float startY, float endX, float endY) {
-        center.set((startX + endX) / 2, (startY + endY) / 2);
+    public Position measure(float startX, float startY, float endX, float endY) {
+        float paintStrokeWidth = paint.getStrokeWidth();
+        width = rectWidth + paintStrokeWidth + PADDING;
+        height = rectHeight + paintStrokeWidth + PADDING;
+        centerX = width / 2;
+        centerY = height / 2;
+        return new Position((startX + endX) / 2 - centerX, (startY + endY) / 2 - centerY);
     }
 
     @Override
     public void paint(Canvas canvas) {
-        canvas.drawRect(left, top, right, bottom, getPaint());
+        float left = (width - rectWidth) / 2;
+        float top = (height - rectHeight) / 2;
+        float right = left + rectWidth;
+        float bottom = top + rectHeight;
+        canvas.drawRect(left, top, right, bottom, paint);
     }
 
     private RectF rect(float sx, float sy, float ex, float ey) {
@@ -100,13 +92,15 @@ public class Rectangle extends Element implements XmlInitializable {
             }
 
             @Override
-            public void onActionMove(Rectangle e, float x, float y, Canvas canvas, float startX, float startY) {
+            public void onActionMove(Rectangle e, float x, float y, Canvas canvas, float startX, float startY, float prevX, float prevY) {
                 canvas.drawRect(rect(startX, startY, x, y), e.getPaint());
             }
 
             @Override
             public void onActionUp(Rectangle e, float x, float y, float startX, float startY) {
-                e.setSize(rect(startX, startY, x, y));
+                RectF r = rect(startX, startY, x, y);
+                e.setRectWidth(r.width());
+                e.setRectHeight(r.height());
             }
         });
         app.setPaintCanvasOnTouchListener(gen);
@@ -124,6 +118,11 @@ public class Rectangle extends Element implements XmlInitializable {
                     break;
             }
         }
+        return true;
+    }
+
+    @Override
+    public boolean inside(float x, float y) {
         return true;
     }
 }

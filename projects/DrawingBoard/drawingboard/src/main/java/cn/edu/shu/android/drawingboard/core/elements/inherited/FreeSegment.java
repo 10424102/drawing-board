@@ -9,6 +9,7 @@ import java.util.Iterator;
 import cn.edu.shu.android.drawingboard.core.XmlInitializable;
 import cn.edu.shu.android.drawingboard.core.elements.Element;
 import cn.edu.shu.android.drawingboard.core.elements.GenerationSlide;
+import cn.edu.shu.android.drawingboard.core.elements.Position;
 import cn.edu.shu.android.drawingboard.xml.Block;
 import cn.edu.shu.android.drawingboard.xml.XmlInitializer;
 import cn.edu.shu.android.drawingboard.xml.XmlParserException;
@@ -42,15 +43,22 @@ public class FreeSegment extends Element implements XmlInitializable {
 
 
     @Override
-    public void measure(float startX, float startY, float endX, float endY) {
+    public Position measure(float startX, float startY, float endX, float endY) {
+        float paintStrokeWidth = paint.getStrokeWidth();
         RectF boundary = new RectF();
         path.computeBounds(boundary, true);
-        center.set(boundary.centerX(), boundary.centerY());
+        width = boundary.width() + paintStrokeWidth + PADDING;
+        height = boundary.height() + paintStrokeWidth + PADDING;
+        centerX = width / 2;
+        centerY = height / 2;
+        Position leftTop = new Position(boundary.centerX() - centerX, boundary.centerY() - centerY);
+        path.offset(-leftTop.x, -leftTop.y);
+        return leftTop;
     }
 
     @Override
     public void paint(Canvas canvas) {
-        canvas.drawPath(path, getPaint());
+        canvas.drawPath(path, paint);
     }
 
     @Override
@@ -63,7 +71,7 @@ public class FreeSegment extends Element implements XmlInitializable {
             }
 
             @Override
-            public void onActionMove(FreeSegment e, float x, float y, Canvas canvas, float startX, float startY) {
+            public void onActionMove(FreeSegment e, float x, float y, Canvas canvas, float startX, float startY, float prevX, float prevY) {
                 Path path = e.getPath();
                 path.lineTo(x, y);
                 canvas.drawPath(path, e.getPaint());
@@ -89,6 +97,11 @@ public class FreeSegment extends Element implements XmlInitializable {
                     break;
             }
         }
+        return true;
+    }
+
+    @Override
+    public boolean inside(float x, float y) {
         return true;
     }
 }

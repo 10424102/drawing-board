@@ -8,6 +8,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Button;
 
 import cn.edu.shu.android.drawingboard.ui.ColorPanel;
 import cn.edu.shu.android.drawingboard.view.PaintCanvas;
@@ -36,17 +37,14 @@ public class MainActivity extends Activity implements PaintColorPickerDialog.OnC
 //        app.setPaintCanvas(pc);
         app.setMainActivity(this);
 //        app.setErrorBox(errorbox);
-//
-//        Button btnTest1 = (Button)findViewById(R.id.btn_test_1);
-//        btnTest1.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                app.error("11111111111111");
-//                app.error("22222222222222");
-//                app.error("33333333333333");
-//                app.showError();
-//            }
-//        });
+
+        Button btnTest1 = (Button) findViewById(R.id.btn_test_1);
+        btnTest1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                app.getCurrentPaintCanvas().endGeneration();
+            }
+        });
 //        Button btnTest2 = (Button)findViewById(R.id.btn_test_2);
 //        btnTest2.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -70,7 +68,7 @@ public class MainActivity extends Activity implements PaintColorPickerDialog.OnC
                 MainActivity.this.colorPanel.setARGB(255, 252, 255, 100);
                 MainActivity.this.colorPanel.invalidate();
 
-                new PaintColorPickerDialog(MainActivity.this, MainActivity.this, app.getPaint().getColor())
+                new PaintColorPickerDialog(MainActivity.this, MainActivity.this, app.getCurrentPaint().getColor())
                         .show();
             }
         });
@@ -98,7 +96,7 @@ public class MainActivity extends Activity implements PaintColorPickerDialog.OnC
                 new ToolboxFragment().show(getFragmentManager(), "toolbox");
                 break;
             case R.id.menu_clean_caves:
-                app.getPaintCanvas().clear();
+                app.getCurrentPaintCanvas().clear();
                 break;
             case R.id.menu_add_tool:
 
@@ -111,15 +109,15 @@ public class MainActivity extends Activity implements PaintColorPickerDialog.OnC
             case R.id.menu_save_template:
                 break;
             case R.id.menu_paint_color:
-                new PaintColorPickerDialog(this, this, app.getPaint().getColor())
+                new PaintColorPickerDialog(this, this, app.getCurrentPaint().getColor())
                         .show();
                 return true;
             case R.id.menu_paint_size:
-                new PaintSizePickerDialog(this, (int) app.getPaint().getStrokeWidth())
+                new PaintSizePickerDialog(this, (int) app.getCurrentPaint().getStrokeWidth())
                         .show(getFragmentManager(), "paint_size");
                 return true;
             case R.id.menu_paint_style:
-                new PaintStylePickerDialog(this, app.getPaint().getStyle())
+                new PaintStylePickerDialog(this, app.getCurrentPaint().getStyle())
                         .show(getFragmentManager(), "paint_style");
                 return true;
             case R.id.action_settings:
@@ -130,17 +128,17 @@ public class MainActivity extends Activity implements PaintColorPickerDialog.OnC
 
     @Override
     public void colorChanged(int color) {
-        app.getPaint().setColor(color);
+        app.getCurrentPaint().setColor(color);
     }
 
     @Override
     public void sizeChanged(int size) {
-        app.getPaint().setStrokeWidth(size);
+        app.getCurrentPaint().setStrokeWidth(size);
     }
 
     @Override
     public void styleChanged(Paint.Style style) {
-        app.getPaint().setStyle(style);
+        app.getCurrentPaint().setStyle(style);
     }
 
     public void hideColorPanle() {
