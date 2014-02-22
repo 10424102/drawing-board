@@ -38,6 +38,7 @@ public class ColorPanel extends ImageView {
     public void setARGB(int a, int r, int g, int b) {
         paint.setARGB(a, r, g, b);
     }
+
     public void setColor(int color){
         paint.setColor(color);
     }

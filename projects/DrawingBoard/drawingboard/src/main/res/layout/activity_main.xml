@@ -38,10 +38,17 @@
         android:layout_marginRight="-4dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:id="@+id/color_button"
+        android:id="@+id/color_panle_bar"
         android:src="@drawable/colorbutton"
         android:layout_width="64dp"
         android:layout_height="64dp" />
+
+    <ImageView
+        android:id="@+id/transparency_layer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bantouminghui" />
+
     <!--<Button-->
     <!--android:layout_width="wrap_content"-->
     <!--android:layout_height="wrap_content"-->

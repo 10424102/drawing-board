@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 
 import cn.edu.shu.android.drawingboard.ui.ColorPanel;
 import cn.edu.shu.android.drawingboard.view.PaintCanvas;
@@ -16,6 +17,8 @@ public class MainActivity extends Activity implements PaintColorPickerDialog.OnC
         PaintStylePickerDialog.OnStyleChangedListener {
     public static final MyApplication app = MyApplication.getInstance();
     private ColorPanel colorPanel = null;
+    private ImageView colorPanelBar = null;
+    private ImageView transparentLayer = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,14 +59,22 @@ public class MainActivity extends Activity implements PaintColorPickerDialog.OnC
 //        });
 
         //pc.bringToFront();
-        colorPanel = (ColorPanel)findViewById(R.id.color_panle);
+
+        transparentLayer = (ImageView) findViewById(R.id.transparency_layer);
+        colorPanelBar = (ImageView) findViewById(R.id.color_panle_bar);
+        colorPanel = (ColorPanel) findViewById(R.id.color_panle);
         colorPanel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                MainActivity.this.colorPanel.setARGB(255,252,255,100);
+                MainActivity.this.colorPanel.setARGB(255, 252, 255, 100);
+                MainActivity.this.colorPanel.invalidate();
+
+                new PaintColorPickerDialog(MainActivity.this, MainActivity.this, app.getPaint().getColor())
+                        .show();
             }
         });
+        hideTransparentLayer();
     }
 
 
@@ -130,5 +141,31 @@ public class MainActivity extends Activity implements PaintColorPickerDialog.OnC
     @Override
     public void styleChanged(Paint.Style style) {
         app.getPaint().setStyle(style);
+    }
+
+    public void hideColorPanle() {
+        if (colorPanel != null) {
+            colorPanel.setVisibility(View.INVISIBLE);
+        }
+        colorPanelBar.setVisibility(View.INVISIBLE);
+    }
+
+    public void showColorPanle() {
+        if (colorPanel != null) {
+            colorPanel.setVisibility(View.VISIBLE);
+        }
+        colorPanelBar.setVisibility(View.VISIBLE);
+    }
+
+    public void hideTransparentLayer() {
+        if (transparentLayer != null) {
+            transparentLayer.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    public void showTransparentLayer() {
+        if (transparentLayer != null) {
+            transparentLayer.setVisibility(View.VISIBLE);
+        }
     }
 }
