@@ -1,23 +1,21 @@
 package cn.edu.shu.android.drawingboard.core.elements;
 
-import android.graphics.Paint;
+import android.graphics.Canvas;
 import android.view.MotionEvent;
 import android.view.View;
 
 import cn.edu.shu.android.drawingboard.MyApplication;
-import cn.edu.shu.android.drawingboard.core.CanvasElement;
-import cn.edu.shu.android.drawingboard.core.PaintCanvas;
+import cn.edu.shu.android.drawingboard.view.CanvasElement;
+import cn.edu.shu.android.drawingboard.view.Draft;
+import cn.edu.shu.android.drawingboard.view.PaintCanvas;
 
 /**
  * Created by yy on 2/20/14.
  */
 public class GenerationSlide<T extends Element> implements View.OnTouchListener {
     private MyApplication app = MyApplication.getInstance();
-    private PaintCanvas pc = app.getPaintCanvas();
     private Class<T> ElementClass;
     private GenerationSlideListener listener;
-    private Paint drawPaint = app.getCurrentTool().getDrawPaint();
-    private Paint erasePaint = app.getCurrentTool().getErasePaint();
     private T element;
     private float startX;
     private float startY;
@@ -31,22 +29,19 @@ public class GenerationSlide<T extends Element> implements View.OnTouchListener 
     public interface GenerationSlideListener<T extends Element> {
         public void onActionDown(T e,
                                  float x, float y,
-                                 PaintCanvas pc,
-                                 Paint drawPaint, Paint erasePaint);
+                                 Canvas canvas
+        );
 
         public void onActionMove(T e,
                                  float x, float y,
-                                 PaintCanvas pc,
-                                 Paint drawPaint, Paint erasePaint,
-                                 float startX, float startY,
-                                 float endX, float endY);
+                                 Canvas canvas,
+                                 float startX, float startY
+        );
 
         public void onActionUp(T e,
                                float x, float y,
-                               PaintCanvas pc,
-                               Paint drawPaint, Paint erasePaint,
-                               float startX, float startY,
-                               float endX, float endY);
+                               float startX, float startY
+        );
     }
 
     public GenerationSlide(Class<T> clazz) {
@@ -55,6 +50,9 @@ public class GenerationSlide<T extends Element> implements View.OnTouchListener 
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
+        Draft draft = (Draft) v;
+        Canvas canvas = draft.getCanvas();
+        PaintCanvas pc = draft.getPaintCanvas();
         float eventX = event.getX();
         float eventY = event.getY();
         switch (event.getAction()) {
@@ -66,22 +64,27 @@ public class GenerationSlide<T extends Element> implements View.OnTouchListener 
                 try {
                     element = ElementClass.getDeclaredConstructor(ElementClass).newInstance(app.getCurrentTool().getContent());
                     element.setGenTool(app.getCurrentTool());
-                    listener.onActionDown(element, eventX, eventY, pc, drawPaint, erasePaint);
+                    listener.onActionDown(element, eventX, eventY, canvas);
+                    draft.invalidate();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 break;
             case MotionEvent.ACTION_MOVE:
-                listener.onActionMove(element, eventX, eventY, pc, drawPaint, erasePaint, startX, startY, endX, endY);
+                draft.clear();
+                listener.onActionMove(element, eventX, eventY, canvas, startX, startY);
+                draft.invalidate();
                 endX = eventX;
                 endY = eventY;
                 break;
             case MotionEvent.ACTION_UP:
-                listener.onActionUp(element, eventX, eventY, pc, drawPaint, erasePaint, startX, startY, endX, endY);
+                draft.clear();
+                draft.invalidate();
+                listener.onActionUp(element, eventX, eventY, startX, startY);
                 element.measure(startX, startY, eventX, eventY);
                 CanvasElement canvasElement = new CanvasElement(app.getContext());
                 canvasElement.setContent(element);
-                pc.addCanvasElement(canvasElement);
+                pc.add(canvasElement);
                 break;
         }
         return true;

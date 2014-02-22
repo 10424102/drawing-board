@@ -1,13 +1,12 @@
-package cn.edu.shu.android.drawingboard.core.elements;
+package cn.edu.shu.android.drawingboard.core.elements.inherited;
 
 import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.view.View;
 
 import java.util.Iterator;
 
-import cn.edu.shu.android.drawingboard.core.PaintCanvas;
 import cn.edu.shu.android.drawingboard.core.XmlInitializable;
+import cn.edu.shu.android.drawingboard.core.elements.Element;
+import cn.edu.shu.android.drawingboard.core.elements.GenerationSlide;
 import cn.edu.shu.android.drawingboard.xml.Block;
 import cn.edu.shu.android.drawingboard.xml.XmlInitializer;
 import cn.edu.shu.android.drawingboard.xml.XmlParserException;
@@ -45,16 +44,11 @@ public class Circle extends Element implements XmlInitializable {
 
     @Override
     public void measure(float startX, float startY, float endX, float endY) {
-        pureWidth = radius * 2;
-        pureHeight = radius * 2;
-        calculateRealSize();
-        center.set(startX, startY);
     }
 
     @Override
-    public void paint(Canvas canvas, Paint paint) {
-        super.paint(canvas, paint);
-        canvas.drawCircle(width / 2, height / 2, radius, drawPaint);
+    public void paint(Canvas canvas) {
+        canvas.drawCircle(center.x, center.y, radius, getPaint());
     }
 
     private float distance(float x1, float y1, float x2, float y2) {
@@ -64,28 +58,26 @@ public class Circle extends Element implements XmlInitializable {
     }
 
     @Override
-    public void generate(View v) {
+    public void generate() {
         GenerationSlide<Circle> gen = new GenerationSlide<>(Circle.class);
         gen.setGenerationSlideListener(new GenerationSlide.GenerationSlideListener<Circle>() {
             @Override
-            public void onActionDown(Circle e, float x, float y, PaintCanvas pc, Paint drawPaint, Paint erasePaint) {
+            public void onActionDown(Circle e, float x, float y, Canvas canvas) {
+                e.setCenter(x, y);
+                canvas.drawPoint(x, y, e.getPaint());
             }
 
             @Override
-            public void onActionMove(Circle e, float x, float y, PaintCanvas pc, Paint drawPaint, Paint erasePaint, float startX, float startY, float endX, float endY) {
-                pc.getCanvas().drawCircle(startX, startY, distance(startX, startY, endX, endY), erasePaint);
-                pc.getCanvas().drawCircle(startX, startY, distance(startX, startY, x, y), drawPaint);
-                pc.invalidate();
+            public void onActionMove(Circle e, float x, float y, Canvas canvas, float startX, float startY) {
+                canvas.drawCircle(startX, startY, distance(startX, startY, x, y), e.getPaint());
             }
 
             @Override
-            public void onActionUp(Circle e, float x, float y, PaintCanvas pc, Paint drawPaint, Paint erasePaint, float startX, float startY, float endX, float endY) {
-                pc.getCanvas().drawCircle(startX, startY, distance(startX, startY, endX, endY), erasePaint);
-                pc.invalidate();
+            public void onActionUp(Circle e, float x, float y, float startX, float startY) {
                 e.setRadius(distance(startX, startY, x, y));
             }
         });
-        v.setOnTouchListener(gen);
+        app.setPaintCanvasOnTouchListener(gen);
     }
 
     @Override
