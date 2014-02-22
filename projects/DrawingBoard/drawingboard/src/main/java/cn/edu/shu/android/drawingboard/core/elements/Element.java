@@ -1,9 +1,6 @@
 package cn.edu.shu.android.drawingboard.core.elements;
 
-import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
 
 import cn.edu.shu.android.drawingboard.MyApplication;
 import cn.edu.shu.android.drawingboard.core.Generable;
@@ -17,37 +14,22 @@ public abstract class Element implements Generable, Paintable {
 
     protected int id;
     protected Tool genTool;
-    protected float width;
-    protected float height;
-    protected float pureWidth;
-    protected float pureHeight;
-    protected Paint drawPaint;
-    protected Paint erasePaint;
+    private Paint paint;
     protected Position center = new Position();
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    //
     //                                       Constructor
-    //
-    ////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////
     public Element() {
         id = ++idCount;
         genTool = null;
-        pureWidth = 0;
-        pureHeight = 0;
         setPaint(null);
-        calculateRealSize();
     }
 
     public Element(Element e) {
         id = ++idCount;
         genTool = e.getGenTool();
-        pureWidth = e.getPureWidth();
-        pureHeight = e.getPureHeight();
-        setPaint(e.getDrawPaint());
-        calculateRealSize();
+        setPaint(e.getPaint());
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -65,79 +47,29 @@ public abstract class Element implements Generable, Paintable {
         this.genTool = genTool;
     }
 
-    public float getWidth() {
-        return width;
-    }
-
-    public void setWidth(float width) {
-        this.width = width;
-    }
-
-    public float getHeight() {
-        return height;
-    }
-
-    public void setHeight(float height) {
-        this.height = height;
-    }
-
-    public float getPureWidth() {
-        return pureWidth;
-    }
-
-    public void setPureWidth(float pureWidth) {
-        this.pureWidth = pureWidth;
-    }
-
-    public float getPureHeight() {
-        return pureHeight;
-    }
-
-    public void setPureHeight(float pureHeight) {
-        this.pureHeight = pureHeight;
-    }
-
-    public Paint getDrawPaint() {
-        return drawPaint;
-    }
-
-    public void setDrawPaint(Paint drawPaint) {
-        this.drawPaint = drawPaint;
-    }
-
-    public Paint getErasePaint() {
-        return erasePaint;
-    }
-
-    public void setErasePaint(Paint erasePaint) {
-        this.erasePaint = erasePaint;
+    public Paint getPaint() {
+        return paint;
     }
 
     public Position getCenter() {
-        return center;
+        return new Position(center);
     }
 
     public void setCenter(Position center) {
-        this.center = center;
+        this.center = new Position(center);
     }
 
-    public int getWidthInt() {
-        return (int) width;
-    }
-
-    public int getHeightInt() {
-        return (int) height;
+    public void setCenter(float x, float y) {
+        center = new Position(x, y);
     }
 
     public void setPaint(Paint p) {
         if (p == null) {
-            drawPaint = new Paint();
-            erasePaint = new Paint();
+            paint = new Paint();
         } else {
-            drawPaint = new Paint(p);
-            erasePaint = new Paint(p);
+            paint = new Paint(p);
         }
-        erasePaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+//        erasePaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -150,17 +82,6 @@ public abstract class Element implements Generable, Paintable {
             if (id == ((Element) o).getId()) return true;
         }
         return false;
-    }
-
-    @Override
-    public void paint(Canvas canvas, Paint paint) {
-        if (paint != null) setPaint(paint);
-    }
-
-    protected void calculateRealSize() {
-        float strokeWidth = drawPaint.getStrokeWidth();
-        width = pureWidth + strokeWidth + 2 * PADDING;
-        height = pureHeight + strokeWidth + 2 * PADDING;
     }
 
     public abstract void measure(float startX, float startY, float endX, float endY);

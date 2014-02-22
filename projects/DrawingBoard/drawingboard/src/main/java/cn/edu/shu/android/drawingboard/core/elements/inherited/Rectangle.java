@@ -1,14 +1,13 @@
-package cn.edu.shu.android.drawingboard.core.elements;
+package cn.edu.shu.android.drawingboard.core.elements.inherited;
 
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.graphics.RectF;
-import android.view.View;
 
 import java.util.Iterator;
 
-import cn.edu.shu.android.drawingboard.core.PaintCanvas;
 import cn.edu.shu.android.drawingboard.core.XmlInitializable;
+import cn.edu.shu.android.drawingboard.core.elements.Element;
+import cn.edu.shu.android.drawingboard.core.elements.GenerationSlide;
 import cn.edu.shu.android.drawingboard.xml.Block;
 import cn.edu.shu.android.drawingboard.xml.XmlInitializer;
 import cn.edu.shu.android.drawingboard.xml.XmlParserException;
@@ -18,20 +17,39 @@ import cn.edu.shu.android.drawingboard.xml.XmlParserException;
  */
 public class Rectangle extends Element implements XmlInitializable {
 
-    public float getRectWidth() {
-        return pureWidth;
+    private float left;
+    private float top;
+    private float right;
+    private float bottom;
+
+    public float getLeft() {
+        return left;
     }
 
-    public void setRectWidth(float width) {
-        pureWidth = width;
+    public float getTop() {
+        return top;
     }
 
-    public float getRectHeight() {
-        return pureHeight;
+    public float getRight() {
+        return right;
     }
 
-    public void setRectHeight(float height) {
-        pureHeight = height;
+    public float getBottom() {
+        return bottom;
+    }
+
+    public void setSize(float l, float t, float r, float b) {
+        left = l;
+        top = t;
+        right = r;
+        bottom = b;
+    }
+
+    public void setSize(RectF rect) {
+        left = rect.left;
+        top = rect.top;
+        right = rect.right;
+        bottom = rect.bottom;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -43,8 +61,10 @@ public class Rectangle extends Element implements XmlInitializable {
 
     public Rectangle(Rectangle x) {
         super(x);
-        pureWidth = x.getRectWidth();
-        pureHeight = x.getRectHeight();
+        left = x.getLeft();
+        top = x.getTop();
+        right = x.getRight();
+        bottom = x.getBottom();
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -54,18 +74,12 @@ public class Rectangle extends Element implements XmlInitializable {
 
     @Override
     public void measure(float startX, float startY, float endX, float endY) {
-        calculateRealSize();
         center.set((startX + endX) / 2, (startY + endY) / 2);
     }
 
     @Override
-    public void paint(Canvas canvas, Paint paint) {
-        super.paint(canvas, paint);
-        float top = (height - pureHeight) / 2;
-        float left = (width - pureWidth) / 2;
-        float bottom = top + pureHeight;
-        float right = left + pureWidth;
-        canvas.drawRect(left, top, right, bottom, drawPaint);
+    public void paint(Canvas canvas) {
+        canvas.drawRect(left, top, right, bottom, getPaint());
     }
 
     private RectF rect(float sx, float sy, float ex, float ey) {
@@ -77,29 +91,25 @@ public class Rectangle extends Element implements XmlInitializable {
     }
 
     @Override
-    public void generate(View v) {
+    public void generate() {
         GenerationSlide<Rectangle> gen = new GenerationSlide<>(Rectangle.class);
         gen.setGenerationSlideListener(new GenerationSlide.GenerationSlideListener<Rectangle>() {
             @Override
-            public void onActionDown(Rectangle e, float x, float y, PaintCanvas pc, Paint drawPaint, Paint erasePaint) {
+            public void onActionDown(Rectangle e, float x, float y, Canvas canvas) {
+
             }
 
             @Override
-            public void onActionMove(Rectangle e, float x, float y, PaintCanvas pc, Paint drawPaint, Paint erasePaint, float startX, float startY, float endX, float endY) {
-                pc.getCanvas().drawRect(rect(startX, startY, endX, endY), erasePaint);
-                pc.getCanvas().drawRect(rect(startX, startY, x, y), drawPaint);
-                pc.invalidate();
+            public void onActionMove(Rectangle e, float x, float y, Canvas canvas, float startX, float startY) {
+                canvas.drawRect(rect(startX, startY, x, y), e.getPaint());
             }
 
             @Override
-            public void onActionUp(Rectangle e, float x, float y, PaintCanvas pc, Paint drawPaint, Paint erasePaint, float startX, float startY, float endX, float endY) {
-                pc.getCanvas().drawRect(rect(startX, startY, endX, endY), erasePaint);
-                pc.invalidate();
-                e.setRectWidth(Math.abs(startX - x));
-                e.setRectHeight(Math.abs(startY - y));
+            public void onActionUp(Rectangle e, float x, float y, float startX, float startY) {
+                e.setSize(rect(startX, startY, x, y));
             }
         });
-        v.setOnTouchListener(gen);
+        app.setPaintCanvasOnTouchListener(gen);
     }
 
     @Override

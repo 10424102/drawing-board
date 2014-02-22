@@ -61,28 +61,23 @@ public class ToolManager {
     private ToolManager() {
     }
 
-    public void buildTool(String name) throws BuildToolException {
-        //String toolDir = app.APP_HOME + app.PLUGIN_DIR + name + "/";
-        String toolDir = "/sdcard/drawingboard/" + app.PLUGIN_DIR + name + "/";
-        File toolXml = new File(toolDir + name + ".xml");
-        if (toolXml.exists()) {
-            Tool t = new Tool();
-            t.setDirPath(toolDir);
-            buildToolByXML(t, toolXml.getPath());
-            tools.add(t);
-        } else throw new BuildToolException("Tool built file doesn't exists: " + toolXml.getPath());
-    }
-
-    public void buildToolByXML(Tool t, String XMLFilePath) throws BuildToolException {
+    public Tool buildTool(String name) throws BuildToolException {
+        Tool t = null;
+        Block root;
+        String toolDir = MyApplication.PLUGIN_DIR + name + "/";
         try {
-            File xml = new File(XMLFilePath);
-            if (!xml.exists()) throw new BuildToolException("Xml file not found.");
-            FileInputStream fis = new FileInputStream(xml);
-            Block root = new XmlParser().getRootBlock(fis);
+            File xml = new File(toolDir + name + ".xml");
+            if (!xml.exists()) throw new BuildToolException("Xml file not exists.");
+            root = new XmlParser().getRootBlock(new FileInputStream(xml));
+            t = new Tool();
+            t.setDirPath(toolDir);
             t.xmlParse(root);
+            tools.add(t);
         } catch (Exception e) {
             throw new BuildToolException(e);
         }
+
+        return t;
     }
 
     public List<ToolDisplayModel> getToolDisplayModelList() {

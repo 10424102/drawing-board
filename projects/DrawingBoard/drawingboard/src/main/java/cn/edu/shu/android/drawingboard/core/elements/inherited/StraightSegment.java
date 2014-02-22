@@ -1,13 +1,13 @@
-package cn.edu.shu.android.drawingboard.core.elements;
+package cn.edu.shu.android.drawingboard.core.elements.inherited;
 
 import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.view.View;
 
 import java.util.Iterator;
 
-import cn.edu.shu.android.drawingboard.core.PaintCanvas;
 import cn.edu.shu.android.drawingboard.core.XmlInitializable;
+import cn.edu.shu.android.drawingboard.core.elements.Element;
+import cn.edu.shu.android.drawingboard.core.elements.GenerationSlide;
+import cn.edu.shu.android.drawingboard.core.elements.Position;
 import cn.edu.shu.android.drawingboard.xml.Block;
 import cn.edu.shu.android.drawingboard.xml.XmlInitializer;
 import cn.edu.shu.android.drawingboard.xml.XmlParserException;
@@ -48,46 +48,36 @@ public class StraightSegment extends Element implements XmlInitializable {
     }
 
     public void measure(float startX, float startY, float endX, float endY) {
-        pureWidth = Math.abs(start.x - end.x);
-        pureHeight = Math.abs(start.y - end.y);
-        calculateRealSize();
-        float dx = (start.x + end.x - width) / 2;
-        float dy = (start.y + end.y - height) / 2;
-        start.offset(-dx, -dy);
-        end.offset(-dx, -dy);
         center.set((startX + endX) / 2, (startY + endY) / 2);
     }
 
 
     @Override
-    public void paint(Canvas canvas, Paint paint) {
-        super.paint(canvas, paint);
-        canvas.drawLine(start.x, start.y, end.x, end.y, drawPaint);
+    public void paint(Canvas canvas) {
+        canvas.drawLine(start.x, start.y, end.x, end.y, getPaint());
     }
 
     @Override
-    public void generate(View v) {
+    public void generate() {
         GenerationSlide<StraightSegment> gen = new GenerationSlide<>(StraightSegment.class);
         gen.setGenerationSlideListener(new GenerationSlide.GenerationSlideListener<StraightSegment>() {
             @Override
-            public void onActionDown(StraightSegment e, float x, float y, PaintCanvas pc, Paint drawPaint, Paint erasePaint) {
+            public void onActionDown(StraightSegment e, float x, float y, Canvas canvas) {
+                canvas.drawPoint(x, y, e.getPaint());
             }
 
             @Override
-            public void onActionMove(StraightSegment e, float x, float y, PaintCanvas pc, Paint drawPaint, Paint erasePaint, float startX, float startY, float endX, float endY) {
-                pc.getCanvas().drawLine(startX, startY, endX, endY, erasePaint);
-                pc.getCanvas().drawLine(startX, startY, x, y, drawPaint);
-                pc.invalidate();
+            public void onActionMove(StraightSegment e, float x, float y, Canvas canvas, float startX, float startY) {
+                canvas.drawLine(startX, startY, x, y, e.getPaint());
             }
 
             @Override
-            public void onActionUp(StraightSegment e, float x, float y, PaintCanvas pc, Paint drawPaint, Paint erasePaint, float startX, float startY, float endX, float endY) {
-                pc.getCanvas().drawLine(startX, startY, endX, endY, erasePaint);
+            public void onActionUp(StraightSegment e, float x, float y, float startX, float startY) {
                 e.setStart(startX, startY);
                 e.setEnd(x, y);
             }
         });
-        v.setOnTouchListener(gen);
+        app.setPaintCanvasOnTouchListener(gen);
     }
 
     @Override

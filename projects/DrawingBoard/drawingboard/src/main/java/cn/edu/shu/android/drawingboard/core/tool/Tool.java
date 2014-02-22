@@ -1,18 +1,16 @@
 package cn.edu.shu.android.drawingboard.core.tool;
 
-import android.graphics.Paint;
-
 import java.util.Iterator;
 
 import cn.edu.shu.android.drawingboard.MyApplication;
 import cn.edu.shu.android.drawingboard.core.XmlInitializable;
-import cn.edu.shu.android.drawingboard.core.elements.Circle;
-import cn.edu.shu.android.drawingboard.core.elements.Dot;
 import cn.edu.shu.android.drawingboard.core.elements.Element;
-import cn.edu.shu.android.drawingboard.core.elements.FreeSegment;
-import cn.edu.shu.android.drawingboard.core.elements.Rectangle;
-import cn.edu.shu.android.drawingboard.core.elements.StaticPicture;
-import cn.edu.shu.android.drawingboard.core.elements.StraightSegment;
+import cn.edu.shu.android.drawingboard.core.elements.inherited.Circle;
+import cn.edu.shu.android.drawingboard.core.elements.inherited.Dot;
+import cn.edu.shu.android.drawingboard.core.elements.inherited.FreeSegment;
+import cn.edu.shu.android.drawingboard.core.elements.inherited.Rectangle;
+import cn.edu.shu.android.drawingboard.core.elements.inherited.StaticPicture;
+import cn.edu.shu.android.drawingboard.core.elements.inherited.StraightSegment;
 import cn.edu.shu.android.drawingboard.xml.Attr;
 import cn.edu.shu.android.drawingboard.xml.Block;
 import cn.edu.shu.android.drawingboard.xml.XmlParserException;
@@ -70,15 +68,7 @@ public class Tool implements XmlInitializable {
 
     public void startUsing() {
         app.setCurrentTool(this);
-        content.generate(app.getPaintCanvas());
-    }
-
-    public Paint getDrawPaint() {
-        return content.getDrawPaint();
-    }
-
-    public Paint getErasePaint() {
-        return content.getErasePaint();
+        content.generate();
     }
 
     @Override

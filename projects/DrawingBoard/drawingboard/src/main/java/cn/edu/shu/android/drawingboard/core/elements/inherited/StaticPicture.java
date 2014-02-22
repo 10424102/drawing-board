@@ -1,15 +1,14 @@
-package cn.edu.shu.android.drawingboard.core.elements;
+package cn.edu.shu.android.drawingboard.core.elements.inherited;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.graphics.Point;
-import android.view.View;
 
 import java.util.Iterator;
 
-import cn.edu.shu.android.drawingboard.core.PaintCanvas;
 import cn.edu.shu.android.drawingboard.core.XmlInitializable;
+import cn.edu.shu.android.drawingboard.core.elements.Element;
+import cn.edu.shu.android.drawingboard.core.elements.GenerationSlide;
 import cn.edu.shu.android.drawingboard.util.BitmapUtil;
 import cn.edu.shu.android.drawingboard.xml.Attr;
 import cn.edu.shu.android.drawingboard.xml.Block;
@@ -20,10 +19,35 @@ import cn.edu.shu.android.drawingboard.xml.XmlParserException;
  * Created by yy on 2/19/14.
  */
 public class StaticPicture extends Element implements XmlInitializable {
-    String picturePath;
-    Bitmap bmp;
+    private String picturePath;
+    private Bitmap bmp;
+    private int pictureWidth;
+    private int pictureHeight;
+    private float left;
+    private float top;
 
-    public Bitmap getBmp() {
+    public float getLeft() {
+        return left;
+    }
+
+    public float getTop() {
+        return top;
+    }
+
+    public int getPictureWidth() {
+        return pictureWidth;
+    }
+
+    public int getPictureHeight() {
+        return pictureHeight;
+    }
+
+    public void setLeftTop(float l, float t) {
+        left = l;
+        top = t;
+    }
+
+    public Bitmap getPicture() {
         if (bmp == null || bmp.isRecycled()) {
             bmp = BitmapUtil.getBitmapFile(picturePath);
         }
@@ -47,6 +71,8 @@ public class StaticPicture extends Element implements XmlInitializable {
     public StaticPicture(StaticPicture x) {
         super(x);
         picturePath = x.getPicturePath();
+        pictureHeight = x.getPictureHeight();
+        pictureWidth = x.getPictureWidth();
     }
 
     @Override
@@ -55,38 +81,33 @@ public class StaticPicture extends Element implements XmlInitializable {
     }
 
     @Override
-    public void paint(Canvas canvas, Paint paint) {
-        super.paint(canvas, paint);
-        bmp = getBmp();
-        canvas.drawBitmap(bmp, (width - pureWidth) / 2, (height - pureHeight) / 2, drawPaint);
+    public void paint(Canvas canvas) {
+        getPicture();
+        canvas.drawBitmap(bmp, left, top, getPaint());
         bmp.recycle();
     }
 
     @Override
-    public void generate(View v) {
+    public void generate() {
         GenerationSlide<StaticPicture> gen = new GenerationSlide<>(StaticPicture.class);
         gen.setGenerationSlideListener(new GenerationSlide.GenerationSlideListener<StaticPicture>() {
             @Override
-            public void onActionDown(StaticPicture e, float x, float y, PaintCanvas pc, Paint drawPaint, Paint erasePaint) {
-                pc.getCanvas().drawBitmap(e.getBmp(), x - e.getPureWidth() / 2, y - e.getPureHeight() / 2, drawPaint);
-                pc.invalidate();
+            public void onActionDown(StaticPicture e, float x, float y, Canvas canvas) {
+                canvas.drawBitmap(e.getPicture(), x - e.getPictureWidth() / 2, y - e.getPictureHeight() / 2, e.getPaint());
             }
 
             @Override
-            public void onActionMove(StaticPicture e, float x, float y, PaintCanvas pc, Paint drawPaint, Paint erasePaint, float startX, float startY, float endX, float endY) {
-                pc.getCanvas().drawBitmap(e.getBmp(), endX - e.getPureWidth() / 2, endY - e.getPureHeight() / 2, erasePaint);
-                pc.getCanvas().drawBitmap(e.getBmp(), x - e.getPureWidth() / 2, y - e.getPureHeight() / 2, drawPaint);
-                pc.invalidate();
+            public void onActionMove(StaticPicture e, float x, float y, Canvas canvas, float startX, float startY) {
+                canvas.drawBitmap(e.getPicture(), x - e.getPictureWidth() / 2, y - e.getPictureHeight() / 2, e.getPaint());
             }
 
             @Override
-            public void onActionUp(StaticPicture e, float x, float y, PaintCanvas pc, Paint drawPaint, Paint erasePaint, float startX, float startY, float endX, float endY) {
-                pc.getCanvas().drawBitmap(e.getBmp(), endX - e.getPureWidth() / 2, endY - e.getPureHeight() / 2, erasePaint);
-                pc.invalidate();
-                e.getBmp().recycle();
+            public void onActionUp(StaticPicture e, float x, float y, float startX, float startY) {
+                e.getPicture().recycle();
+                e.setLeftTop(x - e.getPictureWidth() / 2, y - e.getPictureHeight() / 2);
             }
         });
-        v.setOnTouchListener(gen);
+        app.setPaintCanvasOnTouchListener(gen);
     }
 
     @Override
@@ -97,9 +118,8 @@ public class StaticPicture extends Element implements XmlInitializable {
                 case "path":
                     picturePath = genTool.getDirPath() + a.getValue();
                     Point size = BitmapUtil.getBitmapSize(picturePath);
-                    pureWidth = size.x;
-                    pureHeight = size.y;
-                    calculateRealSize();
+                    pictureWidth = size.x;
+                    pictureHeight = size.y;
                     break;
             }
         }

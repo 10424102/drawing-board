@@ -7,7 +7,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import cn.edu.shu.android.drawingboard.core.PaintCanvas;
+import cn.edu.shu.android.drawingboard.view.PaintCanvas;
 
 public class MainActivity extends Activity implements PaintColorPickerDialog.OnColorChangedListener,
         PaintSizePickerDialog.OnSizeChangedListener,
@@ -19,15 +19,40 @@ public class MainActivity extends Activity implements PaintColorPickerDialog.OnC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //setContentView(new PaintCanvas(this));
-
         PaintCanvas pc = (PaintCanvas) findViewById(R.id.my_canvas);
-        app.setPaintCanvas(pc);
-
-
+//        Errorbox errorbox = new Errorbox();
+//        errorbox.setContent("Fuck You!");
+//        getFragmentManager().beginTransaction().add(R.id.main_container, errorbox).commit();
+//        getFragmentManager().beginTransaction()
+//                .setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out)
+//                .hide(errorbox)
+//                .commit();
+//        app.setPaintCanvas(pc);
         app.setMainActivity(this);
+//        app.setErrorBox(errorbox);
+//
+//        Button btnTest1 = (Button)findViewById(R.id.btn_test_1);
+//        btnTest1.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                app.error("11111111111111");
+//                app.error("22222222222222");
+//                app.error("33333333333333");
+//                app.showError();
+//            }
+//        });
+//        Button btnTest2 = (Button)findViewById(R.id.btn_test_2);
+//        btnTest2.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                app.error("11111111111111");
+//                app.error("22222222222222");
+//                app.error("33333333333333");
+//                app.hideError();
+//            }
+//        });
 
-
+        //pc.bringToFront();
     }
 
 
@@ -63,15 +88,15 @@ public class MainActivity extends Activity implements PaintColorPickerDialog.OnC
             case R.id.menu_save_template:
                 break;
             case R.id.menu_paint_color:
-                new PaintColorPickerDialog(this, this, app.paint.getColor())
+                new PaintColorPickerDialog(this, this, app.getPaint().getColor())
                         .show();
                 return true;
             case R.id.menu_paint_size:
-                new PaintSizePickerDialog(this, (int) app.paint.getStrokeWidth())
+                new PaintSizePickerDialog(this, (int) app.getPaint().getStrokeWidth())
                         .show(getFragmentManager(), "paint_size");
                 return true;
             case R.id.menu_paint_style:
-                new PaintStylePickerDialog(this, app.paint.getStyle())
+                new PaintStylePickerDialog(this, app.getPaint().getStyle())
                         .show(getFragmentManager(), "paint_style");
                 return true;
             case R.id.action_settings:
@@ -82,16 +107,16 @@ public class MainActivity extends Activity implements PaintColorPickerDialog.OnC
 
     @Override
     public void colorChanged(int color) {
-        app.paint.setColor(color);
+        app.getPaint().setColor(color);
     }
 
     @Override
     public void sizeChanged(int size) {
-        app.paint.setStrokeWidth(size);
+        app.getPaint().setStrokeWidth(size);
     }
 
     @Override
     public void styleChanged(Paint.Style style) {
-        app.paint.setStyle(style);
+        app.getPaint().setStyle(style);
     }
 }

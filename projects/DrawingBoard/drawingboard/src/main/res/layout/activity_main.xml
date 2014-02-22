@@ -1,13 +1,33 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:id="@+id/main_container"
     android:background="@color/hufen">
 
-    <cn.edu.shu.android.drawingboard.core.PaintCanvas
+    <cn.edu.shu.android.drawingboard.view.PaintCanvas
         android:id="@+id/my_canvas"
-        android:layout_height="match_parent"
-        android:layout_width="match_parent" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        custom:width="300"
+        custom:height="200"
+        android:background="#2200ff00"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100dp" />
 
-</FrameLayout>
+    <!--<Button-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginLeft="300dp"-->
+    <!--android:layout_marginTop="300dp"-->
+    <!--android:text="Test Button 1"-->
+    <!--android:id="@+id/btn_test_1" />-->
+    <!--<Button-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginLeft="300dp"-->
+    <!--android:layout_marginTop="400dp"-->
+    <!--android:text="Test Button 2"-->
+    <!--android:id="@+id/btn_test_2" />-->
+</RelativeLayout>
