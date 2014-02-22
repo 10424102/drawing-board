@@ -6,14 +6,16 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
+import cn.edu.shu.android.drawingboard.ui.ColorPanel;
 import cn.edu.shu.android.drawingboard.view.PaintCanvas;
 
 public class MainActivity extends Activity implements PaintColorPickerDialog.OnColorChangedListener,
         PaintSizePickerDialog.OnSizeChangedListener,
         PaintStylePickerDialog.OnStyleChangedListener {
     public static final MyApplication app = MyApplication.getInstance();
-
+    private ColorPanel colorPanel = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +56,14 @@ public class MainActivity extends Activity implements PaintColorPickerDialog.OnC
 //        });
 
         //pc.bringToFront();
+        colorPanel = (ColorPanel)findViewById(R.id.color_panle);
+        colorPanel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                MainActivity.this.colorPanel.setARGB(255,252,255,100);
+            }
+        });
     }
 
 

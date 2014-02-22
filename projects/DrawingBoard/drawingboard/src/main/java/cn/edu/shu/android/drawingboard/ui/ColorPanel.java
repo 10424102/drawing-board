@@ -10,17 +10,21 @@ import android.widget.ImageView;
  * Created by otakuplus on 14-2-22.
  */
 public class ColorPanel extends ImageView {
+    private Paint paint = new Paint();
+
     public ColorPanel(Context context) {
         super(context);
+        paint.setARGB(255,255,255,255);
     }
 
     public ColorPanel(Context context, AttributeSet attrs) {
         super(context, attrs);
-
+        paint.setARGB(255,255,255,255);
     }
 
     public ColorPanel(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        paint.setARGB(255,255,255,255);
     }
 
     @Override
@@ -28,8 +32,13 @@ public class ColorPanel extends ImageView {
         super.onDraw(canvas);
         int width = getWidth();
         int height = getHeight();
-        Paint paint = new Paint();
-        paint.setARGB(255, 100, 100, 40);
-        canvas.drawCircle(width/2, height/2, width/2, paint);
+        canvas.drawCircle(width / 2, height / 2, width / 2, paint);
+    }
+
+    public void setARGB(int a, int r, int g, int b) {
+        paint.setARGB(a, r, g, b);
+    }
+    public void setColor(int color){
+        paint.setColor(color);
     }
 }
