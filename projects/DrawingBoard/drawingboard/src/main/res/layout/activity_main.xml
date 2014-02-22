@@ -1,13 +1,41 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:id="@+id/main_container"
-    android:background="@color/hufen">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/main_container">
+
 
     <cn.edu.shu.android.drawingboard.core.PaintCanvas
         android:id="@+id/my_canvas"
         android:layout_height="match_parent"
         android:layout_width="match_parent" />
 
-</FrameLayout>
+
+    <RelativeLayout
+        android:layout_height="match_parent"
+        android:layout_width="64dp">
+
+        <ImageView
+            android:id="@+id/brush_icon"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:src="@drawable/main_brush_icon_04" />
+
+    </RelativeLayout>
+
+    <cn.edu.shu.android.drawingboard.ui.ColorPanel
+        android:id="@+id/color_panle"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true" />
+
+    <ImageView
+        android:rotation="270"
+        android:layout_marginRight="-4dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:id="@+id/color_button"
+        android:src="@drawable/colorbutton"
+        android:layout_width="64dp"
+        android:layout_height="64dp" />
+</RelativeLayout>

@@ -3,6 +3,7 @@ package cn.edu.shu.android.drawingboard;
 import android.app.Activity;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -26,8 +27,6 @@ public class MainActivity extends Activity implements PaintColorPickerDialog.OnC
 
 
         app.setMainActivity(this);
-
-
     }
 
 
@@ -54,6 +53,7 @@ public class MainActivity extends Activity implements PaintColorPickerDialog.OnC
                 app.getPaintCanvas().clear();
                 break;
             case R.id.menu_add_tool:
+
                 break;
             case R.id.menu_remove_tool:
                 new RemoveToolFragment().show(getFragmentManager(), "remove_tool");
