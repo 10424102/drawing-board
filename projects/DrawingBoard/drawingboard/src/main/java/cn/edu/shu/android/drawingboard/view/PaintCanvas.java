@@ -24,6 +24,7 @@ public class PaintCanvas extends ViewGroup {
     private int height;
     private Draft draft;
     private Artwrok artwrok;
+    private Mirror mirror;
     private OnTouchListener defaultOnTouchListener = new OnTouchListener() {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
@@ -35,12 +36,15 @@ public class PaintCanvas extends ViewGroup {
 
     private void init(Context context) {
         artwrok = new Artwrok(context);
+        mirror = new Mirror(context);
         draft = new Draft(context);
         addView(artwrok);
+        addView(mirror);
         addView(draft);
-        app.registerPaintCanvas(this);
-        draft.setPaintCanvas(this);
         artwrok.setPaintCanvas(this);
+        draft.setPaintCanvas(this);
+        mirror.setPaintCanvas(this);
+        app.registerPaintCanvas(this);
     }
 
     public PaintCanvas(Context context) {
