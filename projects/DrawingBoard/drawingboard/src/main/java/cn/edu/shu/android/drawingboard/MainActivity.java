@@ -1,6 +1,7 @@
 package cn.edu.shu.android.drawingboard;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.Menu;
@@ -8,13 +9,20 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
+import cn.edu.shu.android.drawingboard.ui.FloatPanel;
 import cn.edu.shu.android.drawingboard.view.PaintCanvas;
 
 public class MainActivity extends Activity implements PaintColorPickerDialog.OnColorChangedListener,
         PaintSizePickerDialog.OnSizeChangedListener,
         PaintStylePickerDialog.OnStyleChangedListener {
     public static final MyApplication app = MyApplication.getInstance();
+
+    TextView p_color;
+    TextView p_size;
+    TextView p_style;
+    TextView pc_num;
 
 
     @Override
@@ -34,25 +42,45 @@ public class MainActivity extends Activity implements PaintColorPickerDialog.OnC
         app.setMainActivity(this);
 //        app.setErrorBox(errorbox);
 
+        //final ImageView testBlur = (ImageView)findViewById(R.id.test_blur);
         Button btnTest1 = (Button) findViewById(R.id.btn_test_1);
         btnTest1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                app.getCurrentPaintCanvas().endGeneration();
+                updateInfo();
             }
         });
-//        Button btnTest2 = (Button)findViewById(R.id.btn_test_2);
-//        btnTest2.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                app.error("11111111111111");
-//                app.error("22222222222222");
-//                app.error("33333333333333");
-//                app.hideError();
-//            }
-//        });
+        Button btnTest2 = (Button) findViewById(R.id.btn_test_2);
+        btnTest2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //app.getCurrentPaintCanvas().bringCanvasElementToFront();
+                //Bitmap bmp = BitmapUtil.takeScreenShot(app.getMainActivity());
+                //Bitmap blur = BitmapUtil.fastblur(bmp,10);
+                //testBlur.setImageBitmap(blur);
+            }
+        });
 
         //pc.bringToFront();
+
+        p_color = (TextView) findViewById(R.id.info_paint_color);
+        p_size = (TextView) findViewById(R.id.info_paint_size);
+        p_style = (TextView) findViewById(R.id.info_paint_style);
+        pc_num = (TextView) findViewById(R.id.info_currentpc_element_num);
+
+        getFragmentManager().beginTransaction().add(R.id.main_container, new FloatPanel()).commit();
+
+    }
+
+    public void updateInfo() {
+        int alpha = Color.alpha(app.getCurrentPaint().getColor());
+        int red = Color.red(app.getCurrentPaint().getColor());
+        int green = Color.green(app.getCurrentPaint().getColor());
+        int blue = Color.blue(app.getCurrentPaint().getColor());
+        p_color.setText(String.format("A:%d, R:%d, G:%d, B:%d", alpha, red, green, blue));
+        p_size.setText(Float.toString(app.getCurrentPaint().getStrokeWidth()));
+        p_style.setText(app.getCurrentPaint().getStyle().toString());
+        pc_num.setText(Integer.toString(app.getCurrentPaintCanvas().getCanvasElementNum()));
     }
 
 

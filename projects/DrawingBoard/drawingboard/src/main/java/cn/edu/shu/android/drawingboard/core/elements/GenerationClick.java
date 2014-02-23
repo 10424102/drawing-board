@@ -2,7 +2,6 @@ package cn.edu.shu.android.drawingboard.core.elements;
 
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 
 import cn.edu.shu.android.drawingboard.MyApplication;
 import cn.edu.shu.android.drawingboard.view.CanvasElement;
@@ -42,7 +41,7 @@ public class GenerationClick<T extends Element> implements View.OnTouchListener 
                 try {
                     //Create Element
                     element = ElementClass.getDeclaredConstructor(ElementClass).newInstance((T) (app.getCurrentTool().getContent()));
-                    element.setGenTool(app.getCurrentTool());
+                    element.setPaint(app.getCurrentPaint());
                     listener.onSetElement(element, eventX, eventY);
                     Position leftTop = element.measure(eventX, eventY, eventX, eventY);
                     CanvasElement canvasElement = new CanvasElement(app.getContext());
@@ -50,7 +49,6 @@ public class GenerationClick<T extends Element> implements View.OnTouchListener 
                     canvasElement.setY(leftTop.y);
                     canvasElement.setContent(element);
                     pc.add(canvasElement);
-                    app.getMainActivity().addContentView(canvasElement, new ViewGroup.LayoutParams(100, 100));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

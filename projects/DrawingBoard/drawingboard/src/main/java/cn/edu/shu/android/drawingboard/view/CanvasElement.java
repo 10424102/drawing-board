@@ -4,7 +4,10 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -14,11 +17,13 @@ import cn.edu.shu.android.drawingboard.core.elements.Element;
  * Created by yy on 2/21/14.
  */
 public class CanvasElement extends View {
+    private PaintCanvas pc;
     private Element content;
     private Bitmap buffer;
     private Canvas bufCanvas;
     private float width;
     private float height;
+    private boolean selected = false;
 
     public void setContent(Element e) {
         content = e;
@@ -33,55 +38,49 @@ public class CanvasElement extends View {
     private void init() {
         final CanvasElement element = this;
         setOnTouchListener(new OnTouchListener() {
+            private float px;
+            private float py;
+            private boolean moved;
+            private boolean justChanged;
+
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 CanvasElement e = (CanvasElement) v;
-                //TranslateAnimation anim = new TranslateAnimation(0,100,0,100);
-                //AlphaAnimation anim = new AlphaAnimation(1,0);
-//                RotateAnimation anim = new RotateAnimation(0,30);
-//                anim.setDuration(1000);
-//                anim.setFillAfter(true);
-//
-//                final RotateAnimation anim2 = new RotateAnimation(30,0);
-//                anim2.setDuration(1000);
-//                anim2.setFillAfter(true);
-//                final Handler handler = new Handler(){
-//                    @Override
-//                    public void handleMessage(Message msg) {
-//                        if(msg.what==0x123){
-//                            element.startAnimation(anim2);
-//                        }
-//                        else if(msg.what==0x124){
-//                            ScaleAnimation anim = new ScaleAnimation(1,2,1,(float)2.5);
-//                            anim.setDuration(1000);
-//                            element.startAnimation(anim);
-//                        }
-//                    }
-//                };
-//                v.startAnimation(anim);
-//                new Timer().schedule(new TimerTask() {
-//                    @Override
-//                    public void run() {
-//                        handler.sendEmptyMessage(0x123);
-//                    }
-//                },1000);
-//                new Timer().schedule(new TimerTask() {
-//                    @Override
-//                    public void run() {
-//                        handler.sendEmptyMessage(0x124);
-//                    }
-//                },2000);
-
                 int action = event.getAction();
                 if (action == MotionEvent.ACTION_DOWN) {
                     if (content.inside(event.getX(), event.getY())) {
-                        Paint p = new Paint();
-                        e.getCanvas().drawRect(1, 1, width - 1, height - 1, p);
-                        e.invalidate();
+                        if (!selected) {
+                            selected = true;
+                            select();
+                            justChanged = true;
+                        } else {
+                            justChanged = false;
+                        }
+                        px = event.getRawX();
+                        py = event.getRawY();
+                        moved = false;
+                    }
+                } else if (action == MotionEvent.ACTION_MOVE) {
+                    moved = true;
+                    if (selected) {
+                        float dx = event.getRawX() - px;
+                        float dy = event.getRawY() - py;
+                        v.setX(v.getX() + dx);
+                        v.setY(v.getY() + dy);
+                        px = event.getRawX();
+                        py = event.getRawY();
+                    }
+                } else if (action == MotionEvent.ACTION_UP) {
+                    if (selected && !moved && !justChanged) {
+                        selected = false;
+                        unselect();
+                        justChanged = true;
+                    } else {
+                        justChanged = false;
                     }
                 }
-
-                return false;
+                Log.i("yy", Boolean.toString(selected) + "," + Boolean.toString(moved) + "," + Boolean.toString(justChanged));
+                return true;
             }
         });
     }
@@ -116,5 +115,32 @@ public class CanvasElement extends View {
 
     public Canvas getCanvas() {
         return bufCanvas;
+    }
+
+    public void setPaintCanvas(PaintCanvas pc) {
+        this.pc = pc;
+    }
+
+    public PaintCanvas getPaintCanvas() {
+        return pc;
+    }
+
+    public void select() {
+        selected = true;
+        Paint p = new Paint();
+        p.setStyle(Paint.Style.STROKE);
+        bufCanvas.drawRect(1, 1, width - 1, height - 1, p);
+        pc.addSelectedCanvasElement(this);
+        invalidate();
+    }
+
+    public void unselect() {
+        selected = false;
+        Paint p = new Paint();
+        p.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+        p.setStyle(Paint.Style.STROKE);
+        bufCanvas.drawRect(1, 1, width - 1, height - 1, p);
+        pc.removeSelectedCanvasElement(this);
+        invalidate();
     }
 }

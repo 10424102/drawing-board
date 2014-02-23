@@ -23,6 +23,10 @@ public class Draft extends View {
         this.pc = pc;
     }
 
+    public PaintCanvas getPaintCanvas() {
+        return pc;
+    }
+
     public Draft(Context context) {
         super(context);
     }
@@ -62,7 +66,5 @@ public class Draft extends View {
         //bufCanvas = new Canvas(Bitmap.createBitmap(parentWidth,parentHeight, Bitmap.Config.ARGB_8888);
     }
 
-    public PaintCanvas getPaintCanvas() {
-        return pc;
-    }
+
 }
