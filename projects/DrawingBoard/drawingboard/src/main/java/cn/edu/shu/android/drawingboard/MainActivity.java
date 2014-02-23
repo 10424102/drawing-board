@@ -1,23 +1,26 @@
 package cn.edu.shu.android.drawingboard;
 
 import android.app.Activity;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Button;
 import android.widget.TextView;
 
-import cn.edu.shu.android.drawingboard.ui.FloatPanel;
+import cn.edu.shu.android.drawingboard.ui.ColorPanel;
 import cn.edu.shu.android.drawingboard.view.PaintCanvas;
 
 public class MainActivity extends Activity implements PaintColorPickerDialog.OnColorChangedListener,
         PaintSizePickerDialog.OnSizeChangedListener,
         PaintStylePickerDialog.OnStyleChangedListener {
     public static final MyApplication app = MyApplication.getInstance();
+    private ColorPanel colorPanel = null;
+    private ImageView colorPanelBar = null;
+    private ImageView transparentLayer = null;
 
     TextView p_color;
     TextView p_size;
@@ -81,6 +84,22 @@ public class MainActivity extends Activity implements PaintColorPickerDialog.OnC
         p_size.setText(Float.toString(app.getCurrentPaint().getStrokeWidth()));
         p_style.setText(app.getCurrentPaint().getStyle().toString());
         pc_num.setText(Integer.toString(app.getCurrentPaintCanvas().getCanvasElementNum()));
+
+        transparentLayer = (ImageView) findViewById(R.id.transparency_layer);
+        colorPanelBar = (ImageView) findViewById(R.id.color_panle_bar);
+        colorPanel = (ColorPanel) findViewById(R.id.color_panle);
+        colorPanel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                MainActivity.this.colorPanel.setARGB(255, 252, 255, 100);
+                MainActivity.this.colorPanel.invalidate();
+
+                new PaintColorPickerDialog(MainActivity.this, MainActivity.this, app.getCurrentPaint().getColor())
+                        .show();
+            }
+        });
+        hideTransparentLayer();
     }
 
 
@@ -147,5 +166,31 @@ public class MainActivity extends Activity implements PaintColorPickerDialog.OnC
     @Override
     public void styleChanged(Paint.Style style) {
         app.getCurrentPaint().setStyle(style);
+    }
+
+    public void hideColorPanle() {
+        if (colorPanel != null) {
+            colorPanel.setVisibility(View.INVISIBLE);
+        }
+        colorPanelBar.setVisibility(View.INVISIBLE);
+    }
+
+    public void showColorPanle() {
+        if (colorPanel != null) {
+            colorPanel.setVisibility(View.VISIBLE);
+        }
+        colorPanelBar.setVisibility(View.VISIBLE);
+    }
+
+    public void hideTransparentLayer() {
+        if (transparentLayer != null) {
+            transparentLayer.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    public void showTransparentLayer() {
+        if (transparentLayer != null) {
+            transparentLayer.setVisibility(View.VISIBLE);
+        }
     }
 }
