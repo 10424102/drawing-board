@@ -74,7 +74,8 @@ public class ToolManager {
             t.xmlParse(root);
             tools.add(t);
         } catch (Exception e) {
-            throw new BuildToolException(e);
+            //throw new BuildToolException(e);
+            e.printStackTrace();
         }
 
         return t;
