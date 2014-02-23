@@ -3,7 +3,6 @@ package cn.edu.shu.android.drawingboard.view;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.AttributeSet;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
@@ -24,8 +23,7 @@ public class Mirror extends FrameLayout {
 
     private void init(Context context) {
         shade = new ImageView(context);
-        shade.setBackgroundColor(Color.BLACK);
-        shade.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        shade.setBackgroundColor(Color.TRANSPARENT);
         addView(shade);
     }
 
@@ -47,16 +45,15 @@ public class Mirror extends FrameLayout {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        shade.measure(widthMeasureSpec, heightMeasureSpec);
         int parentWidth = MeasureSpec.getSize(widthMeasureSpec);
         int parentHeight = MeasureSpec.getSize(heightMeasureSpec);
+        //setBackgroundColor(Color.YELLOW);
         setMeasuredDimension(parentWidth, parentHeight);
     }
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-        shade.layout(0, 0, shade.getMeasuredWidth(), shade.getMeasuredHeight());
     }
 
 

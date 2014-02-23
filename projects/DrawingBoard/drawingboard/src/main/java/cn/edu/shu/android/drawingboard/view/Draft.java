@@ -45,6 +45,7 @@ public class Draft extends View {
         height = MeasureSpec.getSize(heightMeasureSpec);
         buffer = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         bufCanvas = new Canvas(buffer);
+        //setBackgroundColor(Color.BLUE);
         setMeasuredDimension(width, height);
         //super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }

@@ -86,17 +86,24 @@ public class PaintCanvas extends ViewGroup {
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        //System.out.println(l + "," + t + "," + r + "," + b);
-        draft.layout(0, 0, draft.getMeasuredWidth(), draft.getMeasuredHeight());
-        artwrok.layout(0, 0, artwrok.getMeasuredWidth(), artwrok.getMeasuredHeight());
+        int count = getChildCount();
+        for (int i = 0; i < count; i++) {
+            View child = getChildAt(i);
+            child.layout(0, 0, child.getMeasuredWidth(), child.getMeasuredHeight());
+        }
+//        draft.layout(0, 0, draft.getMeasuredWidth(), draft.getMeasuredHeight());
+//        mirror.layout(0, 0, draft.getMeasuredWidth(), draft.getMeasuredHeight());
+//        artwrok.layout(0, 0, artwrok.getMeasuredWidth(), artwrok.getMeasuredHeight());
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         //super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        //System.out.println(widthMeasureSpec + "," + heightMeasureSpec);
-        draft.measure(widthMeasureSpec, heightMeasureSpec);
-        artwrok.measure(widthMeasureSpec, heightMeasureSpec);
+        int count = getChildCount();
+        for (int i = 0; i < count; i++) {
+            View child = getChildAt(i);
+            child.measure(widthMeasureSpec, heightMeasureSpec);
+        }
         if (width == 0 || height == 0) {
             width = MeasureSpec.getSize(widthMeasureSpec);
             height = MeasureSpec.getSize(heightMeasureSpec);

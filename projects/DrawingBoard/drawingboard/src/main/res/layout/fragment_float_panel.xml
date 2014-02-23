@@ -15,6 +15,7 @@
     <EditText
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:text="This is the edit" />
+        android:text="This is the edit"
+        android:focusable="false" />
 
 </LinearLayout>

@@ -29,6 +29,8 @@ public class MyApplication extends Application {
         ERROR
     }
 
+    public static int MSG_ELEMENT_SELECT = 1;
+
     public class ErrorMessage {
         public String content;
 

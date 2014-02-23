@@ -45,6 +45,7 @@ public class Artwrok extends FrameLayout {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         int parentWidth = MeasureSpec.getSize(widthMeasureSpec);
         int parentHeight = MeasureSpec.getSize(heightMeasureSpec);
+        //setBackgroundColor(Color.RED);
         setMeasuredDimension(parentWidth, parentHeight);
     }
 
