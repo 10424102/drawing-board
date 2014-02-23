@@ -157,6 +157,7 @@ public class MyApplication extends Application {
 
         //initialize paint
         currentPaint = new Paint();
+        currentPaint.setStyle(Paint.Style.STROKE);
 
         //load 'plugins/'
         ToolManager mToolManager = ToolManager.getInstance();

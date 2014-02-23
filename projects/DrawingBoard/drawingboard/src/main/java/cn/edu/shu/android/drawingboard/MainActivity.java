@@ -65,13 +65,11 @@ public class MainActivity extends Activity implements PaintColorPickerDialog.OnC
             @Override
             public void onClick(View view) {
 
-                MainActivity.this.colorPanel.setARGB(255, 252, 255, 100);
-                MainActivity.this.colorPanel.invalidate();
-
                 new PaintColorPickerDialog(MainActivity.this, MainActivity.this, app.getCurrentPaint().getColor())
                         .show();
             }
         });
+        colorPanel.setColor(app.getCurrentPaint().getColor());
         hideTransparentLayer();
     }
 
@@ -129,6 +127,8 @@ public class MainActivity extends Activity implements PaintColorPickerDialog.OnC
     @Override
     public void colorChanged(int color) {
         app.getCurrentPaint().setColor(color);
+        colorPanel.setColor(color);
+        colorPanel.invalidate();
     }
 
     @Override
