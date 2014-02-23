@@ -22,12 +22,12 @@
             android:src="@drawable/main_brush_icon_04" />
 
     </RelativeLayout>
-
+<!--
     <cn.edu.shu.android.drawingboard.ui.ColorCircleView
         android:layout_width="300dp"
         android:layout_height="300dp"
         android:layout_centerInParent="true" />
-
+-->
     <cn.edu.shu.android.drawingboard.ui.ColorPanel
         android:id="@+id/color_panle"
         android:layout_width="50dp"

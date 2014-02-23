@@ -10,6 +10,7 @@ import android.graphics.PorterDuff;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.SweepGradient;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -34,6 +35,10 @@ public class ColorCircleView extends View {
     boolean isTouch = false;
 
     private int colorA, colorR, colorG, colorB;
+    private int circlePickColor;
+    private Shader alphaShader = null;
+
+    private final static float PI = 3.1415927f;
 
     public ColorCircleView(Context context) {
         super(context);
@@ -64,7 +69,7 @@ public class ColorCircleView extends View {
         // 画笔设置为实心
         paint.setStyle(Paint.Style.STROKE);
         paint.setShader(shader);
-        paint.setStrokeWidth(36);
+        paint.setStrokeWidth(48);
 
         // 初始化正方形选择区颜色
         centerPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -75,12 +80,17 @@ public class ColorCircleView extends View {
         pickerCirclePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         pickerCirclePaint.setColor(Color.WHITE);
         pickerCirclePaint.setStyle(Paint.Style.STROKE);
-        pickerCirclePaint.setStrokeWidth(10);
+        pickerCirclePaint.setStrokeWidth(8);
 
         colorA = 255;
         colorR = 255;
         colorG = 255;
         colorB = 255;
+        circlePickColor = Color.argb(colorA, colorR, colorG, colorB);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        }
     }
 
     @Override
@@ -92,10 +102,10 @@ public class ColorCircleView extends View {
         // 计算圆环半径
         radius = (width - paint.getStrokeWidth()) * 0.35f;
 
-        rectXLeft = width * 0.3f;
-        rectYLeft = height * 0.3f;
-        rectXRight = width * 0.7f;
-        rectYRight = height * 0.7f;
+        rectXLeft = width * 0.325f;
+        rectYLeft = height * 0.325f;
+        rectXRight = width * 0.675f;
+        rectYRight = height * 0.675f;
 
         if (rect == null) {
             rect = new RectF(-radius, -radius, radius, radius);
@@ -106,9 +116,13 @@ public class ColorCircleView extends View {
                 Color.WHITE,
                 Color.RED,
         };
-        Shader shader1 = new LinearGradient(rectXLeft, rectYLeft, rectXLeft, rectYRight, Color.WHITE, Color.BLACK, Shader.TileMode.CLAMP);
-        Shader shader2 = new LinearGradient(rectXLeft, rectYLeft, rectXRight, rectYLeft, Color.WHITE, Color.RED, Shader.TileMode.CLAMP);
-        ComposeShader shader3 = new ComposeShader(shader1, shader2, PorterDuff.Mode.MULTIPLY);
+
+        if (alphaShader == null) {
+            alphaShader = new LinearGradient(rectXLeft, rectYLeft, rectXLeft, rectYRight, Color.WHITE, Color.BLACK, Shader.TileMode.CLAMP);
+        }
+
+        Shader shader2 = new LinearGradient(rectXLeft, rectYLeft, rectXRight, rectYLeft, Color.WHITE, circlePickColor, Shader.TileMode.CLAMP);
+        ComposeShader shader3 = new ComposeShader(alphaShader, shader2, PorterDuff.Mode.MULTIPLY);
         centerPaint.setShader(shader3);
         canvas.translate(0, 0);
         canvas.drawRect(rectXLeft, rectYLeft, rectXRight, rectYRight, centerPaint);
@@ -133,22 +147,64 @@ public class ColorCircleView extends View {
             isTouch = true;
             pickerX = touchX;
             pickerY = touchY;
-        }
-        invalidate();
 
-        return super.onTouchEvent(event);
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    invalidate();
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    float angle = (float) java.lang.Math.atan2(touchY - getHeight() / 2, touchX - getWidth() / 2);
+                    // need to turn angle [-PI ... PI] into unit [0....1]
+                    float unit = angle / (2 * PI);
+                    if (unit < 0) {
+                        unit += 1;
+                    }
+                    circlePickColor = interCircleColor(circleColors, unit);
+                    invalidate();
+                    break;
+                case MotionEvent.ACTION_UP:
+                    invalidate();
+                    break;
+            }
+
+
+        }
+        return true;
     }
 
     public int getPickedColor() {
         return Color.argb(colorA, colorR, colorG, colorB);
     }
 
-    private void interCircle() {
+    private int ave(int s, int d, float p) {
+        return s + java.lang.Math.round(p * (d - s));
+    }
 
+    private int interCircleColor(int colors[], float unit) {
+        if (unit <= 0) {
+            return colors[0];
+        }
+        if (unit >= 1) {
+            return colors[colors.length - 1];
+        }
+
+        float p = unit * (colors.length - 1);
+        int i = (int) p;
+        p -= i;
+
+        // now p is just the fractional part [0...1) and i is the index
+        int c0 = colors[i];
+        int c1 = colors[i + 1];
+        int a = ave(Color.alpha(c0), Color.alpha(c1), p);
+        int r = ave(Color.red(c0), Color.red(c1), p);
+        int g = ave(Color.green(c0), Color.green(c1), p);
+        int b = ave(Color.blue(c0), Color.blue(c1), p);
+
+        return Color.argb(a, r, g, b);
     }
 
     private void interRect() {
-        
+
     }
 
     /**
