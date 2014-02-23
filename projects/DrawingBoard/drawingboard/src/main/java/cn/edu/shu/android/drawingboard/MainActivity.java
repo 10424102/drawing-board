@@ -1,17 +1,19 @@
 package cn.edu.shu.android.drawingboard;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import cn.edu.shu.android.drawingboard.ui.ColorPanel;
+import cn.edu.shu.android.drawingboard.ui.FloatPanel;
 import cn.edu.shu.android.drawingboard.view.PaintCanvas;
 
 public class MainActivity extends Activity implements PaintColorPickerDialog.OnColorChangedListener,
@@ -73,17 +75,6 @@ public class MainActivity extends Activity implements PaintColorPickerDialog.OnC
 
         getFragmentManager().beginTransaction().add(R.id.main_container, new FloatPanel()).commit();
 
-    }
-
-    public void updateInfo() {
-        int alpha = Color.alpha(app.getCurrentPaint().getColor());
-        int red = Color.red(app.getCurrentPaint().getColor());
-        int green = Color.green(app.getCurrentPaint().getColor());
-        int blue = Color.blue(app.getCurrentPaint().getColor());
-        p_color.setText(String.format("A:%d, R:%d, G:%d, B:%d", alpha, red, green, blue));
-        p_size.setText(Float.toString(app.getCurrentPaint().getStrokeWidth()));
-        p_style.setText(app.getCurrentPaint().getStyle().toString());
-        pc_num.setText(Integer.toString(app.getCurrentPaintCanvas().getCanvasElementNum()));
 
         transparentLayer = (ImageView) findViewById(R.id.transparency_layer);
         colorPanelBar = (ImageView) findViewById(R.id.color_panle_bar);
@@ -98,6 +89,18 @@ public class MainActivity extends Activity implements PaintColorPickerDialog.OnC
         });
         colorPanel.setColor(app.getCurrentPaint().getColor());
         hideTransparentLayer();
+
+    }
+
+    public void updateInfo() {
+        int alpha = Color.alpha(app.getCurrentPaint().getColor());
+        int red = Color.red(app.getCurrentPaint().getColor());
+        int green = Color.green(app.getCurrentPaint().getColor());
+        int blue = Color.blue(app.getCurrentPaint().getColor());
+        p_color.setText(String.format("A:%d, R:%d, G:%d, B:%d", alpha, red, green, blue));
+        p_size.setText(Float.toString(app.getCurrentPaint().getStrokeWidth()));
+        p_style.setText(app.getCurrentPaint().getStyle().toString());
+        pc_num.setText(Integer.toString(app.getCurrentPaintCanvas().getCanvasElementNum()));
     }
 
 
