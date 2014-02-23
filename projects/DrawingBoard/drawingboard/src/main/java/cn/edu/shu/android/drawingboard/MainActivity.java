@@ -8,8 +8,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Button;
 import android.widget.TextView;
 
 import cn.edu.shu.android.drawingboard.ui.ColorPanel;
@@ -75,7 +75,6 @@ public class MainActivity extends Activity implements PaintColorPickerDialog.OnC
 
         getFragmentManager().beginTransaction().add(R.id.main_container, new FloatPanel()).commit();
 
-
         transparentLayer = (ImageView) findViewById(R.id.transparency_layer);
         colorPanelBar = (ImageView) findViewById(R.id.color_panle_bar);
         colorPanel = (ColorPanel) findViewById(R.id.color_panle);
@@ -83,15 +82,12 @@ public class MainActivity extends Activity implements PaintColorPickerDialog.OnC
             @Override
             public void onClick(View view) {
 
-                MainActivity.this.colorPanel.setARGB(255, 252, 255, 100);
-                MainActivity.this.colorPanel.invalidate();
-
                 new PaintColorPickerDialog(MainActivity.this, MainActivity.this, app.getCurrentPaint().getColor())
                         .show();
             }
         });
+        colorPanel.setColor(app.getCurrentPaint().getColor());
         hideTransparentLayer();
-
     }
 
     public void updateInfo() {
@@ -103,8 +99,9 @@ public class MainActivity extends Activity implements PaintColorPickerDialog.OnC
         p_size.setText(Float.toString(app.getCurrentPaint().getStrokeWidth()));
         p_style.setText(app.getCurrentPaint().getStyle().toString());
         pc_num.setText(Integer.toString(app.getCurrentPaintCanvas().getCanvasElementNum()));
-    }
 
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -159,6 +156,8 @@ public class MainActivity extends Activity implements PaintColorPickerDialog.OnC
     @Override
     public void colorChanged(int color) {
         app.getCurrentPaint().setColor(color);
+        colorPanel.setColor(color);
+        colorPanel.invalidate();
     }
 
     @Override
