@@ -108,6 +108,18 @@ public class StraightSegment extends Element implements XmlInitializable {
 
     @Override
     public boolean inside(float x, float y) {
-        return true;
+        double d = 24 + paint.getStrokeWidth();
+        double x1 = start.x;
+        double x2 = end.x;
+        double y1 = start.y;
+        double y2 = end.y;
+        double sqrt = Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+        double c = (y2 - y1) * x1 - (x2 - x1) * y1;
+        double c1 = c + d * sqrt;
+        double c2 = c - d * sqrt;
+        double a = y2 - y1;
+        double b = x1 - x2;
+        if (a * x + b * y >= c2 && a * x + b * y <= c1) return true;
+        return false;
     }
 }

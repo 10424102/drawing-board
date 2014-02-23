@@ -9,6 +9,7 @@ import cn.edu.shu.android.drawingboard.core.elements.inherited.Circle;
 import cn.edu.shu.android.drawingboard.core.elements.inherited.Dot;
 import cn.edu.shu.android.drawingboard.core.elements.inherited.FreeSegment;
 import cn.edu.shu.android.drawingboard.core.elements.inherited.Rectangle;
+import cn.edu.shu.android.drawingboard.core.elements.inherited.Selector;
 import cn.edu.shu.android.drawingboard.core.elements.inherited.StaticPicture;
 import cn.edu.shu.android.drawingboard.core.elements.inherited.StraightSegment;
 import cn.edu.shu.android.drawingboard.xml.Attr;
@@ -122,6 +123,10 @@ public class Tool implements XmlInitializable {
                             content = new StaticPicture();
                             content.setGenTool(this);
                             ((StaticPicture) content).xmlParse(bb);
+                            break;
+                        case "selector":
+                            content = new Selector();
+                            content.setGenTool(this);
                             break;
                     }
                     break;

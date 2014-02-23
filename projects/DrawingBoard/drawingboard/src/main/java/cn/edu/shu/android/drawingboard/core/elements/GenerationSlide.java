@@ -79,7 +79,10 @@ public class GenerationSlide<T extends Element> implements View.OnTouchListener 
                 prevY = startY;
                 try {
                     element = ElementClass.getDeclaredConstructor(ElementClass).newInstance(app.getCurrentTool().getContent());
+<<<<<<< HEAD
                     element.setGenTool(app.getCurrentTool());
+=======
+>>>>>>> 75f17385e7b3839e1a9bfe35a84439f9d60c1a1b
                     element.setPaint(app.getCurrentPaint());
                     listener.onActionDown(element, eventX, eventY, canvas);
                     draft.invalidate();

@@ -43,6 +43,7 @@ public class MyApplication extends Application {
     public static final String TEMPLATE_DIR;
     public static final String GALLERY_DIR;
     public static final String[] defaultToolList = new String[]{
+            "Selector",
             "DrawPointTool",
             "DrawStraightSegmentTool",
             "DrawFreeSegmentTool",
@@ -157,7 +158,9 @@ public class MyApplication extends Application {
 
         //initialize paint
         currentPaint = new Paint();
+        currentPaint.setStrokeWidth(3);
         currentPaint.setStyle(Paint.Style.STROKE);
+        currentPaint.setStrokeCap(Paint.Cap.ROUND);
 
         //load 'plugins/'
         ToolManager mToolManager = ToolManager.getInstance();

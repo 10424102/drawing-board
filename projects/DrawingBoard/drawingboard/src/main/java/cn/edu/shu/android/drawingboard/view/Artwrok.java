@@ -8,6 +8,16 @@ import android.widget.FrameLayout;
  * Created by yy on 2/21/14.
  */
 public class Artwrok extends FrameLayout {
+    private PaintCanvas pc;
+
+    public void setPaintCanvas(PaintCanvas pc) {
+        this.pc = pc;
+    }
+
+    public PaintCanvas getPaintCanvas() {
+        return pc;
+    }
+
     public Artwrok(Context context) {
         super(context);
     }

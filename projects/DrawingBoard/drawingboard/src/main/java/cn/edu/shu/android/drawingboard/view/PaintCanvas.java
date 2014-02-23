@@ -9,6 +9,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import cn.edu.shu.android.drawingboard.MyApplication;
 import cn.edu.shu.android.drawingboard.R;
 
@@ -27,15 +30,22 @@ public class PaintCanvas extends ViewGroup {
             return false;
         }
     };
+    private List<CanvasElement> selectedCanvasElementList = new ArrayList<>();
+    private boolean multiSelect = true;
 
-    public PaintCanvas(Context context) {
-        super(context);
+    private void init(Context context) {
         artwrok = new Artwrok(context);
         draft = new Draft(context);
         addView(artwrok);
         addView(draft);
         app.registerPaintCanvas(this);
         draft.setPaintCanvas(this);
+        artwrok.setPaintCanvas(this);
+    }
+
+    public PaintCanvas(Context context) {
+        super(context);
+        init(context);
     }
 
     public PaintCanvas(Context context, AttributeSet attrs) {
@@ -51,12 +61,7 @@ public class PaintCanvas extends ViewGroup {
         } finally {
             a.recycle();
         }
-        artwrok = new Artwrok(context);
-        draft = new Draft(context);
-        addView(artwrok);
-        addView(draft);
-        app.registerPaintCanvas(this);
-        draft.setPaintCanvas(this);
+        init(context);
     }
 
     public PaintCanvas(Context context, AttributeSet attrs, int defStyle) {
@@ -72,12 +77,7 @@ public class PaintCanvas extends ViewGroup {
         } finally {
             a.recycle();
         }
-        artwrok = new Artwrok(context);
-        draft = new Draft(context);
-        addView(artwrok);
-        addView(draft);
-        app.registerPaintCanvas(this);
-        draft.setPaintCanvas(this);
+        init(context);
     }
 
     @Override
@@ -93,19 +93,40 @@ public class PaintCanvas extends ViewGroup {
         //System.out.println(widthMeasureSpec + "," + heightMeasureSpec);
         draft.measure(widthMeasureSpec, heightMeasureSpec);
         artwrok.measure(widthMeasureSpec, heightMeasureSpec);
+        if (width == 0 || height == 0) {
+            width = MeasureSpec.getSize(widthMeasureSpec);
+            height = MeasureSpec.getSize(heightMeasureSpec);
+        }
         setMeasuredDimension(width, height);
     }
 
     public void add(CanvasElement e) {
         Log.i("yy", "add");
         artwrok.addView(e);
+        e.setPaintCanvas(this);
         //artwrok.invalidate();
         artwrok.requestLayout();
     }
 
     public void clear() {
-        artwrok.clear();
+        if (selectedCanvasElementList.isEmpty()) {
+            artwrok.clear();
+        } else {
+            for (CanvasElement e : selectedCanvasElementList) {
+                artwrok.removeView(e);
+            }
+            selectedCanvasElementList.clear();
+        }
     }
+
+    public void bringCanvasElementToFront() {
+        for (CanvasElement e : selectedCanvasElementList) {
+            artwrok.bringChildToFront(e);
+        }
+        artwrok.requestLayout();
+        invalidate();
+    }
+
 
     @Override
     public void setOnTouchListener(OnTouchListener l) {
@@ -117,6 +138,14 @@ public class PaintCanvas extends ViewGroup {
         return draft.getCanvas();
     }
 
+    public void setMultiSelect(boolean b) {
+        multiSelect = b;
+    }
+
+    public boolean isMultiSelect() {
+        return multiSelect;
+    }
+
     @Override
     public void invalidate() {
         draft.invalidate();
@@ -124,5 +153,28 @@ public class PaintCanvas extends ViewGroup {
 
     public void endGeneration() {
         draft.setOnTouchListener(defaultOnTouchListener);
+    }
+
+    public int getCanvasElementNum() {
+        return artwrok.getChildCount();
+    }
+
+    public void addSelectedCanvasElement(CanvasElement ce) {
+        if (!multiSelect) {
+            for (CanvasElement e : selectedCanvasElementList) {
+                e.unselect();
+            }
+        }
+        selectedCanvasElementList.add(ce);
+    }
+
+    public void removeSelectedCanvasElement(CanvasElement ce) {
+        selectedCanvasElementList.remove(ce);
+    }
+
+    public void clearSelectedCanvasElement() {
+        for (CanvasElement e : selectedCanvasElementList) {
+            e.unselect();
+        }
     }
 }
