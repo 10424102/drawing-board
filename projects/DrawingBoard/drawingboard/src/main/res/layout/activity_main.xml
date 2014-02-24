@@ -24,6 +24,7 @@
     </RelativeLayout>
 <!--
     <cn.edu.shu.android.drawingboard.ui.ColorCircleView
+        android:id="@+id/circle_select_view"
         android:layout_width="300dp"
         android:layout_height="300dp"
         android:layout_centerInParent="true" />

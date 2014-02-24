@@ -12,7 +12,6 @@ import android.graphics.Shader;
 import android.graphics.SweepGradient;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -32,10 +31,10 @@ public class ColorCircleView extends View {
     private RectF rect = null;
     private float rectXLeft, rectYLeft, rectXRight, rectYRight;
     private float pickerX, pickerY;
-    boolean isTouch = false;
+    boolean isRectTouch = false;
 
-    private int colorA, colorR, colorG, colorB;
     private int circlePickColor;
+    private int selectColor;
     private Shader alphaShader = null;
 
     private final static float PI = 3.1415927f;
@@ -82,11 +81,7 @@ public class ColorCircleView extends View {
         pickerCirclePaint.setStyle(Paint.Style.STROKE);
         pickerCirclePaint.setStrokeWidth(8);
 
-        colorA = 255;
-        colorR = 255;
-        colorG = 255;
-        colorB = 255;
-        circlePickColor = Color.argb(colorA, colorR, colorG, colorB);
+        circlePickColor = Color.WHITE;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             setLayerType(View.LAYER_TYPE_SOFTWARE, null);
@@ -131,11 +126,10 @@ public class ColorCircleView extends View {
         canvas.translate(width / 2, height / 2);
         canvas.drawOval(rect, paint);
 
-        if (isTouch) {
+        if (isRectTouch) {
             canvas.translate(-width / 2, -height / 2);
             canvas.drawCircle(pickerX, pickerY, 20, pickerCirclePaint);
         }
-
     }
 
     @Override
@@ -143,43 +137,56 @@ public class ColorCircleView extends View {
         float touchX = event.getX();
         float touchY = event.getY();
 
-        if (inRect(touchX, touchY) || inCircle(touchX, touchY)) {
-            isTouch = true;
+        if ((isRectTouch = inRect(touchX, touchY)) || inCircle(touchX, touchY)) {
             pickerX = touchX;
             pickerY = touchY;
 
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    invalidate();
-                    break;
+                    ;
                 case MotionEvent.ACTION_MOVE:
-                    float angle = (float) java.lang.Math.atan2(touchY - getHeight() / 2, touchX - getWidth() / 2);
-                    // need to turn angle [-PI ... PI] into unit [0....1]
-                    float unit = angle / (2 * PI);
-                    if (unit < 0) {
-                        unit += 1;
+                    if (isRectTouch) {
+                        selectColor = interRectColor(touchX, touchY);
+                    } else {
+                        float angle = (float) java.lang.Math.atan2(touchY - getHeight() / 2, touchX - getWidth() / 2);
+                        // need to turn angle [-PI ... PI] into unit [0....1]
+                        float unit = angle / (2 * PI);
+                        if (unit < 0) {
+                            unit += 1;
+                        }
+                        circlePickColor = interCircleColor(circleColors, unit);
+                        selectColor = circlePickColor;
                     }
-                    circlePickColor = interCircleColor(circleColors, unit);
                     invalidate();
                     break;
                 case MotionEvent.ACTION_UP:
                     invalidate();
                     break;
             }
-
-
         }
         return true;
     }
 
+    public void setSelectColor(int color) {
+        circlePickColor = color;
+        selectColor = color;
+    }
+
     public int getPickedColor() {
-        return Color.argb(colorA, colorR, colorG, colorB);
+        return selectColor;
     }
 
     private int ave(int s, int d, float p) {
         return s + java.lang.Math.round(p * (d - s));
     }
 
+    /**
+     * 获取色调环上的颜色
+     *
+     * @param colors 扫描线数组
+     * @param unit   色调环上的角度映射到数组中的数值
+     * @return color 从色调盘上选择的颜色
+     */
     private int interCircleColor(int colors[], float unit) {
         if (unit <= 0) {
             return colors[0];
@@ -203,8 +210,26 @@ public class ColorCircleView extends View {
         return Color.argb(a, r, g, b);
     }
 
-    private void interRect() {
+    /**
+     * 拾取方形区域的颜色
+     *
+     * @param pointX 接触点的X坐标
+     * @param pointY 接触点的Y坐标
+     * @return 拾取的颜色值
+     */
 
+    private int interRectColor(float pointX, float pointY) {
+        int r, g, b;
+        float colorFactor = (pointX - rectXLeft) / (rectXRight - rectXLeft);
+        float brightnessFactor = (pointY - rectYLeft) / (rectYRight - rectYLeft);
+        float[] hsv = new float[3];
+        r = ave(Color.red(Color.WHITE), Color.red(circlePickColor), colorFactor);
+        g = ave(Color.green(Color.WHITE), Color.green(circlePickColor), colorFactor);
+        b = ave(Color.blue(Color.WHITE), Color.blue(circlePickColor), colorFactor);
+        Color.RGBToHSV(r, g, b, hsv);
+        // hsv空间当中亮度值从0%到100%，其中0%代表全黑
+        hsv[2] =1.0f - brightnessFactor;
+        return Color.HSVToColor(hsv);
     }
 
     /**
