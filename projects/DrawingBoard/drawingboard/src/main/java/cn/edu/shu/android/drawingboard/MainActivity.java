@@ -1,6 +1,8 @@
 package cn.edu.shu.android.drawingboard;
 
 import android.app.Activity;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
@@ -14,6 +16,7 @@ import android.widget.TextView;
 
 import cn.edu.shu.android.drawingboard.ui.ColorCircleView;
 import cn.edu.shu.android.drawingboard.ui.ColorPanel;
+import cn.edu.shu.android.drawingboard.ui.ColorPickerFragment;
 import cn.edu.shu.android.drawingboard.ui.FloatPanel;
 import cn.edu.shu.android.drawingboard.view.PaintCanvas;
 
@@ -24,13 +27,14 @@ public class MainActivity extends Activity implements PaintColorPickerDialog.OnC
     private ColorPanel colorPanel = null;
     private ImageView colorPanelBar = null;
     private ImageView transparentLayer = null;
-    private ColorCircleView circleSelect = null;
 
     TextView p_color;
     TextView p_size;
     TextView p_style;
     TextView pc_num;
 
+
+    private ColorPickerFragment colorPickerFragment = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,19 +85,22 @@ public class MainActivity extends Activity implements PaintColorPickerDialog.OnC
         colorPanelBar = (ImageView) findViewById(R.id.color_panle_bar);
         colorPanel = (ColorPanel) findViewById(R.id.color_panle);
 
-        circleSelect = (ColorCircleView) findViewById(R.id.circle_select_view);
-        circleSelect.setSelectColor(app.getCurrentPaint().getColor());
-
         colorPanel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                app.getCurrentPaint().setColor(circleSelect.getPickedColor());
                 colorPanel.setColor(app.getCurrentPaint().getColor());
                 colorPanel.invalidate();
             }
         });
         colorPanel.setColor(app.getCurrentPaint().getColor());
+
+        colorPickerFragment = new ColorPickerFragment();
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.main_container,colorPickerFragment);
+        fragmentTransaction.commit();
+
         hideTransparentLayer();
     }
 
@@ -106,7 +113,6 @@ public class MainActivity extends Activity implements PaintColorPickerDialog.OnC
         p_size.setText(Float.toString(app.getCurrentPaint().getStrokeWidth()));
         p_style.setText(app.getCurrentPaint().getStyle().toString());
         pc_num.setText(Integer.toString(app.getCurrentPaintCanvas().getCanvasElementNum()));
-
 
     }
 

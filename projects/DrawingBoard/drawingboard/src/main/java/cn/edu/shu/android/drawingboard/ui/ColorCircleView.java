@@ -25,7 +25,6 @@ public class ColorCircleView extends View {
     private Paint pickerCirclePaint = null;
 
     private int[] circleColors = null;
-    private int[] rectColors = null;
 
     private float radius;
     private RectF rect = null;
@@ -105,12 +104,6 @@ public class ColorCircleView extends View {
         if (rect == null) {
             rect = new RectF(-radius, -radius, radius, radius);
         }
-
-        rectColors = null;
-        rectColors = new int[]{
-                Color.WHITE,
-                Color.RED,
-        };
 
         if (alphaShader == null) {
             alphaShader = new LinearGradient(rectXLeft, rectYLeft, rectXLeft, rectYRight, Color.WHITE, Color.BLACK, Shader.TileMode.CLAMP);
@@ -228,7 +221,7 @@ public class ColorCircleView extends View {
         b = ave(Color.blue(Color.WHITE), Color.blue(circlePickColor), colorFactor);
         Color.RGBToHSV(r, g, b, hsv);
         // hsv空间当中亮度值从0%到100%，其中0%代表全黑
-        hsv[2] =1.0f - brightnessFactor;
+        hsv[2] = 1.0f - brightnessFactor;
         return Color.HSVToColor(hsv);
     }
 
@@ -240,10 +233,7 @@ public class ColorCircleView extends View {
      * @return boolean值，说明点(pointX,poingY)是否在方形区域内
      */
     private boolean inRect(float pointX, float pointY) {
-        if (pointX >= rectXLeft && pointX <= rectXRight && pointY >= rectYLeft && pointY <= rectYRight) {
-            return true;
-        }
-        return false;
+        return (pointX >= rectXLeft && pointX <= rectXRight && pointY >= rectYLeft && pointY <= rectYRight);
     }
 
     /**
