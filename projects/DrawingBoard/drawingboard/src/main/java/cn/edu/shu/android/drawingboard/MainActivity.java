@@ -81,6 +81,12 @@ public class MainActivity extends Activity implements PaintColorPickerDialog.OnC
 
         getFragmentManager().beginTransaction().add(R.id.main_container, new FloatPanel()).commit();
 
+        colorPickerFragment = new ColorPickerFragment();
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.main_container,colorPickerFragment);
+        fragmentTransaction.commit();
+
         transparentLayer = (ImageView) findViewById(R.id.transparency_layer);
         colorPanelBar = (ImageView) findViewById(R.id.color_panle_bar);
         colorPanel = (ColorPanel) findViewById(R.id.color_panle);
@@ -89,17 +95,12 @@ public class MainActivity extends Activity implements PaintColorPickerDialog.OnC
             @Override
             public void onClick(View view) {
 
+                MainActivity.this.getFragmentManager().beginTransaction().show(colorPickerFragment).commit();
                 colorPanel.setColor(app.getCurrentPaint().getColor());
                 colorPanel.invalidate();
             }
         });
         colorPanel.setColor(app.getCurrentPaint().getColor());
-
-        colorPickerFragment = new ColorPickerFragment();
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.main_container,colorPickerFragment);
-        fragmentTransaction.commit();
 
         hideTransparentLayer();
     }
@@ -149,8 +150,7 @@ public class MainActivity extends Activity implements PaintColorPickerDialog.OnC
             case R.id.menu_save_template:
                 break;
             case R.id.menu_paint_color:
-                new PaintColorPickerDialog(this, this, app.getCurrentPaint().getColor())
-                        .show();
+                getFragmentManager().beginTransaction().show(colorPickerFragment).commit();
                 return true;
             case R.id.menu_paint_size:
                 new PaintSizePickerDialog(this, (int) app.getCurrentPaint().getStrokeWidth())

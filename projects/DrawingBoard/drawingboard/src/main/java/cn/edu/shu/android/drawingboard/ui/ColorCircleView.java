@@ -36,6 +36,12 @@ public class ColorCircleView extends View {
     private int selectColor;
     private Shader alphaShader = null;
 
+    public interface OnColorChangeListener {
+        public void OnColorChange(int color);
+    }
+
+    private ColorCircleView.OnColorChangeListener onColorChangedListener;
+
     private final static float PI = 3.1415927f;
 
     public ColorCircleView(Context context) {
@@ -156,8 +162,13 @@ public class ColorCircleView extends View {
                     invalidate();
                     break;
             }
+            onColorChangedListener.OnColorChange(selectColor);
         }
         return true;
+    }
+
+    public void setOnColorChangeListener(OnColorChangeListener onColorChangeListener) {
+        this.onColorChangedListener = onColorChangeListener;
     }
 
     public void setSelectColor(int color) {
