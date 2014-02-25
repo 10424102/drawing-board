@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import cn.edu.shu.android.drawingboard.core.elements.inherited.TranslateAnimator;
 import cn.edu.shu.android.drawingboard.core.tool.Tool;
 import cn.edu.shu.android.drawingboard.core.tool.ToolManager;
 import cn.edu.shu.android.drawingboard.view.PaintCanvas;
@@ -173,6 +175,10 @@ public class MyApplication extends Application {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        Tool t = new Tool();
+        t.setName("Translate Animation");
+        t.setContent(new TranslateAnimator());
+        mToolManager.getTools().add(t);
     }
 
     public void error(String msg) {
@@ -213,5 +219,17 @@ public class MyApplication extends Application {
         for (PaintCanvas pc : pclist) {
             pc.setOnTouchListener(l);
         }
+    }
+
+    private List<Handler> handlerList = new ArrayList<>();
+
+    public void message(int msg) {
+        for (Handler handler : handlerList) {
+            handler.sendEmptyMessage(msg);
+        }
+    }
+
+    public List<Handler> getHandlerList() {
+        return handlerList;
     }
 }

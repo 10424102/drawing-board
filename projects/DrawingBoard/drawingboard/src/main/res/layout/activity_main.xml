@@ -1,16 +1,20 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/main_container">
 
+    <!-- 画板 -->
+    <!--
     <cn.edu.shu.android.drawingboard.view.PaintCanvas
         android:id="@+id/my_canvas"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#2200ff00"
         android:layout_centerHorizontal="true" />
+-->
 
+    <!-- 画笔 -->
+    <!--
     <RelativeLayout
         android:layout_height="match_parent"
         android:layout_width="64dp">
@@ -22,7 +26,19 @@
             android:src="@drawable/main_brush_icon_04" />
 
     </RelativeLayout>
-    
+-->
+
+    <!-- 色环 -->
+    <!--
+    <cn.edu.shu.android.drawingboard.ui.ColorCircleView
+        android:id="@+id/circle_select_view"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_centerInParent="true" />
+-->
+
+    <!-- 调色盘 -->
+    <!--
     <cn.edu.shu.android.drawingboard.ui.ColorPanel
         android:id="@+id/color_panle"
         android:layout_width="50dp"
@@ -45,7 +61,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/bantouminghui" />
+-->
 
+    <!-- 调试文本信息 -->
+    <!--
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -122,7 +141,10 @@
                 android:id="@+id/info_currentpc_element_num" />
         </LinearLayout>
     </LinearLayout>
+-->
 
+    <!-- 调试按钮 -->
+    <!--
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -137,9 +159,13 @@
         android:layout_toRightOf="@+id/btn_test_1"
         android:text="Test Button 2"
         android:id="@+id/btn_test_2" />
+    -->
 
-    <!--<ImageView-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:id="@+id/test_blur"/>-->
+    <!-- 图像模糊测试 -->
+    <!--
+    <ImageView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/test_blur"/>
+    -->
 </RelativeLayout>

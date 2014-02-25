@@ -9,6 +9,7 @@ import android.view.View;
 import cn.edu.shu.android.drawingboard.MyApplication;
 import cn.edu.shu.android.drawingboard.core.elements.Element;
 import cn.edu.shu.android.drawingboard.core.elements.Position;
+import cn.edu.shu.android.drawingboard.view.CanvasElement;
 import cn.edu.shu.android.drawingboard.view.PaintCanvas;
 
 /**
@@ -34,6 +35,8 @@ public class TranslateAnimator extends Element {
             @Override
             public boolean handleMessage(Message msg) {
                 if (msg.what == MyApplication.MSG_ELEMENT_SELECT) {
+                    PaintCanvas pc = app.getCurrentPaintCanvas();
+                    CanvasElement select = pc.mirror();
                 }
                 return false;
             }

@@ -11,12 +11,14 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
+import cn.edu.shu.android.drawingboard.MyApplication;
 import cn.edu.shu.android.drawingboard.core.elements.Element;
 
 /**
  * Created by yy on 2/21/14.
  */
 public class CanvasElement extends View {
+    private static final MyApplication app = MyApplication.getInstance();
     private PaintCanvas pc;
     private Element content;
     private Bitmap buffer;
@@ -24,6 +26,21 @@ public class CanvasElement extends View {
     private float width;
     private float height;
     private boolean selected = false;
+
+    public CanvasElement(Context context) {
+        super(context);
+        init();
+    }
+
+    public CanvasElement(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init();
+    }
+
+    public CanvasElement(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        init();
+    }
 
     public void setContent(Element e) {
         content = e;
@@ -85,21 +102,6 @@ public class CanvasElement extends View {
         });
     }
 
-    public CanvasElement(Context context) {
-        super(context);
-        init();
-    }
-
-    public CanvasElement(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
-    }
-
-    public CanvasElement(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        init();
-    }
-
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         //super.onMeasure(widthMeasureSpec, heightMeasureSpec);
@@ -117,12 +119,12 @@ public class CanvasElement extends View {
         return bufCanvas;
     }
 
-    public void setPaintCanvas(PaintCanvas pc) {
-        this.pc = pc;
-    }
-
     public PaintCanvas getPaintCanvas() {
         return pc;
+    }
+
+    public void setPaintCanvas(PaintCanvas pc) {
+        this.pc = pc;
     }
 
     public void select() {
@@ -131,6 +133,7 @@ public class CanvasElement extends View {
         p.setStyle(Paint.Style.STROKE);
         bufCanvas.drawRect(1, 1, width - 1, height - 1, p);
         pc.addSelectedCanvasElement(this);
+        app.message(MyApplication.MSG_ELEMENT_SELECT);
         invalidate();
     }
 
@@ -142,5 +145,13 @@ public class CanvasElement extends View {
         bufCanvas.drawRect(1, 1, width - 1, height - 1, p);
         pc.removeSelectedCanvasElement(this);
         invalidate();
+    }
+
+    public CanvasElement copy() {
+        CanvasElement result = new CanvasElement(getContext());
+        result.setX(getX());
+        result.setY(getY());
+        result.setContent(content);
+        return result;
     }
 }
