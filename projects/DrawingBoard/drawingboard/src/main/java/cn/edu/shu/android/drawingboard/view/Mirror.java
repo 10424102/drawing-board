@@ -13,20 +13,6 @@ public class Mirror extends FrameLayout {
     private PaintCanvas pc;
     private ImageView shade;
 
-    public void setPaintCanvas(PaintCanvas pc) {
-        this.pc = pc;
-    }
-
-    public PaintCanvas getPaintCanvas() {
-        return pc;
-    }
-
-    private void init(Context context) {
-        shade = new ImageView(context);
-        shade.setBackgroundColor(Color.TRANSPARENT);
-        addView(shade);
-    }
-
     public Mirror(Context context) {
         super(context);
         init(context);
@@ -40,6 +26,20 @@ public class Mirror extends FrameLayout {
     public Mirror(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init(context);
+    }
+
+    public PaintCanvas getPaintCanvas() {
+        return pc;
+    }
+
+    public void setPaintCanvas(PaintCanvas pc) {
+        this.pc = pc;
+    }
+
+    private void init(Context context) {
+        shade = new ImageView(context);
+        shade.setBackgroundColor(Color.TRANSPARENT);
+        addView(shade);
     }
 
     @Override
@@ -56,5 +56,11 @@ public class Mirror extends FrameLayout {
         super.onLayout(changed, left, top, right, bottom);
     }
 
+    public void shadeOn() {
+        shade.setBackgroundColor(Color.argb(100, 0, 0, 0));
+    }
 
+    public void shadeOff() {
+        shade.setBackgroundColor(Color.TRANSPARENT);
+    }
 }

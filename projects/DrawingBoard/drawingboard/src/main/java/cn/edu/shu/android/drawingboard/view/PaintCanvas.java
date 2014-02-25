@@ -188,4 +188,12 @@ public class PaintCanvas extends ViewGroup {
             e.unselect();
         }
     }
+
+    public CanvasElement mirror() {
+        CanvasElement select = selectedCanvasElementList.get(0);
+        CanvasElement copy = select.copy();
+        mirror.shadeOn();
+        mirror.addView(copy);
+        return copy;
+    }
 }

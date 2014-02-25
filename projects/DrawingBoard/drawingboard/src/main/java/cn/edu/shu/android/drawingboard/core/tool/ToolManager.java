@@ -18,6 +18,10 @@ public class ToolManager {
     private static ToolManager instance;
     private final static MyApplication app = MyApplication.getInstance();
 
+    public List<Tool> getTools() {
+        return tools;
+    }
+
     public static ToolManager getInstance() {
         if (instance == null) {
             instance = new ToolManager();
