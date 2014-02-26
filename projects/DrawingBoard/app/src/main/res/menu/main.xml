@@ -1,9 +1,46 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="cn.edu.shu.android.group6.drawingboard.app.MainActivity" >
-    
-    <item android:id="@+id/action_settings"
+    tools:context="cn.edu.shu.android.drawingboard.MainActivity">
+
+    <item
+        android:id="@+id/action_settings"
         android:title="@string/action_settings"
         android:orderInCategory="100"
         android:showAsAction="never" />
+    <item
+        android:id="@+id/menu_toolbox"
+        android:icon="@drawable/actionbar_pickaxe_icon"
+        android:title="@string/menu_toolbox"
+        android:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/menu_gallery"
+        android:icon="@drawable/actionbar_gallery_icon"
+        android:title="@string/menu_gallery"
+        android:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/menu_clean_caves"
+        android:title="@string/menu_clean_canvas"
+        android:icon="@drawable/actionbar_tnt_icon"
+        android:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/menu_add_tool"
+        android:title="@string/menu_add_tool" />
+    <item
+        android:id="@+id/menu_remove_tool"
+        android:title="@string/menu_remove_tool" />
+    <item
+        android:id="@+id/menu_save_canvas"
+        android:title="@string/menu_save_canvas" />
+    <item
+        android:id="@+id/menu_save_template"
+        android:title="@string/menu_save_template" />
+    <item
+        android:id="@+id/menu_paint_color"
+        android:title="Paint color" />
+    <item
+        android:id="@+id/menu_paint_size"
+        android:title="Paint size" />
+    <item
+        android:id="@+id/menu_paint_style"
+        android:title="Paint style" />
 </menu>

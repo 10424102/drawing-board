@@ -1,16 +1,171 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="cn.edu.shu.android.group6.drawingboard.app.MainActivity">
+    android:id="@+id/main_container">
 
-    <TextView
-        android:text="@string/hello_world"
+    <!-- 画板 -->
+    <!--
+    <cn.edu.shu.android.drawingboard.core.view.PaintCanvas
+        android:id="@+id/my_canvas"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#2200ff00"
+        android:layout_centerHorizontal="true" />
+-->
+
+    <!-- 画笔 -->
+    <!--
+    <RelativeLayout
+        android:layout_height="match_parent"
+        android:layout_width="64dp">
+
+        <ImageView
+            android:id="@+id/brush_icon"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:src="@drawable/main_brush_icon_04" />
+
+    </RelativeLayout>
+-->
+
+    <!-- 色环 -->
+    <!--
+    <cn.edu.shu.android.drawingboard.ui.ColorCircleView
+        android:id="@+id/circle_select_view"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_centerInParent="true" />
+-->
+
+    <!-- 调色盘 -->
+    <!--
+    <cn.edu.shu.android.drawingboard.ui.ColorPanel
+        android:id="@+id/color_panle"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true" />
+
+    <ImageView
+        android:rotation="270"
+        android:layout_marginRight="-4dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:id="@+id/color_panle_bar"
+        android:src="@drawable/colorbutton"
+        android:layout_width="64dp"
+        android:layout_height="64dp" />
+
+    <ImageView
+        android:id="@+id/transparency_layer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bantouminghui" />
+-->
+
+    <!-- 调试文本信息 -->
+    <!--
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentRight="true">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Current Paint" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Color: " />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/info_paint_color" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Style: " />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/info_paint_style" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Size: " />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/info_paint_size" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Current PaintCanvas" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CanvasElement Num: " />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/info_currentpc_element_num" />
+        </LinearLayout>
+    </LinearLayout>
+-->
+
+    <!-- 调试按钮 -->
+    <!--
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="Test Button 1"
+        android:id="@+id/btn_test_1" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/btn_test_1"
+        android:text="Test Button 2"
+        android:id="@+id/btn_test_2" />
+    -->
+
+    <!-- 图像模糊测试 -->
+    <!--
+    <ImageView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/test_blur"/>
+    -->
 </RelativeLayout>
