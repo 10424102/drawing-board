@@ -1,9 +1,0 @@
-<resources>
-
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="android:Theme.Holo.Light">
-        <!-- Customize your theme here. -->
-        <item name="android:actionBarStyle">@style/actionbar_style</item>
-    </style>
-
-</resources>
