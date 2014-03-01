@@ -36,6 +36,12 @@ public class ColorCircleView extends View {
     private int selectColor;
     private Shader alphaShader = null;
 
+    public interface OnColorChangeListener {
+        public void OnColorChange(int color);
+    }
+
+    private ColorCircleView.OnColorChangeListener onColorChangedListener;
+
     private final static float PI = 3.1415927f;
 
     public ColorCircleView(Context context) {
@@ -54,6 +60,9 @@ public class ColorCircleView extends View {
     }
 
     private void init() {
+
+        float scaleFactor = getResources().getDisplayMetrics().density;
+
         // 定义环状颜色列表
         circleColors = new int[]{
                 0xFFFF0000, 0xFFFF00FF, 0xFF0000FF, 0xFF00FFFF, 0xFF00FF00,
@@ -67,18 +76,18 @@ public class ColorCircleView extends View {
         // 画笔设置为实心
         paint.setStyle(Paint.Style.STROKE);
         paint.setShader(shader);
-        paint.setStrokeWidth(48);
+        paint.setStrokeWidth(21.0f*scaleFactor);
 
         // 初始化正方形选择区颜色
         centerPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        centerPaint.setStrokeWidth(36);
+        centerPaint.setStrokeWidth(18.0f*scaleFactor);
         // 画笔设置为填充
         centerPaint.setStyle(Paint.Style.FILL);
 
         pickerCirclePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         pickerCirclePaint.setColor(Color.WHITE);
         pickerCirclePaint.setStyle(Paint.Style.STROKE);
-        pickerCirclePaint.setStrokeWidth(8);
+        pickerCirclePaint.setStrokeWidth(4.0f*scaleFactor);
 
         circlePickColor = Color.WHITE;
 
@@ -96,10 +105,10 @@ public class ColorCircleView extends View {
         // 计算圆环半径
         radius = (width - paint.getStrokeWidth()) * 0.35f;
 
-        rectXLeft = width * 0.325f;
-        rectYLeft = height * 0.325f;
-        rectXRight = width * 0.675f;
-        rectYRight = height * 0.675f;
+        rectXLeft = width * 0.3f;
+        rectYLeft = height * 0.3f;
+        rectXRight = width * 0.7f;
+        rectYRight = height * 0.7f;
 
         if (rect == null) {
             rect = new RectF(-radius, -radius, radius, radius);
@@ -156,8 +165,13 @@ public class ColorCircleView extends View {
                     invalidate();
                     break;
             }
+            onColorChangedListener.OnColorChange(selectColor);
         }
         return true;
+    }
+
+    public void setOnColorChangeListener(OnColorChangeListener onColorChangeListener) {
+        this.onColorChangedListener = onColorChangeListener;
     }
 
     public void setSelectColor(int color) {

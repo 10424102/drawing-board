@@ -26,7 +26,20 @@
         android:layout_marginTop="16dp"
         android:layout_marginLeft="16dp"
         android:layout_centerHorizontal="true"
-        android:text="Pick Color" />
+        android:text="Preview" />
+
+    <ImageView
+        android:layout_toRightOf="@id/colorcircle"
+        android:id="@+id/preview_color"
+        android:layout_width="72dp"
+        android:layout_height="48dp" />
+
+    <ImageView
+        android:layout_toRightOf="@id/colorcircle"
+        android:layout_below="@id/preview_color"
+        android:id="@+id/before_color"
+        android:layout_width="72dp"
+        android:layout_height="48dp" />
 
     <Button
         android:layout_marginRight="48dp"
