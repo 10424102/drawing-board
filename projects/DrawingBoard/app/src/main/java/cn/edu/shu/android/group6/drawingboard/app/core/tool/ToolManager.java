@@ -73,6 +73,9 @@ public class ToolManager {
                         case "delete":
                             generator = new DeleteTool();
                             break;
+                        case "translate-animation":
+                            generator = new TranslateAnimationTool();
+                            break;
                     }
                 }
             }

@@ -66,6 +66,7 @@ public class MainActivity extends Activity {
             ToolManager.load("RoundRectangle.xml");
             app.setCurrentTool(ToolManager.load("Select.xml"));
             ToolManager.load("Delete.xml");
+            ToolManager.load("TranslateAnimation.xml");
         } catch (Exception e) {
             e.printStackTrace();
         }

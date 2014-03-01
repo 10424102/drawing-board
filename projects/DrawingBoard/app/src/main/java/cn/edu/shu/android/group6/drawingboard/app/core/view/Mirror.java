@@ -1,6 +1,7 @@
 package cn.edu.shu.android.group6.drawingboard.app.core.view;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.widget.FrameLayout;
 
 /**
@@ -9,6 +10,7 @@ import android.widget.FrameLayout;
 public class Mirror extends FrameLayout {
     private PaintCanvas paintCanvas;
     private ControlPoint activeControlPoint;
+    private Shade shade = new Shade(getContext());
 
     public ControlPoint getActiveControlPoint() {
         return activeControlPoint;
@@ -24,6 +26,19 @@ public class Mirror extends FrameLayout {
 
     public Mirror(Context context) {
         super(context);
+        addView(shade);
+    }
+
+    public void shadeOn() {
+        shade.setBackgroundColor(Color.argb(200, 0, 0, 0));
+//        shade.setOpen(true);
+//        shade.invalidate();
+    }
+
+    public void shadeOff() {
+        shade.setBackgroundColor(Color.TRANSPARENT);
+//        shade.setOpen(false);
+//        shade.invalidate();
     }
 
     @Override

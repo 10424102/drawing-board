@@ -5,18 +5,20 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.view.View;
 
+import cn.edu.shu.android.group6.drawingboard.app.App;
 import cn.edu.shu.android.group6.drawingboard.app.core.element.Gaia;
 
 /**
  * Created by yy on 2/26/14.
  */
 public class CanvasElement extends View {
+    private static final App app = App.getInstance();
     public static final int SELECT_FLAG = 2;
     public static final int TRANSLATE_FLAG = 4;
     public static final int ROTATE_FLAG = 8;
     public static final int SCALE_FLAG = 16;
 
-    private PaintCanvas paintCanvas;
+    private PaintCanvas paintCanvas = app.getPaintCanvas();
     private int flags = 0;
     private Gaia gaia;
     private boolean selected = false;
@@ -47,9 +49,6 @@ public class CanvasElement extends View {
     private void select() {
         selected = true;
         setBackgroundColor(Color.LTGRAY);
-        if (paintCanvas == null) {
-            paintCanvas = ((Artwork) getParent()).getPaintCanvas();
-        }
         paintCanvas.getSelectedElements().add(this);
         paintCanvas.mirror();
     }
@@ -74,5 +73,13 @@ public class CanvasElement extends View {
     protected void onDraw(Canvas canvas) {
         //canvas.drawColor(Color.argb(20, 100, 100, 100));
         gaia.paint(canvas);
+    }
+
+    public CanvasElement copy() {
+        CanvasElement element = new CanvasElement(getContext(), gaia);
+        element.setFlags(flags);
+        element.setX(getX());
+        element.setY(getY());
+        return element;
     }
 }
