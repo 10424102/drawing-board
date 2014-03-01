@@ -37,6 +37,7 @@ public class GaiaCircle extends Gaia {
                     GaiaCircle circle = new GaiaCircle();
                     circle.set(app.getPaint(), MathUtil.distance(sx, sy, event.getX(), event.getY()), sx, sy);
                     CanvasElement element = new CanvasElement(app.getContext(), circle);
+                    element.setFlags(CanvasElement.SELECT_FLAG);
                     app.getPaintCanvas().getArtwork().addView(element);
                     break;
             }

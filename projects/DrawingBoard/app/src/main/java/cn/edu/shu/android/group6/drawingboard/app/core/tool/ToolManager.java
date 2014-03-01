@@ -41,6 +41,9 @@ public class ToolManager {
                     case "name":
                         tool.setName(a.getValue());
                         break;
+                    case "oneoff":
+                        tool.setOneoff(Boolean.parseBoolean(a.getValue()));
+                        break;
                 }
             }
             Generable generator = null;
@@ -66,6 +69,9 @@ public class ToolManager {
                             break;
                         case "select":
                             generator = new SelectTool();
+                            break;
+                        case "delete":
+                            generator = new DeleteTool();
                             break;
                     }
                 }

@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import cn.edu.shu.android.group6.drawingboard.app.R;
+import cn.edu.shu.android.group6.drawingboard.app.ui.ColorCircleView;
+import cn.edu.shu.android.group6.drawingboard.app.ui.TransparentRegulator;
 
 
 /**
@@ -19,6 +21,7 @@ public class ColorPickerFragment extends Fragment {
     private Button confirmButton;
     private TransparentRegulator transparentRegulator;
     private ColorCircleView colorCircleView;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.colorpick_fragment_layout, container, false);

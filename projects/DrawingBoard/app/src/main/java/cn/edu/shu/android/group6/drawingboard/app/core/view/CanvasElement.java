@@ -21,6 +21,25 @@ public class CanvasElement extends View {
     private Gaia gaia;
     private boolean selected = false;
 
+    public CanvasElement(Context context, Gaia gaia) {
+        super(context);
+        setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if ((flags | ~SELECT_FLAG) == -1) {
+                    if (selected) {
+                        unselect();
+                    } else {
+                        select();
+                    }
+                }
+            }
+        });
+        this.gaia = gaia;
+        setX(gaia.getLeft());
+        setY(gaia.getTop());
+    }
+
     public void setFlags(int flags) {
         this.flags = flags;
     }
@@ -39,25 +58,6 @@ public class CanvasElement extends View {
         selected = false;
         setBackgroundColor(Color.TRANSPARENT);
         paintCanvas.getSelectedElements().remove(this);
-    }
-
-    public CanvasElement(Context context, Gaia gaia) {
-        super(context);
-        setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if ((flags | ~SELECT_FLAG) == -1) {
-                    if (selected) {
-                        unselect();
-                    } else {
-                        select();
-                    }
-                }
-            }
-        });
-        this.gaia = gaia;
-        setX(gaia.getLeft());
-        setY(gaia.getTop());
     }
 
     public Gaia getGaia() {

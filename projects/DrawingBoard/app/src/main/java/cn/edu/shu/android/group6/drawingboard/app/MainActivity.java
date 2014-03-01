@@ -65,6 +65,7 @@ public class MainActivity extends Activity {
             ToolManager.load("Rectangle.xml");
             ToolManager.load("RoundRectangle.xml");
             app.setCurrentTool(ToolManager.load("Select.xml"));
+            ToolManager.load("Delete.xml");
         } catch (Exception e) {
             e.printStackTrace();
         }

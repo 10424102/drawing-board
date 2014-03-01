@@ -15,6 +15,15 @@ public class Tool {
     private Generable generator;
     private String name = "No name";
     private View view;
+    private boolean oneoff = false;
+
+    public boolean isOneoff() {
+        return oneoff;
+    }
+
+    public void setOneoff(boolean oneoff) {
+        this.oneoff = oneoff;
+    }
 
     public View getView() {
         return view;
@@ -42,7 +51,9 @@ public class Tool {
 
     public void startUsing() {
         if (generator != null) generator.generate();
-        ((Button) app.getCurrentTool().getView()).setTextColor(Color.BLACK);
-        app.setCurrentTool(this);
+        if (!oneoff) {
+            ((Button) app.getCurrentTool().getView()).setTextColor(Color.BLACK);
+            app.setCurrentTool(this);
+        }
     }
 }

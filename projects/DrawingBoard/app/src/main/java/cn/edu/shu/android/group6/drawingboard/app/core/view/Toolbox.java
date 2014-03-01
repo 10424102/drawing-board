@@ -31,7 +31,9 @@ public class Toolbox extends Fragment {
                 @Override
                 public void onClick(View v) {
                     t.startUsing();
-                    ((Button) v).setTextColor(Color.RED);
+                    if (!t.isOneoff()) {
+                        ((Button) v).setTextColor(Color.RED);
+                    }
                 }
             });
             t.setView(btn);
