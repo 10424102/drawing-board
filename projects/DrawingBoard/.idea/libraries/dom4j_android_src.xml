@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="dom4j-android-src">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/app/libs/dom4j-android-src.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

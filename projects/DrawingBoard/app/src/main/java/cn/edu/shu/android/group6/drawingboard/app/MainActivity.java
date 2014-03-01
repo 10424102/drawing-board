@@ -1,13 +1,26 @@
 package cn.edu.shu.android.group6.drawingboard.app;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import cn.edu.shu.android.group6.drawingboard.app.core.tool.ToolManager;
+import cn.edu.shu.android.group6.drawingboard.app.core.view.PaintCanvas;
+import cn.edu.shu.android.group6.drawingboard.app.core.view.Toolbox;
 
 public class MainActivity extends Activity {
     private static final App app = App.getInstance();
+    private PaintCanvas paintCanvas;
+    private RelativeLayout container;
 
     //条色盘测试
     //private ColorPanel colorPanel = null;
@@ -25,8 +38,71 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //register main activity
         app.setMainActivity(this);
+
+        //get the container
         setContentView(R.layout.activity_main);
+        container = (RelativeLayout) findViewById(R.id.main_container);
+
+        //new PaintCanvas & register it
+        paintCanvas = new PaintCanvas(this);
+        container.addView(paintCanvas);
+        app.setPaintCanvas(paintCanvas);
+
+        //test paint
+
+
+        //add the TestFragment
+        getFragmentManager().beginTransaction().add(R.id.main_container, new TestFragment()).commit();
+
+        //add Toolbox
+        try {
+            ToolManager.load("Circle.xml");
+            ToolManager.load("Curve.xml");
+            ToolManager.load("Line.xml");
+            ToolManager.load("Rectangle.xml");
+            ToolManager.load("RoundRectangle.xml");
+            app.setCurrentTool(ToolManager.load("Select.xml"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        getFragmentManager().beginTransaction().add(R.id.main_container, new Toolbox()).commit();
+
+        //test control point
+//        ControlPoint controlPoint = new ControlPoint(this);
+//        controlPoint.setX(100);
+//        controlPoint.setY(100);
+//        paintCanvas.getMirror().addView(controlPoint);
+//        paintCanvas.getMirror().requestLayout();
+
+//        setContentView(R.layout.activity_main);
+//        CanvasElement element = new CanvasElement(this);
+//        Oval oval = new Oval();
+//        Path path = new Path();
+//        path.moveTo(20,20);
+//        path.lineTo(20,180);
+//        path.lineTo(60,100);
+//        path.quadTo(160,-100,150,180);
+//        path.lineTo(100,100);
+//        ShapeDrawable drawable = new ShapeDrawable(new PathShape(path,200,200));
+        //ShapeDrawable drawable = new ShapeDrawable(new RoundRectShape(new float[]{0,0,0,0,0,0,0,0},new RectF(40,40,160,160),new float[]{50,50,50,50,50,50,50,50}));
+        //ShapeDrawable drawable = new ShapeDrawable(new ArcShape(0, 270));
+//        GaiaCircle drawable = new GaiaCircle();
+//        drawable.setRadius(50);
+//        drawable.getPaint().setStyle(Paint.Style.STROKE);
+//        drawable.getPaint().setStrokeWidth(10);
+//        drawable.getPaint().setAntiAlias(true);
+//        drawable.getPaint().setColor(Color.RED);
+        //drawable.setPadding(6,6,6,6);
+        //drawable.setBounds(0, 0, 200, 200);
+//        oval.setDrawable(drawable);
+//        element.setDrawable(drawable);
+//        RelativeLayout container = (RelativeLayout) findViewById(R.id.main_container);
+//        element.setX(50);
+//        element.setY(50);
+//        container.addView(element);
 //调色盘测试
 //        p_color = (TextView) findViewById(R.id.info_paint_color);
 //        p_size = (TextView) findViewById(R.id.info_paint_size);
@@ -154,5 +230,59 @@ public class MainActivity extends Activity {
         /*if (transparentLayer != null) {
             transparentLayer.setVisibility(View.VISIBLE);
         }*/
+    }
+
+    public void testUpdatePaintCanvas() {
+        TextView text = new TextView(this);
+        text.setText("I'm a test message");
+        paintCanvas.getArtwork().addView(text);
+    }
+
+    private class TestFragment extends Fragment {
+        //        public static final int UPDATE_CANVAS_ELEMENT_COUNT = 1;
+        private TextView tvCanvasElementCount;
+//        private Handler handler = new Handler(new Handler.Callback() {
+//            @Override
+//            public boolean handleMessage(Message msg) {
+//                switch (msg.what) {
+//                    case UPDATE_CANVAS_ELEMENT_COUNT:
+//                        tvCanvasElementCount.setText(paintCanvas.getArtwork().getChildCount());
+//                        break;
+//                }
+//                return true;
+//            }
+//        });
+
+        private void updateInfo() {
+            tvCanvasElementCount.setText(Integer.toString(paintCanvas.getArtwork().getChildCount()));
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            View root = inflater.inflate(R.layout.fragment_test, container, false);
+            //root.setBackgroundColor(Color.LTGRAY);
+            Button test = (Button) root.findViewById(R.id.test);
+            test.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //testUpdatePaintCanvas();
+//                    SelectTool tool = new SelectTool();
+//                    tool.startUsingOn(paintCanvas);
+                    //mirror.addView(copy);
+                    TextView text = new TextView(v.getContext());
+                    text.setText("message");
+                    paintCanvas.getMirror().addView(text);
+                }
+            });
+            tvCanvasElementCount = (TextView) root.findViewById(R.id.test_canvas_element_count);
+            Button update = (Button) root.findViewById(R.id.test_update_info);
+            update.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    updateInfo();
+                }
+            });
+            return root;
+        }
     }
 }

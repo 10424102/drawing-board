@@ -1,9 +1,15 @@
 package cn.edu.shu.android.group6.drawingboard.app;
 
+import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.Paint;
 import android.os.Handler;
 import android.os.Message;
+
+import cn.edu.shu.android.group6.drawingboard.app.core.tool.Tool;
+import cn.edu.shu.android.group6.drawingboard.app.core.view.PaintCanvas;
 
 /**
  * Created by yy on 2/25/14.
@@ -22,27 +28,44 @@ public class App extends Application {
             return false;
         }
     });
-    //private PaintCanvas paintCanvas;
-    private MainActivity mainActivity;
+    private Activity mainActivity;
+    private PaintCanvas paintCanvas;
+    private Paint paint = new Paint();
+    private Tool currentTool;
+
+    public Tool getCurrentTool() {
+        return currentTool;
+    }
+
+    public void setCurrentTool(Tool currentTool) {
+        this.currentTool = currentTool;
+    }
 
     public App() {
         super();
         instance = this;
+        paint.setStrokeWidth(3);
+        paint.setAntiAlias(true);
+        paint.setStyle(Paint.Style.STROKE);
     }
 
     public static App getInstance() {
         return instance;
     }
 
-//    public PaintCanvas getPaintCanvas() {
-//        return paintCanvas;
-//    }
-//
-//    public void setPaintCanvas(PaintCanvas paintCanvas) {
-//        this.paintCanvas = paintCanvas;
-//    }
+    public Paint getPaint() {
+        return paint;
+    }
 
-    public MainActivity getMainActivity() {
+    public PaintCanvas getPaintCanvas() {
+        return paintCanvas;
+    }
+
+    public void setPaintCanvas(PaintCanvas paintCanvas) {
+        this.paintCanvas = paintCanvas;
+    }
+
+    public Activity getMainActivity() {
         return mainActivity;
     }
 
@@ -77,5 +100,9 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+    }
+
+    public Context getContext() {
+        return mainActivity;
     }
 }
