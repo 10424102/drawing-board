@@ -24,6 +24,8 @@ public class DeleteTool implements Generable {
             for (CanvasElement e : elements) {
                 paintCanvas.getArtwork().removeView(e);
             }
+            elements.clear();
         }
+
     }
 }

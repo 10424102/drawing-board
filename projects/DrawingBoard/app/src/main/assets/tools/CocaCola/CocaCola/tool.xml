@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tool name="Coca Cola">
+    <generator>
+        <static-picture path="Coca-Cola-icon.png" />
+    </generator>
+</tool>

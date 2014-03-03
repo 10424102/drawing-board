@@ -59,14 +59,18 @@ public class MainActivity extends Activity {
 
         //add Toolbox
         try {
-            ToolManager.load("Circle.xml");
-            ToolManager.load("Curve.xml");
-            ToolManager.load("Line.xml");
-            ToolManager.load("Rectangle.xml");
-            ToolManager.load("RoundRectangle.xml");
-            app.setCurrentTool(ToolManager.load("Select.xml"));
-            ToolManager.load("Delete.xml");
-            ToolManager.load("TranslateAnimation.xml");
+            ToolManager.load("Assets://tools/Circle.xml");
+            ToolManager.load("Assets://tools/Curve.xml");
+            ToolManager.load("Assets://tools/Line.xml");
+            ToolManager.load("Assets://tools/Rectangle.xml");
+            ToolManager.load("Assets://tools/RoundRectangle.xml");
+            app.setCurrentTool(ToolManager.load("Assets://tools/Select.xml"));
+            ToolManager.load("Assets://tools/PlayAnimation.xml");
+            ToolManager.load("Assets://tools/Delete.xml");
+            ToolManager.load("Assets://tools/TranslateAnimation.xml");
+            ToolManager.load("Assets://tools/CocaCola/CocaCola/");
+            ToolManager.load("Assets://tools/CocaCola/CokeZero/");
+            ToolManager.load("Assets://tools/CocaCola/DietCoke/");
         } catch (Exception e) {
             e.printStackTrace();
         }

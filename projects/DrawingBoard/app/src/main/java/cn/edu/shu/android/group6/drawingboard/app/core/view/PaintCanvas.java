@@ -1,5 +1,6 @@
 package cn.edu.shu.android.group6.drawingboard.app.core.view;
 
+import android.animation.AnimatorSet;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,15 @@ public class PaintCanvas extends ViewGroup {
     private Mirror mirror;
     private Artwork artwork;
     private List<CanvasElement> selectedElements = new ArrayList<>();
+    private AnimatorSet animatorSet = new AnimatorSet();
+
+    public AnimatorSet getAnimatorSet() {
+        return animatorSet;
+    }
+
+    public void setAnimatorSet(AnimatorSet animatorSet) {
+        this.animatorSet = animatorSet;
+    }
 
     public Draft getDraft() {
         return draft;

@@ -18,6 +18,12 @@ public class Artwork extends FrameLayout {
     }
 
     @Override
+    public void removeAllViews() {
+        super.removeAllViews();
+        paintCanvas.getSelectedElements().clear();
+    }
+
+    @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         if (paintCanvas == null) paintCanvas = (PaintCanvas) getParent();

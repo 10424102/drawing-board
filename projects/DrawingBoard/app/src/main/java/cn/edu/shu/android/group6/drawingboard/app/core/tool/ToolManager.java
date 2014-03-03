@@ -12,11 +12,13 @@ import java.util.List;
 
 import cn.edu.shu.android.group6.drawingboard.app.App;
 import cn.edu.shu.android.group6.drawingboard.app.core.Generable;
+import cn.edu.shu.android.group6.drawingboard.app.core.XmlInitializable;
 import cn.edu.shu.android.group6.drawingboard.app.core.element.GaiaCircle;
 import cn.edu.shu.android.group6.drawingboard.app.core.element.GaiaCurve;
 import cn.edu.shu.android.group6.drawingboard.app.core.element.GaiaLine;
 import cn.edu.shu.android.group6.drawingboard.app.core.element.GaiaRectangle;
 import cn.edu.shu.android.group6.drawingboard.app.core.element.GaiaRoundRectangle;
+import cn.edu.shu.android.group6.drawingboard.app.core.element.GaiaStaticPicture;
 
 /**
  * Created by yy on 2/27/14.
@@ -25,9 +27,10 @@ public class ToolManager {
     private static final App app = App.getInstance();
     private static final List<Tool> tools = new ArrayList<>();
 
-    public static Tool load(String name) throws LoadToolException {
+    private static Tool loadFromAssets(String url) {
         try {
-            InputStream is = app.getAssets().open("tools/" + name);
+            if (url.endsWith("/")) url += "Tool.xml";
+            InputStream is = app.getAssets().open(url);
             SAXReader reader = new SAXReader();
             Document document = reader.read(is);
             Element root = document.getRootElement();
@@ -35,6 +38,7 @@ public class ToolManager {
                 throw new LoadToolException("Root element is not 'tool'.");
 
             Tool tool = new Tool();
+            tool.setDirPath("Assets://" + url.substring(0, url.lastIndexOf("/") + 1));
             for (Iterator i = root.attributeIterator(); i.hasNext(); ) {
                 Attribute a = (Attribute) i.next();
                 switch (a.getName()) {
@@ -53,28 +57,35 @@ public class ToolManager {
                     Element gen = (Element) e.elements().get(0);
                     switch (gen.getName()) {
                         case "circle":
-                            generator = new GaiaCircle();
+                            generator = new GaiaCircle(tool);
                             break;
                         case "curve":
-                            generator = new GaiaCurve();
+                            generator = new GaiaCurve(tool);
                             break;
                         case "line":
-                            generator = new GaiaLine();
+                            generator = new GaiaLine(tool);
                             break;
                         case "rectangle":
-                            generator = new GaiaRectangle();
+                            generator = new GaiaRectangle(tool);
                             break;
                         case "round-rectangle":
-                            generator = new GaiaRoundRectangle();
+                            generator = new GaiaRoundRectangle(tool);
                             break;
                         case "select":
                             generator = new SelectTool();
+                            break;
+                        case "play-animation":
+                            generator = new PlayAnimationTool();
                             break;
                         case "delete":
                             generator = new DeleteTool();
                             break;
                         case "translate-animation":
                             generator = new TranslateAnimationTool();
+                            break;
+                        case "static-picture":
+                            generator = new GaiaStaticPicture(tool);
+                            ((XmlInitializable) generator).parseXmlElement(gen);
                             break;
                     }
                 }
@@ -83,8 +94,21 @@ public class ToolManager {
             tools.add(tool);
             return tool;
         } catch (Exception e) {
-            throw new LoadToolException(e);
+            e.printStackTrace();
         }
+        return null;
+    }
+
+    private static Tool loadFromSdcard(String url) {
+        return null;
+    }
+
+    public static Tool load(String url) {
+        Tool t = null;
+        if (url.startsWith("Assets://")) {
+            t = loadFromAssets(url.substring(9));
+        }
+        return t;
     }
 
     public static List<Tool> getTools() {

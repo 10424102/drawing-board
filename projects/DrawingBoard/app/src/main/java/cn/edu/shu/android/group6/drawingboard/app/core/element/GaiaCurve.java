@@ -7,6 +7,7 @@ import android.graphics.RectF;
 import android.view.MotionEvent;
 import android.view.View;
 
+import cn.edu.shu.android.group6.drawingboard.app.core.tool.Tool;
 import cn.edu.shu.android.group6.drawingboard.app.core.view.CanvasElement;
 import cn.edu.shu.android.group6.drawingboard.app.core.view.Draft;
 
@@ -14,9 +15,16 @@ import cn.edu.shu.android.group6.drawingboard.app.core.view.Draft;
  * Created by yy on 3/1/14.
  */
 public class GaiaCurve extends Gaia {
+    public GaiaCurve(GaiaCurve g) {
+        super(g);
+        this.path = new Path(g.path);
+    }
+
     private static final View.OnTouchListener gen = new View.OnTouchListener() {
         final Path path = new Path();
-        final Draft draft = app.getPaintCanvas().getDraft();
+        Draft draft;
+        Canvas canvas;
+        GaiaCurve template;
         float px;
         float py;
 
@@ -24,6 +32,9 @@ public class GaiaCurve extends Gaia {
         public boolean onTouch(View v, MotionEvent event) {
             switch (event.getActionMasked()) {
                 case MotionEvent.ACTION_DOWN:
+                    draft = app.getPaintCanvas().getDraft();
+                    canvas = draft.getCanvas();
+                    template = (GaiaCurve) app.getCurrentTool().getGenerator();
                     path.reset();
                     path.moveTo(event.getX(), event.getY());
                     px = event.getX();
@@ -31,7 +42,7 @@ public class GaiaCurve extends Gaia {
                     break;
                 case MotionEvent.ACTION_MOVE:
                     path.lineTo(event.getX(), event.getY());
-                    draft.getCanvas().drawLine(px, py, event.getX(), event.getY(), app.getPaint());
+                    canvas.drawLine(px, py, event.getX(), event.getY(), app.getPaint());
                     px = event.getX();
                     py = event.getY();
                     draft.invalidate();
@@ -39,7 +50,7 @@ public class GaiaCurve extends Gaia {
                 case MotionEvent.ACTION_UP:
                     draft.clear();
                     draft.invalidate();
-                    GaiaCurve gaia = new GaiaCurve();
+                    GaiaCurve gaia = new GaiaCurve(template);
                     gaia.set(app.getPaint(), path);
                     CanvasElement element = new CanvasElement(app.getContext(), gaia);
                     app.getPaintCanvas().getArtwork().addView(element);
@@ -62,6 +73,10 @@ public class GaiaCurve extends Gaia {
     @Override
     public void paint(Canvas canvas) {
         canvas.drawPath(path, paint);
+    }
+
+    public GaiaCurve(Tool genTool) {
+        super(genTool);
     }
 
     @Override

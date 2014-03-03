@@ -19,6 +19,7 @@ public class ControlArc extends View {
 
     public void setFrom(ControlPoint from) {
         this.from = from;
+        from.getOutArcs().add(this);
     }
 
     public ControlPoint getTo() {
@@ -27,6 +28,7 @@ public class ControlArc extends View {
 
     public void setTo(ControlPoint to) {
         this.to = to;
+        to.getInArcs().add(this);
     }
 
     public ControlArc(Context context) {

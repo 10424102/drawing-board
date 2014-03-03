@@ -16,6 +16,19 @@ public class Tool {
     private String name = "No name";
     private View view;
     private boolean oneoff = false;
+    private String dirPath;
+
+    public void setDirPath(String dirPath) {
+        this.dirPath = dirPath;
+    }
+
+    public String getDirPath() {
+        return dirPath;
+    }
+
+    public Generable getGenerator() {
+        return generator;
+    }
 
     public boolean isOneoff() {
         return oneoff;
@@ -26,6 +39,21 @@ public class Tool {
     }
 
     public View getView() {
+        if (view == null) {
+            view = new Button(app.getContext());
+            ((Button) view).setText(name);
+            ((Button) view).setTextSize(10);
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startUsing();
+                    if (!oneoff) {
+                        ((Button) v).setTextColor(Color.RED);
+                    }
+                }
+            });
+
+        }
         return view;
     }
 
@@ -43,10 +71,6 @@ public class Tool {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Tool() {
-
     }
 
     public void startUsing() {

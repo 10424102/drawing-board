@@ -6,6 +6,9 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.View;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import cn.edu.shu.android.group6.drawingboard.app.App;
 
 /**
@@ -16,6 +19,33 @@ public class ControlPoint extends View {
     public static final int SIZE = 50;
     Paint paint = new Paint();
     private CanvasElement element;
+    private List<ControlArc> inArcs = new LinkedList<>();
+    private List<ControlArc> outArcs = new LinkedList<>();
+
+    public void update() {
+        for (ControlArc ca : inArcs) {
+            ca.invalidate();
+        }
+        for (ControlArc ca : outArcs) {
+            ca.invalidate();
+        }
+    }
+
+    public float getCpX() {
+        return getX() + SIZE / 2.0f;
+    }
+
+    public float getCpY() {
+        return getY() + SIZE / 2.0f;
+    }
+
+    public List<ControlArc> getInArcs() {
+        return inArcs;
+    }
+
+    public List<ControlArc> getOutArcs() {
+        return outArcs;
+    }
 
     public CanvasElement getElement() {
         return element;

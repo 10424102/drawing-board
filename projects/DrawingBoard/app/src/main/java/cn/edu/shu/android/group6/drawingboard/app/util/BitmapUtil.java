@@ -8,6 +8,8 @@ import android.graphics.Rect;
 import android.util.Log;
 import android.view.View;
 
+import java.io.IOException;
+
 import cn.edu.shu.android.group6.drawingboard.app.App;
 
 /**
@@ -16,7 +18,7 @@ import cn.edu.shu.android.group6.drawingboard.app.App;
 public class BitmapUtil {
     private static App app = App.getInstance();
 
-    public static Bitmap getBitmapFile(String path, double width, double height) {
+    public static Bitmap getBitmapFromFile(String path, double width, double height) {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(path, options);
@@ -25,15 +27,32 @@ public class BitmapUtil {
         return BitmapFactory.decodeFile(path);
     }
 
-    public static Bitmap getBitmapFile(String path) {
+    public static Bitmap getBitmapFromFile(String path) {
         return BitmapFactory.decodeFile(path);
     }
 
-    public static Bitmap getBitmapResource(int resourceId) {
+    public static Bitmap getBitmapFromAssets(String path) {
+        try {
+            return BitmapFactory.decodeStream(app.getAssets().open(path));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static Bitmap getBitmapFromUrl(String url) {
+        Bitmap b = null;
+        if (url.startsWith("Assets://")) {
+            b = getBitmapFromAssets(url.substring(9));
+        }
+        return b;
+    }
+
+    public static Bitmap getBitmapFromResource(int resourceId) {
         return BitmapFactory.decodeResource(app.getResources(), resourceId);
     }
 
-    public static Bitmap getBitmapResource(int resourceId, double width, double height) {
+    public static Bitmap getBitmapFromResource(int resourceId, double width, double height) {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeResource(app.getResources(), resourceId, options);
@@ -68,7 +87,6 @@ public class BitmapUtil {
     public static Bitmap loadBitmapFromView(View v) {
         v.setDrawingCacheEnabled(true);
         v.buildDrawingCache(true);
-
         // creates immutable clone
         Bitmap b = Bitmap.createBitmap(v.getDrawingCache());
 

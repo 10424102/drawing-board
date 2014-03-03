@@ -7,6 +7,7 @@ import android.graphics.PorterDuffXfermode;
 
 import cn.edu.shu.android.group6.drawingboard.app.App;
 import cn.edu.shu.android.group6.drawingboard.app.core.Generable;
+import cn.edu.shu.android.group6.drawingboard.app.core.tool.Tool;
 
 /**
  * Created by yy on 2/26/14.
@@ -21,6 +22,19 @@ public abstract class Gaia implements Generable {
     protected float left;
     protected float cx;
     protected float cy;
+    protected Tool genTool;
+
+    public Tool getGenTool() {
+        return genTool;
+    }
+
+    public void setGenTool(Tool genTool) {
+        this.genTool = genTool;
+    }
+
+    public Gaia(Tool genTool) {
+        this.genTool = genTool;
+    }
 
     public void setLeftTop(float l, float t) {
         left = l;
@@ -59,5 +73,17 @@ public abstract class Gaia implements Generable {
 
     public float getHeight() {
         return height;
+    }
+
+    public Gaia(Gaia g) {
+        this.genTool = g.genTool;
+        this.cx = g.cx;
+        this.cy = g.cy;
+        this.erasePaint = g.erasePaint;
+        this.paint = g.paint;
+        this.width = g.width;
+        this.height = g.height;
+        this.left = g.left;
+        this.top = g.top;
     }
 }

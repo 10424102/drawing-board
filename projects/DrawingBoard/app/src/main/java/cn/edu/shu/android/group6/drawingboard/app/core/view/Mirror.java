@@ -29,6 +29,15 @@ public class Mirror extends FrameLayout {
         addView(shade);
     }
 
+    @Override
+    public void removeAllViews() {
+        //super.removeAllViews();
+        int count = getChildCount();
+        for (int i = 1; i < count; i++) {
+            removeView(getChildAt(1));
+        }
+    }
+
     public void shadeOn() {
         shade.setBackgroundColor(Color.argb(200, 0, 0, 0));
 //        shade.setOpen(true);

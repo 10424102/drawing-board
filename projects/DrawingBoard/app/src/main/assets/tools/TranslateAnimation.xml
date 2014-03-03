@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<tool name="Translate Animation">
-    <generator>
+<tool name="Translate Animation" oneoff="true">
+<generator>
         <translate-animation />
     </generator>
 </tool>

@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.SeekBar;
 
 import cn.edu.shu.android.group6.drawingboard.app.R;
+import cn.edu.shu.android.group6.drawingboard.app.core.tool.Tool;
 import cn.edu.shu.android.group6.drawingboard.app.core.view.CanvasElement;
 import cn.edu.shu.android.group6.drawingboard.app.core.view.Draft;
 import cn.edu.shu.android.group6.drawingboard.app.util.DimensionUtil;
@@ -21,6 +22,13 @@ import cn.edu.shu.android.group6.drawingboard.app.util.DimensionUtil;
  * Created by yy on 3/1/14.
  */
 public class GaiaRoundRectangle extends Gaia {
+    public GaiaRoundRectangle(GaiaRoundRectangle g) {
+        super(g);
+        this.rect = new RectF(g.rect);
+        this.rx = g.rx;
+        this.ry = g.ry;
+    }
+
     private RectF rect;
     private static final SettingPanel settingPanel = new SettingPanel();
     float rx;
@@ -44,9 +52,11 @@ public class GaiaRoundRectangle extends Gaia {
     }
 
     private static final View.OnTouchListener gen = new View.OnTouchListener() {
+        Draft draft;
+        Canvas canvas;
+        GaiaRoundRectangle template;
         float sx;
         float sy;
-        final Draft draft = app.getPaintCanvas().getDraft();
 
         private RectF f(float x1, float y1, float x2, float y2) {
 
@@ -61,6 +71,9 @@ public class GaiaRoundRectangle extends Gaia {
         public boolean onTouch(View v, MotionEvent event) {
             switch (event.getActionMasked()) {
                 case MotionEvent.ACTION_DOWN:
+                    draft = app.getPaintCanvas().getDraft();
+                    canvas = draft.getCanvas();
+                    template = (GaiaRoundRectangle) app.getCurrentTool().getGenerator();
                     sx = event.getX();
                     sy = event.getY();
                     break;
@@ -72,7 +85,7 @@ public class GaiaRoundRectangle extends Gaia {
                 case MotionEvent.ACTION_UP:
                     draft.clear();
                     draft.invalidate();
-                    GaiaRoundRectangle gaia = new GaiaRoundRectangle();
+                    GaiaRoundRectangle gaia = new GaiaRoundRectangle(template);
                     gaia.set(app.getPaint(), f(sx, sy, event.getX(), event.getY()));
                     CanvasElement element = new CanvasElement(app.getContext(), gaia);
                     app.getPaintCanvas().getArtwork().addView(element);
@@ -104,6 +117,10 @@ public class GaiaRoundRectangle extends Gaia {
     @Override
     public void generate() {
         app.getPaintCanvas().getDraft().setOnTouchListener(gen);
+    }
+
+    public GaiaRoundRectangle(Tool genTool) {
+        super(genTool);
     }
 
     private static class SettingPanel extends Fragment {
