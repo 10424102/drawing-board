@@ -12,6 +12,8 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
+import cn.edu.shu.android.group6.drawingboard.app.App;
+
 /**
  * Created by yy on 2/23/14.
  */
@@ -114,6 +116,10 @@ public class TransparentRegulator extends View {
                             p5.setColor(Color.argb((int) ((1 - percentage) * 255), Color.red(color2), Color.green(color2), Color.blue(color2)));
                             invalidate();
                         }
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        App.getInstance().getPaint().setColor(Color.argb((int) (percentage * 255),
+                                Color.red(color2), Color.green(color2), Color.blue(color2)));
                         break;
                 }
                 return true;
