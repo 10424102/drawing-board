@@ -32,6 +32,7 @@ public class TranslateAnimationTool implements Generable {
     private static final PaintCanvas paintCanvas = app.getPaintCanvas();
     private static final SettingPanel settingPanel = new SettingPanel();
 
+
     @Override
     public void generate() {
 

@@ -5,7 +5,7 @@ import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
-import java.io.InputStream;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -28,17 +28,34 @@ public class ToolManager {
     private static final List<Tool> tools = new ArrayList<>();
 
     private static Tool loadFromAssets(String url) {
+
+        return null;
+    }
+
+    private static Tool loadFromSdcard(String url) {
+        return null;
+    }
+
+    /**
+     * give the tool root directory
+     * like Assets://tools/CocaCola/CokeZero
+     *
+     * @param uri
+     * @return
+     */
+    public static Tool load(URI uri) {
+        Tool t = null;
         try {
-            if (url.endsWith("/")) url += "Tool.xml";
-            InputStream is = app.getAssets().open(url);
+            URI toolUri = new URI(uri.toString() + "/tool.xml");
             SAXReader reader = new SAXReader();
-            Document document = reader.read(is);
+            Document document = reader.read(app.getAssets().open(toolUri.getHost() + toolUri.getPath()));
             Element root = document.getRootElement();
             if (!root.getName().equals("tool"))
                 throw new LoadToolException("Root element is not 'tool'.");
-
             Tool tool = new Tool();
-            tool.setDirPath("Assets://" + url.substring(0, url.lastIndexOf("/") + 1));
+            tool.setDirPath(uri.toString());
+
+            //attributes
             for (Iterator i = root.attributeIterator(); i.hasNext(); ) {
                 Attribute a = (Attribute) i.next();
                 switch (a.getName()) {
@@ -50,6 +67,8 @@ public class ToolManager {
                         break;
                 }
             }
+
+            //elements
             Generable generator = null;
             for (Iterator i = root.elementIterator(); i.hasNext(); ) {
                 Element e = (Element) i.next();
@@ -95,18 +114,6 @@ public class ToolManager {
             return tool;
         } catch (Exception e) {
             e.printStackTrace();
-        }
-        return null;
-    }
-
-    private static Tool loadFromSdcard(String url) {
-        return null;
-    }
-
-    public static Tool load(String url) {
-        Tool t = null;
-        if (url.startsWith("Assets://")) {
-            t = loadFromAssets(url.substring(9));
         }
         return t;
     }

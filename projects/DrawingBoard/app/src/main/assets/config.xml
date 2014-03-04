@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<load-tool>
+    <url>Assets://tools/Shape/Circle</url>
+    <url>Assets://tools/Line/Curve</url>
+    <url>Assets://tools/Line/Line</url>
+    <url>Assets://tools/Shape/Rectangle</url>
+    <url>Assets://tools/Shape/RoundRectangle</url>
+    <url>Assets://tools/Default/Select</url>)
+    <url>Assets://tools/Default/PlayAnimation</url>
+    <url>Assets://tools/Default/Delete</url>
+    <url>Assets://tools/Default/TranslateAnimation</url>
+    <url>Assets://tools/CocaCola/CocaCola/</url>
+    <url>Assets://tools/CocaCola/CokeZero/</url>
+    <url>Assets://tools/CocaCola/DietCoke/</url>
+</load-tool>

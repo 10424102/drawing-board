@@ -13,7 +13,6 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import cn.edu.shu.android.group6.drawingboard.app.core.tool.ToolManager;
 import cn.edu.shu.android.group6.drawingboard.app.core.view.PaintCanvas;
 import cn.edu.shu.android.group6.drawingboard.app.core.view.Toolbox;
 
@@ -22,19 +21,6 @@ public class MainActivity extends Activity {
     private PaintCanvas paintCanvas;
     private RelativeLayout container;
 
-    //条色盘测试
-    //private ColorPanel colorPanel = null;
-    //private ImageView colorPanelBar = null;
-    //private ImageView transparentLayer = null;
-    //private ColorPickerFragment colorPickerFragment = null;
-
-    /**
-     * 创建流程：
-     * 1、在App里注册MainActivity
-     * 2、加载画布
-     *
-     * @param savedInstanceState
-     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,86 +44,8 @@ public class MainActivity extends Activity {
         getFragmentManager().beginTransaction().add(R.id.main_container, new TestFragment()).commit();
 
         //add Toolbox
-        try {
-            ToolManager.load("Assets://tools/Circle.xml");
-            ToolManager.load("Assets://tools/Curve.xml");
-            ToolManager.load("Assets://tools/Line.xml");
-            ToolManager.load("Assets://tools/Rectangle.xml");
-            ToolManager.load("Assets://tools/RoundRectangle.xml");
-            app.setCurrentTool(ToolManager.load("Assets://tools/Select.xml"));
-            ToolManager.load("Assets://tools/PlayAnimation.xml");
-            ToolManager.load("Assets://tools/Delete.xml");
-            ToolManager.load("Assets://tools/TranslateAnimation.xml");
-            ToolManager.load("Assets://tools/CocaCola/CocaCola/");
-            ToolManager.load("Assets://tools/CocaCola/CokeZero/");
-            ToolManager.load("Assets://tools/CocaCola/DietCoke/");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        getFragmentManager().beginTransaction().add(R.id.main_container, new Toolbox()).commit();
+        getFragmentManager().beginTransaction().add(R.id.main_container, new Toolbox(), "toolbox").commit();
 
-        //test control point
-//        ControlPoint controlPoint = new ControlPoint(this);
-//        controlPoint.setX(100);
-//        controlPoint.setY(100);
-//        paintCanvas.getMirror().addView(controlPoint);
-//        paintCanvas.getMirror().requestLayout();
-
-//        setContentView(R.layout.activity_main);
-//        CanvasElement element = new CanvasElement(this);
-//        Oval oval = new Oval();
-//        Path path = new Path();
-//        path.moveTo(20,20);
-//        path.lineTo(20,180);
-//        path.lineTo(60,100);
-//        path.quadTo(160,-100,150,180);
-//        path.lineTo(100,100);
-//        ShapeDrawable drawable = new ShapeDrawable(new PathShape(path,200,200));
-        //ShapeDrawable drawable = new ShapeDrawable(new RoundRectShape(new float[]{0,0,0,0,0,0,0,0},new RectF(40,40,160,160),new float[]{50,50,50,50,50,50,50,50}));
-        //ShapeDrawable drawable = new ShapeDrawable(new ArcShape(0, 270));
-//        GaiaCircle drawable = new GaiaCircle();
-//        drawable.setRadius(50);
-//        drawable.getPaint().setStyle(Paint.Style.STROKE);
-//        drawable.getPaint().setStrokeWidth(10);
-//        drawable.getPaint().setAntiAlias(true);
-//        drawable.getPaint().setColor(Color.RED);
-        //drawable.setPadding(6,6,6,6);
-        //drawable.setBounds(0, 0, 200, 200);
-//        oval.setDrawable(drawable);
-//        element.setDrawable(drawable);
-//        RelativeLayout container = (RelativeLayout) findViewById(R.id.main_container);
-//        element.setX(50);
-//        element.setY(50);
-//        container.addView(element);
-//调色盘测试
-//        p_color = (TextView) findViewById(R.id.info_paint_color);
-//        p_size = (TextView) findViewById(R.id.info_paint_size);
-//        p_style = (TextView) findViewById(R.id.info_paint_style);
-//        pc_num = (TextView) findViewById(R.id.info_currentpc_element_num);
-//
-//        getFragmentManager().beginTransaction().add(R.id.main_container, new FloatPanel()).commit();
-//
-//        transparentLayer = (ImageView) findViewById(R.id.transparency_layer);
-//        colorPanelBar = (ImageView) findViewById(R.id.color_panle_bar);
-//        colorPanel = (ColorPanel) findViewById(R.id.color_panle);
-//
-//        colorPanel.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//                colorPanel.setColor(app.getCurrentPaint().getColor());
-//                colorPanel.invalidate();
-//            }
-//        });
-//        colorPanel.setColor(app.getCurrentPaint().getColor());
-//
-//        colorPickerFragment = new ColorPickerFragment();
-//        FragmentManager fragmentManager = getFragmentManager();
-//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//        fragmentTransaction.add(R.id.main_container,colorPickerFragment);
-//        fragmentTransaction.commit();
-//
-//        hideTransparentLayer();
     }
 
     @Override
@@ -154,6 +62,12 @@ public class MainActivity extends Activity {
         switch (item.getItemId()) {
             //工具箱
             case R.id.menu_toolbox:
+                Fragment f = getFragmentManager().findFragmentByTag("toolbox");
+                if (f.isHidden()) {
+                    getFragmentManager().beginTransaction().show(f).commit();
+                } else {
+                    getFragmentManager().beginTransaction().hide(f).commit();
+                }
                 //new ToolboxFragment().show(getFragmentManager(), "toolbox");
                 break;
             //清空画布，后面要改为删除工具
