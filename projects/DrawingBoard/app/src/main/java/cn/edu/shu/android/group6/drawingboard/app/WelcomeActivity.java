@@ -29,24 +29,7 @@ public class WelcomeActivity extends Activity {
     private static final App app = App.getInstance();
 
     TextView loadToolText;
-    Handler handler = new Handler(new Handler.Callback() {
-        int i = 0;
-
-        @Override
-        public boolean handleMessage(Message msg) {
-            if (msg.what == 1) {
-                i++;
-            } else if (msg.what == 2) {
-                i++;
-            }
-            if (i == 2) {
-                Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-            }
-            return false;
-        }
-    });
+    Handler handler;
 
     Context mContext;
 
@@ -62,7 +45,7 @@ public class WelcomeActivity extends Activity {
         loadToolText = (TextView) findViewById(R.id.welcome_load_tool_text);
 
         // Font path
-        String fontPath = "welcome_title_font.ttf";
+        String fontPath = "dragon_is_coming.otf";
 
         // text view label
         TextView txtGhost = (TextView) findViewById(R.id.welcome_title);
@@ -75,7 +58,7 @@ public class WelcomeActivity extends Activity {
 
         final AsyncTask task = new LoadToolTask().execute(Config.toolList());
 
-        RelativeLayout mImageView = (RelativeLayout) findViewById(R.id.logo);
+        final RelativeLayout mImageView = (RelativeLayout) findViewById(R.id.logo);
         AlphaAnimation aa = new AlphaAnimation(0.1f, 1.0f);
         aa.setDuration(3000);
         mImageView.startAnimation(aa);
@@ -98,6 +81,24 @@ public class WelcomeActivity extends Activity {
             }
 
         });
+        handler = new Handler(new Handler.Callback() {
+            int i = 0;
+
+            @Override
+            public boolean handleMessage(Message msg) {
+                if (msg.what == 1) {
+                    i++;
+                } else if (msg.what == 2) {
+                    i++;
+                }
+                if (i == 2) {
+                    Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+                return false;
+            }
+        });
 
 
     }
@@ -109,19 +110,19 @@ public class WelcomeActivity extends Activity {
             int i = 0;
             int loadSuccess = 0;
             for (URI uri : urlLists[0]) {
-                loadMsg = "Now loading " + uri;
+                loadMsg = "➠  Now loading " + uri;
                 Tool t = ToolManager.load(uri);
                 if (t != null) loadSuccess++;
                 publishProgress();
                 // Escape early if cancel() is called
-//                    if (isCancelled()) break;
-//                    try {
-//                        Thread.sleep(1000);
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
+                if (isCancelled()) break;
+                try {
+                    Thread.sleep(200);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
-            loadMsg = "Successful loaded  " + loadSuccess + " tools.";
+            loadMsg = "➠  Successful loaded  " + loadSuccess + " tools.";
             publishProgress();
             handler.sendEmptyMessage(2);
             return null;

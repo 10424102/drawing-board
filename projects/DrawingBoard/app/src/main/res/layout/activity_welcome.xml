@@ -6,14 +6,15 @@
     android:background="@drawable/welcome_bg"
     android:id="@+id/logo">
 
-<TextView
-        android:layout_width="wrap_content"
+    <TextView
+        android:gravity="center"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="80dp"
         android:text="Drawing Board"
-        android:textSize="40sp"
-        android:textColor="#fffffa7e"
+        android:textSize="300sp"
+        android:textColor="#ffffffdf"
         android:textAlignment="center"
         android:textAppearance="@drawable/test_bg"
         android:shadowColor="#ffe7da6b"
@@ -23,10 +24,14 @@
         android:id="@+id/welcome_title" />
 
     <TextView
+        android:paddingLeft="30dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/welcome_load_tool_text"
-        android:background="#fff"
-        android:layout_alignParentBottom="true" />
+        android:background="#33ffcf72"
+        android:textColor="#fff"
+        android:textSize="20sp"
+        android:layout_alignParentBottom="true"
+        android:typeface="sans" />
 
 </RelativeLayout>
