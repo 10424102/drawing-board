@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/panel_bg">
+
+    <TextView
+        android:id="@+id/title_tool"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select a tool"
+        android:layout_margin="5dp" />
+
+    <GridView
+        android:id="@+id/gridview"
+        android:layout_below="@id/title_tool"
+        android:layout_width="600dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:numColumns="3"
+        android:paddingBottom="15dp" />
+</RelativeLayout>

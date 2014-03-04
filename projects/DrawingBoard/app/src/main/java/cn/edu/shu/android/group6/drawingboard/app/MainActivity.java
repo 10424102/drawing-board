@@ -15,10 +15,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import cn.edu.shu.android.group6.drawingboard.app.core.view.PaintCanvas;
-import cn.edu.shu.android.group6.drawingboard.app.core.view.Toolbox;
 import cn.edu.shu.android.group6.drawingboard.app.ui.ColorPickerFragment;
 import cn.edu.shu.android.group6.drawingboard.app.ui.PaintSizePickerDialog;
 import cn.edu.shu.android.group6.drawingboard.app.ui.PaintStylePickerDialog;
+import cn.edu.shu.android.group6.drawingboard.app.ui.ToolBoxFragment;
 
 public class MainActivity extends Activity {
     private static final App app = App.getInstance();
@@ -45,7 +45,7 @@ public class MainActivity extends Activity {
         getFragmentManager().beginTransaction().add(R.id.main_container, new TestFragment()).commit();
 
         //add Toolbox
-        getFragmentManager().beginTransaction().add(R.id.main_container, new Toolbox(), "toolbox").commit();
+        //getFragmentManager().beginTransaction().add(R.id.main_container, new Toolbox(), "toolbox").commit();
 
         //add color select view
         getFragmentManager().beginTransaction().add(R.id.main_container, new ColorPickerFragment(), "color").commit();
@@ -66,13 +66,15 @@ public class MainActivity extends Activity {
         switch (item.getItemId()) {
             //工具箱
             case R.id.menu_toolbox:
-                Fragment f = getFragmentManager().findFragmentByTag("toolbox");
+                /*Fragment f = getFragmentManager().findFragmentByTag("toolbox");
                 if (f.isHidden()) {
                     getFragmentManager().beginTransaction().show(f).commit();
                 } else {
                     getFragmentManager().beginTransaction().hide(f).commit();
                 }
-                //new ToolboxFragment().show(getFragmentManager(), "toolbox");
+                //new ToolboxFragment().show(getFragmentManager(), "toolbox");*/
+                getFragmentManager().beginTransaction().add(R.id.main_container,
+                        new ToolBoxFragment()).commit();
                 break;
             //清空画布，后面要改为删除工具
             case R.id.menu_clean_caves:
@@ -116,7 +118,7 @@ public class MainActivity extends Activity {
                 new PaintStylePickerDialog(new PaintStylePickerDialog.OnStyleChangedListener() {
                     @Override
                     public void styleChanged(Paint.Style style) {
-
+                        app.getPaint().setStyle(style);
                     }
                 }, app.getPaint().getStyle())
                         .show(getFragmentManager(), "paint_style");
