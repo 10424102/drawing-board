@@ -10,6 +10,7 @@ import android.widget.Button;
 
 import cn.edu.shu.android.group6.drawingboard.app.App;
 import cn.edu.shu.android.group6.drawingboard.app.R;
+import cn.edu.shu.android.group6.drawingboard.app.util.ListenerUtil;
 
 
 /**
@@ -24,6 +25,7 @@ public class ColorPickerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.colorpick_fragment_layout, container, false);
 
+        view.setOnTouchListener(ListenerUtil.floatListener);
         //confirmButton = (Button) view.findViewById(R.id.confirm_button);
         transparentRegulator = (TransparentRegulator) view.findViewById(R.id.alphabar);
         colorCircleView = (ColorCircleView) view.findViewById(R.id.colorcircle);

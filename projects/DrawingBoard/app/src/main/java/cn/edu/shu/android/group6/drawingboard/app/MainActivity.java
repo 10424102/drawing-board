@@ -14,7 +14,6 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import cn.edu.shu.android.group6.drawingboard.app.core.tool.ToolManager;
 import cn.edu.shu.android.group6.drawingboard.app.core.view.PaintCanvas;
 import cn.edu.shu.android.group6.drawingboard.app.core.view.Toolbox;
 import cn.edu.shu.android.group6.drawingboard.app.ui.ColorPickerFragment;
@@ -42,14 +41,14 @@ public class MainActivity extends Activity {
         container.addView(paintCanvas);
         app.setPaintCanvas(paintCanvas);
 
-        //test paint
-
-
         //add the TestFragment
         getFragmentManager().beginTransaction().add(R.id.main_container, new TestFragment()).commit();
 
         //add Toolbox
         getFragmentManager().beginTransaction().add(R.id.main_container, new Toolbox(), "toolbox").commit();
+
+        //add color select view
+        getFragmentManager().beginTransaction().add(R.id.main_container, new ColorPickerFragment(), "color").commit();
 
     }
 
