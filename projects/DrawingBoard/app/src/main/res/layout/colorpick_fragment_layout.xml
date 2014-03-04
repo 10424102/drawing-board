@@ -1,33 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentRight="true"
+    android:background="@drawable/test_bg">
 
-    <cn.edu.shu.android.drawingboard.ui.ColorCircleView
+    <cn.edu.shu.android.group6.drawingboard.app.ui.ColorCircleView
         android:id="@+id/colorcircle"
         android:layout_width="300dp"
         android:layout_height="300dp"
         android:layout_centerInParent="true" />
 
 
-    <cn.edu.shu.android.drawingboard.ui.TransparentRegulator
+    <cn.edu.shu.android.group6.drawingboard.app.ui.TransparentRegulator
         android:layout_marginLeft="16dp"
         android:id="@+id/alphabar"
         android:layout_width="80dp"
         android:layout_height="300dp"
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@id/colorcircle" />
-
-    <TextView
-        android:id="@+id/pen_size_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_centerHorizontal="true"
-        android:text="Preview" />
-
+    <!--
+        <TextView
+            android:id="@+id/pen_size_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_centerHorizontal="true"
+            android:text="Preview" />
+    -->
     <ImageView
         android:layout_toRightOf="@id/colorcircle"
         android:id="@+id/preview_color"
@@ -40,7 +43,7 @@
         android:id="@+id/before_color"
         android:layout_width="72dp"
         android:layout_height="48dp" />
-
+    <!--
     <Button
         android:layout_marginRight="48dp"
         android:id="@+id/confirm_button"
@@ -49,5 +52,6 @@
         android:layout_centerVertical="true"
         android:text="confirm"
         android:layout_toRightOf="@id/colorcircle" />
+    -->
 
 </RelativeLayout>

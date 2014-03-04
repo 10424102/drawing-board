@@ -2,6 +2,7 @@ package cn.edu.shu.android.group6.drawingboard.app;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -13,8 +14,12 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import cn.edu.shu.android.group6.drawingboard.app.core.tool.ToolManager;
 import cn.edu.shu.android.group6.drawingboard.app.core.view.PaintCanvas;
 import cn.edu.shu.android.group6.drawingboard.app.core.view.Toolbox;
+import cn.edu.shu.android.group6.drawingboard.app.ui.ColorPickerFragment;
+import cn.edu.shu.android.group6.drawingboard.app.ui.PaintSizePickerDialog;
+import cn.edu.shu.android.group6.drawingboard.app.ui.PaintStylePickerDialog;
 
 public class MainActivity extends Activity {
     private static final App app = App.getInstance();
@@ -89,18 +94,33 @@ public class MainActivity extends Activity {
                 break;
             //调画笔的颜色，后面转到画笔调节统一设置
             case R.id.menu_paint_color:
-                /*new PaintColorPickerDialog(this, this, app.getCurrentPaint().getColor())
-                        .show();*/
-                return true;
-            //调节画笔大小，后面转到画笔调节统一设置
+            /*    new PaintColorPickerDialog(this, new PaintColorPickerDialog.OnColorChangedListener() {
+                    @Override
+                    public void colorChanged(int color) {
+
+                    }
+                }, app.getPaint().getColor())
+                        .show();
+                return true;*/
+                //调节画笔大小，后面转到画笔调节统一设置
             case R.id.menu_paint_size:
-                /*new PaintSizePickerDialog(this, (int) app.getCurrentPaint().getStrokeWidth())
-                        .show(getFragmentManager(), "paint_size");*/
+                new PaintSizePickerDialog(new PaintSizePickerDialog.OnSizeChangedListener() {
+                    @Override
+                    public void sizeChanged(int size) {
+                        app.getPaint().setStrokeWidth(size);
+                    }
+                }, (int) app.getPaint().getStrokeWidth())
+                        .show(getFragmentManager(), "paint_size");
                 return true;
             //调节画笔类型，后面改为填充工具
             case R.id.menu_paint_style:
-                /*new PaintStylePickerDialog(this, app.getCurrentPaint().getStyle())
-                        .show(getFragmentManager(), "paint_style");*/
+                new PaintStylePickerDialog(new PaintStylePickerDialog.OnStyleChangedListener() {
+                    @Override
+                    public void styleChanged(Paint.Style style) {
+
+                    }
+                }, app.getPaint().getStyle())
+                        .show(getFragmentManager(), "paint_style");
                 return true;
             //统一的程序设置
             case R.id.action_settings:
